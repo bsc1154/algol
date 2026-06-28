@@ -266,7 +266,7 @@ if (window.mermaid) mermaid.initialize({ startOnLoad: false, theme: 'dark', secu
 
 const TYPE_COLOR = {
   '수학':'#3b82f6','자료구조':'#8b5cf6','해시/맵':'#ec4899',
-  '완전탐색':'#f59e0b','BFS/DFS':'#10b981','우선순위큐':'#f97316','구현/시뮬':'#14b8a6'
+  '완전탐색':'#f59e0b','BFS/DFS':'#10b981','우선순위큐':'#f97316','구현/시뮬':'#14b8a6','스트림':'#0ea5e9'
 };
 const DIFF_COLOR = { B:'#8b5a2b', S:'#4a6fa5', G:'#b8860b' };
 
@@ -2008,6 +2008,283 @@ public class Main {
             // 1 → 주사위로 2~7 도달(1번) → 사다리 점프 … → 최소 3번 만에 100 도달
         }
     }
+}`},
+
+// ───────────── 스트림 (Java Stream 기초) ─────────────
+{id:9001,title:'정수 합 (sum)',type:'스트림',diff:'B5',
+problem:'N개의 정수가 주어질 때, 스트림으로 모든 수의 합을 구하시오.\n\n입력: 1행에 N, 2행에 N개의 정수\n출력: 합',
+summary:'mapToInt + sum 으로 정수 합 구하기',
+explain:'문자열 배열을 Arrays.stream으로 흘려보내 mapToInt(Integer::parseInt)로 IntStream을 만든 뒤 sum()으로 합칩니다. 원시 스트림(IntStream)은 오토박싱이 없어 효율적입니다.',
+flow:`flowchart TD
+A([시작]) --> B["입력 문자열 → 스트림"]
+B --> C["mapToInt(parseInt)"]
+C --> D["sum()"]
+D --> E["출력"]
+E --> F([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 정수들을 스트림으로 합산해 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / 1 2 3 4 5
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();   // N (스트림 풀이에선 굳이 필요 없음)
+        int sum = Arrays.stream(br.readLine().split(" "))
+                        .mapToInt(Integer::parseInt)   // 문자열 → int 스트림
+                        .sum();                        // 모두 합
+        System.out.println(sum);   // ✅ 출력: 15
+    }
+}`},
+
+{id:9002,title:'짝수 개수 (filter·count)',type:'스트림',diff:'B5',
+problem:'N개의 정수 중 짝수가 몇 개인지 스트림으로 구하시오.\n\n입력: 1행에 N, 2행에 N개의 정수\n출력: 짝수의 개수',
+summary:'filter로 거르고 count로 개수 세기',
+explain:'filter(조건)로 원하는 원소만 남기고 count()로 개수를 셉니다. count()의 반환형은 long입니다.',
+flow:`flowchart TD
+A([시작]) --> B["int 스트림"]
+B --> C["filter(x%2==0)"]
+C --> D["count()"]
+D --> E["출력"]
+E --> F([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 짝수만 걸러 개수를 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / 1 2 3 4 5
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
+        long cnt = Arrays.stream(br.readLine().split(" "))
+                         .mapToInt(Integer::parseInt)
+                         .filter(x -> x % 2 == 0)   // 짝수만 남김
+                         .count();                  // 개수 (long)
+        System.out.println(cnt);   // ✅ 출력: 2
+    }
+}`},
+
+{id:9003,title:'최댓값 (max)',type:'스트림',diff:'B5',
+problem:'N개의 정수 중 최댓값을 스트림으로 구하시오.\n\n입력: 1행에 N, 2행에 N개의 정수\n출력: 최댓값',
+summary:'max()로 최댓값 (OptionalInt 처리)',
+explain:'IntStream.max()는 결과가 없을 수도 있어 OptionalInt를 반환합니다. getAsInt()로 값을 꺼냅니다. (min()도 동일)',
+flow:`flowchart TD
+A([시작]) --> B["int 스트림"]
+B --> C["max() → OptionalInt"]
+C --> D["getAsInt()"]
+D --> E["출력"]
+E --> F([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 최댓값을 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / 3 1 4 1 5
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
+        int max = Arrays.stream(br.readLine().split(" "))
+                        .mapToInt(Integer::parseInt)
+                        .max()          // OptionalInt (비었을 수도 있어서)
+                        .getAsInt();    // 값 꺼내기
+        System.out.println(max);   // ✅ 출력: 5
+    }
+}`},
+
+{id:9004,title:'평균 (average)',type:'스트림',diff:'B4',
+problem:'N개의 정수의 평균을 스트림으로 구하시오. (소수점 그대로 출력)\n\n입력: 1행에 N, 2행에 N개의 정수\n출력: 평균',
+summary:'average()로 평균 (OptionalDouble)',
+explain:'average()는 OptionalDouble을 반환합니다. getAsDouble()로 실수 평균을 꺼냅니다. 합과 개수를 직접 구하지 않아도 됩니다.',
+flow:`flowchart TD
+A([시작]) --> B["int 스트림"]
+B --> C["average() → OptionalDouble"]
+C --> D["getAsDouble()"]
+D --> E["출력"]
+E --> F([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 평균을 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  4 / 1 2 3 4
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
+        double avg = Arrays.stream(br.readLine().split(" "))
+                           .mapToInt(Integer::parseInt)
+                           .average()        // OptionalDouble
+                           .getAsDouble();
+        System.out.println(avg);   // ✅ 출력: 2.5
+    }
+}`},
+
+{id:9005,title:'각 수 제곱 (map)',type:'스트림',diff:'B4',
+problem:'N개의 정수를 각각 제곱한 결과를 공백으로 구분해 출력하시오.\n\n입력: 1행에 N, 2행에 N개의 정수\n출력: 제곱한 값들',
+summary:'map으로 각 원소 변환하기',
+explain:'map(x -> x*x)으로 각 원소를 변환합니다. 출력을 위해 mapToObj로 문자열로 바꾼 뒤 Collectors.joining으로 이어 붙입니다.',
+flow:`flowchart TD
+A([시작]) --> B["int 스트림"]
+B --> C["map(x → x*x)"]
+C --> D["문자열로 join"]
+D --> E["출력"]
+E --> F([종료])`,
+code:`import java.util.*;
+import java.io.*;
+import java.util.stream.*;
+
+public class Main {
+    // [메서드 역할] 각 수를 제곱해 공백으로 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  3 / 1 2 3
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
+        String result = Arrays.stream(br.readLine().split(" "))
+                              .mapToInt(Integer::parseInt)
+                              .map(x -> x * x)            // 각 수 제곱
+                              .mapToObj(String::valueOf)  // int → String
+                              .collect(Collectors.joining(" "));
+        System.out.println(result);   // ✅ 출력: 1 4 9
+    }
+}`},
+
+{id:9006,title:'내림차순 정렬 (sorted)',type:'스트림',diff:'B3',
+problem:'N개의 정수를 내림차순으로 정렬해 공백으로 구분해 출력하시오.\n\n입력: 1행에 N, 2행에 N개의 정수\n출력: 내림차순 정렬 결과',
+summary:'boxed + sorted(reverseOrder)로 내림차순',
+explain:'IntStream에는 역순 정렬이 없어 boxed()로 Stream<Integer>로 바꾼 뒤 sorted(Comparator.reverseOrder())를 씁니다. 오름차순은 그냥 sorted().',
+flow:`flowchart TD
+A([시작]) --> B["Integer 스트림"]
+B --> C["sorted(reverseOrder)"]
+C --> D["join 후 출력"]
+D --> E([종료])`,
+code:`import java.util.*;
+import java.io.*;
+import java.util.stream.*;
+
+public class Main {
+    // [메서드 역할] 내림차순 정렬해 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / 3 1 4 1 5
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
+        String result = Arrays.stream(br.readLine().split(" "))
+                              .map(Integer::parseInt)              // Stream<Integer>
+                              .sorted(Comparator.reverseOrder())   // 내림차순
+                              .map(String::valueOf)
+                              .collect(Collectors.joining(" "));
+        System.out.println(result);   // ✅ 출력: 5 4 3 1 1
+    }
+}`},
+
+{id:9007,title:'모두 양수? (allMatch)',type:'스트림',diff:'B4',
+problem:'N개의 정수가 모두 양수이면 YES, 아니면 NO를 출력하시오.\n\n입력: 1행에 N, 2행에 N개의 정수\n출력: YES 또는 NO',
+summary:'allMatch / anyMatch / noneMatch 조건 검사',
+explain:'allMatch(조건)는 모든 원소가 조건을 만족하면 true. anyMatch는 하나라도, noneMatch는 하나도 만족 안 하면 true입니다. 조건 결과가 정해지는 순간 멈춥니다(short-circuit).',
+flow:`flowchart TD
+A([시작]) --> B["int 스트림"]
+B --> C["allMatch(x>0)"]
+C --> D{모두 양수?}
+D -->|Yes| E["YES"]
+D -->|No| F["NO"]
+E --> G([종료])
+F --> G`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 모두 양수인지 검사해 YES/NO 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  4 / 1 2 3 4
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
+        boolean allPos = Arrays.stream(br.readLine().split(" "))
+                               .mapToInt(Integer::parseInt)
+                               .allMatch(x -> x > 0);   // 모두 양수면 true
+        System.out.println(allPos ? "YES" : "NO");   // ✅ 출력: YES
+    }
+}`},
+
+{id:9008,title:'중복 제거 정렬 (distinct)',type:'스트림',diff:'B3',
+problem:'N개의 정수에서 중복을 제거하고 오름차순으로 출력하시오.\n\n입력: 1행에 N, 2행에 N개의 정수\n출력: 중복 제거 후 오름차순',
+summary:'distinct로 중복 제거 + sorted',
+explain:'distinct()는 중복을 제거합니다(equals 기준). sorted()와 함께 쓰면 "중복 없는 정렬"이 한 줄로 됩니다.',
+flow:`flowchart TD
+A([시작]) --> B["int 스트림"]
+B --> C["distinct()"]
+C --> D["sorted()"]
+D --> E["join 후 출력"]
+E --> F([종료])`,
+code:`import java.util.*;
+import java.io.*;
+import java.util.stream.*;
+
+public class Main {
+    // [메서드 역할] 중복 제거 후 오름차순 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / 3 1 4 1 5
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
+        String result = Arrays.stream(br.readLine().split(" "))
+                              .mapToInt(Integer::parseInt)
+                              .distinct()    // 중복 제거
+                              .sorted()      // 오름차순
+                              .mapToObj(String::valueOf)
+                              .collect(Collectors.joining(" "));
+        System.out.println(result);   // ✅ 출력: 1 3 4 5
+    }
+}`},
+
+{id:9009,title:'단어 이어 붙이기 (joining)',type:'스트림',diff:'B4',
+problem:'N개의 단어를 콤마(,)로 이어 붙여 출력하시오.\n\n입력: 1행에 N, 2행에 공백으로 구분된 N개의 단어\n출력: 콤마로 이어 붙인 문자열',
+summary:'Collectors.joining 으로 문자열 합치기',
+explain:'Collectors.joining(구분자)으로 문자열 스트림을 하나로 합칩니다. joining(",", "[", "]") 처럼 구분자·접두사·접미사를 함께 줄 수도 있습니다.',
+flow:`flowchart TD
+A([시작]) --> B["문자열 스트림"]
+B --> C["collect(joining)"]
+C --> D["출력"]
+D --> E([종료])`,
+code:`import java.util.*;
+import java.io.*;
+import java.util.stream.*;
+
+public class Main {
+    // [메서드 역할] 단어들을 콤마로 이어 붙여 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  3 / apple banana cherry
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
+        String joined = Arrays.stream(br.readLine().split(" "))
+                              .collect(Collectors.joining(","));   // 콤마로 연결
+        System.out.println(joined);   // ✅ 출력: apple,banana,cherry
+    }
+}`},
+
+{id:9010,title:'단어 빈도수 (groupingBy)',type:'스트림',diff:'B2',
+problem:'N개의 단어가 주어질 때 각 단어의 등장 횟수를 사전순으로 "단어 횟수" 형식으로 출력하시오.\n\n입력: 1행에 N, 2행에 N개의 단어\n출력: 단어별 등장 횟수',
+summary:'groupingBy + counting 으로 빈도 집계',
+explain:'Collectors.groupingBy(분류기준, counting())으로 같은 값끼리 묶어 개수를 셉니다. 결과는 Map<단어, Long>이며, TreeMap으로 모으면 자동으로 사전순 정렬됩니다.',
+flow:`flowchart TD
+A([시작]) --> B["단어 스트림"]
+B --> C["groupingBy(자기자신, counting)"]
+C --> D["Map 단어→횟수"]
+D --> E["사전순 출력"]
+E --> F([종료])`,
+code:`import java.util.*;
+import java.io.*;
+import java.util.stream.*;
+
+public class Main {
+    // [메서드 역할] 단어별 등장 횟수를 사전순으로 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  4 / apple banana apple cherry
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
+        Map<String, Long> freq = Arrays.stream(br.readLine().split(" "))
+            .collect(Collectors.groupingBy(w -> w, TreeMap::new, Collectors.counting()));
+        // freq = {apple=2, banana=1, cherry=1}  (TreeMap이라 사전순)
+        StringBuilder sb = new StringBuilder();
+        freq.forEach((word, count) -> sb.append(word).append(' ').append(count).append('\\n'));
+        System.out.print(sb);   // ✅ 출력: apple 2 / banana 1 / cherry 1
+    }
 }`}
 ]; // end problems array
 
@@ -2038,7 +2315,7 @@ function renderCards(type) {
 }
 
 function renderFilters() {
-  const types = ['전체','수학','자료구조','해시/맵','완전탐색','BFS/DFS','우선순위큐','구현/시뮬'];
+  const types = ['전체','수학','자료구조','해시/맵','완전탐색','BFS/DFS','우선순위큐','구현/시뮬','스트림'];
   const div = document.getElementById('filters');
   div.innerHTML = types.map(t => `<button class="filter-btn${t==='전체'?' active':''}" data-type="${t}">${t}</button>`).join('');
   div.querySelectorAll('.filter-btn').forEach(btn => {
@@ -2294,7 +2571,8 @@ const skillInfo = {
 '완전탐색':{ds:'배열 + 반복문', kind:'브루트포스 (완전탐색)', how:'가능한 모든 경우를 빠짐없이 시도하고 조건을 만족하는 답을 추림', evl:'<b>문제를 경우의 수로 빠짐없이 나누는 사고력</b>과 시간복잡도 가늠 능력'},
 'BFS/DFS':{ds:'그래프 / 2차원 배열 + 큐·재귀', kind:'그래프 탐색 — 연결성·최단거리', how:'BFS는 큐로 가까운 곳부터, DFS는 재귀로 깊이 우선', evl:'<b>현실 문제를 그래프로 모델링하고 탐색하는 핵심 역량</b>. 최단경로·영역 구분의 기반'},
 '우선순위큐':{ds:'힙(Heap) / PriorityQueue', kind:'우선순위 처리 — 최대·최소 즉시 추출', how:'힙으로 항상 최댓값/최솟값이 맨 위에 오도록 유지', evl:'<b>정렬 상태를 유지하며 최적값을 효율적으로 꺼내는 능력</b> (O(log N))'},
-'구현/시뮬':{ds:'배열 + 조건/반복 (복합)', kind:'시뮬레이션 / 구현', how:'문제에 적힌 규칙을 그대로, 정확히 코드로 옮김', evl:'<b>복잡하고 긴 요구사항을 빠짐없이 코드화하는 구현력</b>. 실무와 가장 닮은 유형'}
+'구현/시뮬':{ds:'배열 + 조건/반복 (복합)', kind:'시뮬레이션 / 구현', how:'문제에 적힌 규칙을 그대로, 정확히 코드로 옮김', evl:'<b>복잡하고 긴 요구사항을 빠짐없이 코드화하는 구현력</b>. 실무와 가장 닮은 유형'},
+'스트림':{ds:'Stream / IntStream + Collectors', kind:'함수형 데이터 처리 (Java Stream)', how:'filter·map·reduce·collect를 체이닝해 선언형으로 처리', evl:'<b>모던 자바 함수형 API 활용 능력</b>. 가독성 좋은 데이터 변환·집계 (단, 대용량 코테는 for문이 더 안전)'}
 };
 function renderCap(type) {
   const c = skillInfo[type]; if (!c) return '';
@@ -2346,7 +2624,18 @@ const quizzes = {
 1074:[{q:'Z 문제를 효율적으로 푸는 방법은?',options:['사분면을 따져 재귀적으로 좁히기','모든 칸을 하나씩 세기','정렬','BFS'],answer:0,explain:'2^N×2^N을 4등분해 찾는 칸이 속한 사분면의 앞 칸 수를 더하며 재귀적으로 좁힙니다. 직접 세면 너무 큽니다.'}],
 14500:[{q:'테트로미노 풀이의 기본 접근은?',options:['모든 위치·모양을 대보는 완전탐색','DP','그리디','이분탐색'],answer:0,explain:'각 칸을 시작점으로 회전·대칭 모양을 모두 올려보는 완전탐색입니다(ㅏ 모양만 별도 처리).'}],
 5430:[{q:'R(뒤집기)을 빠르게 처리하는 방법은?',options:['실제로 뒤집지 않고 방향만 토글','매번 배열을 reverse','정렬','스택'],answer:0,explain:'매번 뒤집으면 느려서, 방향 플래그만 바꾸고 D는 그 방향의 앞에서 제거합니다.'}],
-16928:[{q:'주사위 최소 횟수를 구하기 적합한 방법은?',options:['BFS','DFS','정렬','그리디'],answer:0,explain:'칸을 노드로 보고 BFS로 탐색하면 100번 칸에 처음 닿는 횟수가 최소입니다.'}]
+16928:[{q:'주사위 최소 횟수를 구하기 적합한 방법은?',options:['BFS','DFS','정렬','그리디'],answer:0,explain:'칸을 노드로 보고 BFS로 탐색하면 100번 칸에 처음 닿는 횟수가 최소입니다.'}],
+9001:[{q:'정수 스트림의 모든 값을 더하는 최종 연산은?',options:['sum()','count()','collect()','map()'],answer:0,explain:'IntStream의 sum()이 모든 원소를 더합니다. mapToInt로 IntStream을 먼저 만들어야 sum()을 쓸 수 있어요.'}],
+9002:[{q:'조건에 맞는 원소만 남기는 연산은?',options:['map()','filter()','sorted()','reduce()'],answer:1,explain:'filter(조건)는 조건이 true인 원소만 통과시킵니다. 변환은 map, 거르기는 filter로 구분하세요.'},
+ {q:'count()의 반환 타입은?',options:['int','long','double','Optional'],answer:1,explain:'count()는 long을 반환합니다. 큰 데이터도 셀 수 있도록 long입니다.'}],
+9003:[{q:'IntStream.max()의 반환 타입은?',options:['int','OptionalInt','Integer','long'],answer:1,explain:'스트림이 비어 있을 수도 있어 OptionalInt를 반환합니다. getAsInt()로 값을 꺼냅니다.'}],
+9004:[{q:'average()가 반환하는 타입은?',options:['double','OptionalDouble','int','float'],answer:1,explain:'평균도 빈 스트림일 수 있어 OptionalDouble입니다. getAsDouble()로 꺼냅니다.'}],
+9005:[{q:'각 원소를 다른 값으로 "변환"하는 연산은?',options:['filter()','map()','distinct()','count()'],answer:1,explain:'map(변환식)은 각 원소를 1:1로 변환합니다. 제곱·대문자화 등에 씁니다.'}],
+9006:[{q:'IntStream을 내림차순 정렬하려면 먼저 무엇을 해야 하나요?',options:['바로 sorted(reverseOrder)','boxed()로 Integer 스트림 변환','count()','distinct()'],answer:1,explain:'IntStream에는 역순 정렬자가 없어 boxed()로 Stream<Integer>로 바꾼 뒤 sorted(Comparator.reverseOrder())를 씁니다.'}],
+9007:[{q:'"모든 원소가 조건을 만족하는가"를 검사하는 연산은?',options:['anyMatch','allMatch','noneMatch','filter'],answer:1,explain:'allMatch는 전부 만족하면 true. 하나라도면 anyMatch, 하나도 아니면 noneMatch입니다.'}],
+9008:[{q:'중복을 제거하는 연산은?',options:['distinct()','sorted()','filter()','limit()'],answer:0,explain:'distinct()가 equals 기준으로 중복을 제거합니다. 정렬은 sorted()로 따로 합니다.'}],
+9009:[{q:'문자열 스트림을 구분자로 이어 붙이는 수집기는?',options:['Collectors.toList()','Collectors.joining()','Collectors.counting()','Collectors.groupingBy()'],answer:1,explain:'Collectors.joining(구분자)으로 합칩니다. 접두·접미사도 함께 줄 수 있어요.'}],
+9010:[{q:'같은 값끼리 묶어 개수를 세는 수집기 조합은?',options:['groupingBy + counting','toList + size','joining','mapToInt + sum'],answer:0,explain:'Collectors.groupingBy(기준, Collectors.counting())으로 값별 빈도를 Map으로 만듭니다.'}]
 };
 // 문제별 구현(서술형) 퀴즈 — 직접 떠올린 뒤 모범 답안과 비교
 const IMPL = {
