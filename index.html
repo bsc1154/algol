@@ -2953,7 +2953,7 @@ function diffColor(diff) {
 
 function renderCards(type) {
   const grid = document.getElementById('grid');
-  const filtered = type === '전체' ? problems : problems.filter(p => p.type === type);
+  const filtered = type === '전체' ? problems.filter(p => p.type !== '스트림') : problems.filter(p => p.type === type);
   grid.innerHTML = filtered.map(p => `
     <div class="card" data-id="${p.id}" style="border-top:3px solid ${TYPE_COLOR[p.type]}">
       <div class="card-bar" style="background:${TYPE_COLOR[p.type]}22"></div>
