@@ -1,0 +1,2668 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>백준 Class 1~3 알고리즘</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#c9d1d9;font-family:'Segoe UI',sans-serif;min-height:100vh}
+header{background:#161b22;border-bottom:1px solid #30363d;padding:20px 32px;display:flex;align-items:center;gap:16px}
+header h1{font-size:1.6rem;color:#f0f6fc}
+header p{color:#8b949e;font-size:.95rem}
+.filters{padding:20px 32px;display:flex;flex-wrap:wrap;gap:8px;background:#0d1117;position:sticky;top:0;z-index:10;border-bottom:1px solid #21262d}
+.filter-btn{padding:6px 16px;border-radius:20px;border:1px solid #30363d;background:#161b22;color:#8b949e;cursor:pointer;font-size:.85rem;transition:all .2s}
+.filter-btn:hover{border-color:#58a6ff;color:#58a6ff}
+.filter-btn.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;padding:24px 32px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.4);border-color:#58a6ff}
+.card-type{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+.card-id{font-size:.8rem;color:#8b949e;margin-bottom:4px}
+.card-title{font-size:1rem;font-weight:600;color:#f0f6fc;margin-bottom:8px}
+.card-summary{font-size:.78rem;color:#8b949e;line-height:1.5}
+.diff-badge{position:absolute;top:12px;right:12px;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:4px;color:#fff}
+.card-bar{position:absolute;bottom:0;left:0;right:0;height:3px}
+
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+.overlay.show{display:flex}
+.modal{background:#161b22;border:1px solid #30363d;border-radius:14px;width:min(800px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid #21262d}
+.modal-title{font-size:1.15rem;font-weight:700;color:#f0f6fc}
+.modal-badge{font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:6px;color:#fff;margin-left:10px}
+.close-btn{background:none;border:none;color:#8b949e;font-size:1.5rem;cursor:pointer;padding:0 6px;line-height:1}
+.close-btn:hover{color:#f0f6fc}
+.tabs{display:flex;gap:0;border-bottom:1px solid #21262d}
+.tab{padding:12px 24px;background:none;border:none;color:#8b949e;cursor:pointer;font-size:.9rem;border-bottom:2px solid transparent;transition:all .2s}
+.tab.active{color:#58a6ff;border-bottom-color:#58a6ff}
+.tab-content{padding:24px;overflow-y:auto;flex:1}
+.tab-content.hidden{display:none}
+.explain-text{font-size:.9rem;line-height:1.8;color:#c9d1d9;margin-bottom:24px;background:#0d1117;padding:16px;border-radius:8px;border-left:3px solid #58a6ff}
+.problem-box{background:#0d1117;padding:16px;border-radius:8px;border-left:3px solid #2ea043;margin-bottom:18px}
+.problem-label{font-size:.8rem;font-weight:700;color:#2ea043;margin-bottom:8px;letter-spacing:.03em}
+.problem-text{font-size:.9rem;line-height:1.8;color:#c9d1d9;white-space:pre-line}
+/* 구조화된 문제 표시 */
+.problem-desc{margin-bottom:16px}
+.pd-lead{font-size:.96rem;line-height:1.7;color:#f0f6fc;font-weight:600;margin-bottom:11px}
+.pd-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin:0}
+.pd-list li{position:relative;padding-left:19px;font-size:.9rem;line-height:1.65;color:#c9d1d9}
+.pd-list li::before{content:"";position:absolute;left:3px;top:8px;width:6px;height:6px;border-radius:50%;background:#3fb950}
+.pd-eg{font-size:.85rem;line-height:1.6;color:#9da7b3;background:#161b22;border-left:2px solid #6e7681;padding:8px 13px;border-radius:0 6px 6px 0;margin:9px 0}
+.pd-eg b{color:#adbac7}
+.problem-desc strong{color:#79c0ff;font-weight:700}
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.io-box{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:11px 14px}
+.io-label{font-size:.72rem;font-weight:700;letter-spacing:.04em;margin-bottom:7px;display:inline-block;padding:2px 9px;border-radius:5px}
+.io-label.in{color:#58a6ff;background:rgba(88,166,255,.13)}
+.io-label.out{color:#3fb950;background:rgba(63,185,80,.13)}
+.io-text{font-size:.85rem;line-height:1.7;color:#c9d1d9;white-space:pre-line}
+.io-text .vsep{color:#6e7681}
+@media(max-width:600px){ .io-grid{grid-template-columns:1fr} }
+#mermaidChart{margin-top:8px;text-align:center;overflow-x:auto}
+#mermaidChart svg{max-width:100%}
+.code-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.copy-btn{padding:6px 14px;background:#21262d;border:1px solid #30363d;color:#8b949e;border-radius:6px;cursor:pointer;font-size:.8rem;transition:all .2s}
+.copy-btn:hover{background:#30363d;color:#f0f6fc}
+.copy-btn.copied{background:#238636;border-color:#238636;color:#fff}
+pre{margin:0;border-radius:8px;overflow-x:auto}
+pre code{font-size:.85rem;font-family:'Consolas',monospace;line-height:1.55}
+/* 주석 종류별 색 구분 (가독성) */
+pre code .hljs-comment{font-style:normal;color:#7d8590}
+.hljs-comment.cm-role{color:#79c0ff;font-weight:600}        /* [메서드 역할] */
+.hljs-comment.cm-eg{color:#e3b341}                          /* ▼ 예시 입력 */
+.hljs-comment.cm-out{color:#3fb950;font-weight:600}         /* ✅ 출력 */
+.hljs-comment.cm-note{color:#6e7781}                        /* 일반 트레이스 주석 */
+/* 비개발자용 코드 설명 박스 */
+.beginner-box{background:#0d1117;border:1px solid rgba(31,111,235,.4);border-left:3px solid #1f6feb;border-radius:8px;padding:14px 17px;margin-bottom:16px}
+.beginner-title{font-size:.83rem;font-weight:700;color:#58a6ff;margin-bottom:10px;letter-spacing:.02em}
+.bg-lead{font-size:.91rem;line-height:1.6;color:#f0f6fc;font-weight:600;margin-bottom:11px}
+.bg-steps{list-style:none;counter-reset:bg;display:flex;flex-direction:column;gap:8px;margin:0}
+.bg-steps li{counter-increment:bg;position:relative;padding-left:29px;font-size:.88rem;line-height:1.6;color:#c9d1d9}
+.bg-steps li::before{content:counter(bg);position:absolute;left:0;top:1px;width:20px;height:20px;background:#1f6feb;color:#fff;border-radius:50%;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.bg-note{font-size:.82rem;color:#8b949e;margin-top:9px;line-height:1.55;padding-left:2px}
+/* 동작 미리보기 (그림 트레이스) */
+.trace-box{background:linear-gradient(180deg,#fbfcfe,#f3f5fb);border:1px solid #e1e6f0;border-left:3px solid #a371f7;border-radius:11px;padding:14px 16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(16,24,40,.06)}
+.trace-title{font-size:.85rem;font-weight:800;color:#7c3aed;margin-bottom:3px}
+.trace-in{font-weight:600;color:#64748b;font-size:.76rem;margin-left:7px}
+.trace-legend{font-size:.76rem;color:#64748b;margin-bottom:11px}
+.trace-strip{display:flex;gap:9px;overflow-x:auto;padding:4px 2px 8px}
+.tr-step{flex:0 0 auto;min-width:108px;background:#161b22;border:1px solid #21262d;border-radius:9px;padding:10px 11px}
+.tr-op{font-size:.76rem;font-weight:700;color:#adbac7;margin-bottom:9px;white-space:nowrap}
+.tr-boxes{display:flex;gap:4px;align-items:center;min-height:32px;flex-wrap:wrap}
+.tr-cell{position:relative;min-width:34px;height:34px;padding:0 9px;display:flex;align-items:center;justify-content:center;border:1px solid #cfd9e8;border-radius:8px;font-size:.84rem;font-weight:800;color:#1f2937;box-shadow:0 1px 2px rgba(16,24,40,.1),inset 0 1px 0 rgba(255,255,255,.55)}
+.tr-cell.hi{outline:2px solid #10b981;outline-offset:1px}
+.tr-cell.nx{box-shadow:0 0 0 2px #f59e0b,0 1px 2px rgba(16,24,40,.12)}
+.nx-crown{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-size:.74rem;line-height:1}
+/* 자료구조 컨테이너 */
+.ds{display:inline-flex;flex-direction:column;gap:5px;border:1.5px solid #d6deea;border-radius:10px;padding:8px 11px 9px;background:#fbfcfe}
+.ds-head{font-size:.72rem;font-weight:800;color:#475569;display:flex;align-items:center;gap:5px}
+.ds-head b{color:#1f2937}
+.ds-body{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:34px;padding-top:6px}
+.ds-next{font-size:.71rem;color:#92400e}
+.ds-next b{color:#b45309}
+.ds-stack{border-color:#f5c2e0;background:#fdf5fb}
+.ds-queue{border-color:#bcd9fb;background:#f1f7ff}
+.ds-deque{border-color:#c9d2fb;background:#f3f5ff}
+.ds-heap{border-color:#fbe093;background:#fffcf0}
+/* 반복 프레임 */
+.loop-frame{position:relative;border:1.5px dashed #f0b8d6;border-radius:12px;padding:10px 10px 4px;background:rgba(244,180,214,.07);margin:3px 0}
+.loop-head{font-size:.74rem;font-weight:800;color:#be3d8f;margin-bottom:11px;display:flex;align-items:center;gap:5px}
+.loop-back{font-size:.72rem;font-weight:700;color:#be3d8f;text-align:center;margin-top:11px}
+/* 비교 그림 */
+.cmp-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:7px 10px}
+.cmp-chip{font-family:'Consolas',monospace;font-weight:800;font-size:.82rem;color:#1f2937;border:1px solid #e3c9a3;border-radius:6px;padding:3px 10px}
+.cmp-vs{font-size:.74rem;font-weight:800;color:#c2410c}
+.cmp-note{font-size:.74rem;color:#9a3412}
+.tr-empty{display:inline-flex;align-items:center;gap:5px;min-width:72px;height:34px;padding:0 12px;border:1.5px dashed #c3cdda;border-radius:8px;color:#94a3b8;font-size:.75rem;font-style:normal;background:repeating-linear-gradient(45deg,#ffffff,#ffffff 6px,#f1f5f9 6px,#f1f5f9 12px)}
+.tr-out{margin-top:10px;font-size:.76rem;font-weight:800;color:#067647;background:#e3f8ee;border:1px solid #b6ecca;border-radius:6px;padding:3px 10px;display:inline-block}
+.tr-note{margin-top:7px;font-size:.73rem;color:#64748b;line-height:1.45}
+/* 코드+그림 세로 순서도 */
+.flow-steps{display:flex;flex-direction:column;margin-top:4px}
+.fstep{position:relative;background:#ffffff;border:1px solid #e5e9f0;border-radius:11px;padding:11px 13px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.fstep + .fstep{margin-top:16px}
+.fstep + .fstep::before{content:"▼";position:absolute;top:-14px;left:18px;color:#c0c8d4;font-size:.74rem;line-height:1}
+.fs-op{font-size:.79rem;font-weight:800;color:#7c3aed;margin-bottom:7px}
+.fs-code{font-family:'Consolas',monospace;font-size:.79rem;line-height:1.5;background:#f4f6fb;border:1px solid #e3e8f0;border-left:3px solid #3b82f6;border-radius:6px;padding:6px 10px;color:#1f2937;margin-bottom:9px;white-space:pre-wrap;word-break:break-word}
+.fs-code .cm{color:#94a3b2}
+.fs-boxes{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;min-height:34px}
+.fs-dir{font-size:.69rem;font-weight:800;padding:3px 8px;border-radius:20px;margin-right:3px;white-space:nowrap}
+.fs-dir.in{color:#047857;background:#d1fae5}
+.fs-dir.out{color:#b45309;background:#fef3c7}
+/* 격자 그림 트레이스 (BFS/DFS) */
+.gt-step{flex:0 0 auto;background:#161b22;border:1px solid #21262d;border-radius:9px;padding:10px 11px}
+.gt-grid{display:grid;gap:3px;margin-top:2px}
+.gt-cell{width:24px;height:24px;border-radius:6px;background:#e9eef5;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+.gc-empty{background:#e9eef5}
+.gc-house{background:#94a3b8}
+.gc-ripe{background:linear-gradient(180deg,#fbbf24,#f59e0b)}
+.gc-new{background:linear-gradient(180deg,#fdba74,#fb923c);box-shadow:inset 0 0 0 2px rgba(255,255,255,.7)}
+.gc-wall{background:#cbd5e1}
+.gc-rA{background:linear-gradient(180deg,#60a5fa,#3b82f6)}
+.gc-rB{background:linear-gradient(180deg,#a78bfa,#8b5cf6)}
+.gc-rC{background:linear-gradient(180deg,#f472b6,#ec4899)}
+.gc-R{background:linear-gradient(180deg,#f87171,#ef4444)}
+.gc-G{background:linear-gradient(180deg,#4ade80,#22c55e)}
+.gc-L{background:linear-gradient(180deg,#60a5fa,#3b82f6)}
+.trace-strip{-webkit-overflow-scrolling:touch}
+/* 역량 패널 */
+.cap-box{background:#0d1117;border:1px solid rgba(46,160,67,.3);border-left:3px solid #2ea043;border-radius:8px;padding:13px 16px;margin-bottom:18px}
+.cap-title{font-size:.83rem;font-weight:700;color:#3fb950;margin-bottom:9px}
+.cap-row{display:grid;grid-template-columns:78px 1fr;gap:10px;padding:6px 0}
+.cap-row + .cap-row{border-top:1px solid #1b2129}
+.cap-k{color:#8b949e;font-weight:700;font-size:.79rem;padding-top:1px}
+.cap-v{color:#c9d1d9;font-size:.85rem;line-height:1.55}
+.cap-v b{color:#f0f6fc}
+/* 퀴즈 */
+.quiz-intro{font-size:.85rem;color:#8b949e;margin-bottom:16px;padding:10px 14px;background:#0d1117;border-radius:8px;border-left:3px solid #a371f7}
+.quiz-q{background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:15px 16px;margin-bottom:14px}
+.quiz-qnum{font-size:.72rem;font-weight:800;color:#a371f7;margin-bottom:7px;letter-spacing:.03em}
+.quiz-text{font-size:.93rem;font-weight:600;color:#f0f6fc;margin-bottom:13px;line-height:1.6}
+.quiz-opts{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{position:relative;text-align:left;background:#161b22;border:1px solid #30363d;color:#c9d1d9;border-radius:8px;padding:11px 14px;cursor:pointer;font-size:.88rem;line-height:1.5;transition:border-color .15s,background .15s;font-family:inherit}
+.quiz-opt:hover{border-color:#58a6ff}
+.quiz-opt.correct{background:rgba(46,160,67,.16);border-color:#2ea043;color:#56d364}
+.quiz-opt.wrong{background:rgba(248,81,73,.14);border-color:#f85149;color:#ff7b72}
+.quiz-opt.disabled{cursor:default;pointer-events:none}
+.quiz-opt .mk{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-weight:800}
+.quiz-explain{margin-top:12px;font-size:.85rem;line-height:1.65;color:#adbac7;background:#161b22;border-left:3px solid #2ea043;border-radius:0 6px 6px 0;padding:10px 13px;display:none}
+.quiz-explain.show{display:block}
+.quiz-explain b{color:#f0f6fc}
+.quiz-empty{color:#8b949e;text-align:center;padding:36px 16px;font-size:.92rem;line-height:1.7}
+/* 구현(서술형) 퀴즈 */
+.quiz-q.impl{border-color:#2c2540}
+.qa-btn{background:#21262d;border:1px solid #30363d;color:#adbac7;border-radius:7px;padding:7px 13px;font-size:.82rem;cursor:pointer;margin:2px 8px 2px 0;font-family:inherit;font-weight:600}
+.qa-btn:hover{border-color:#a371f7;color:#d2a8ff}
+.quiz-hint{display:none;margin-top:11px;font-size:.84rem;line-height:1.6;color:#d2a8ff;background:#161b22;border-left:3px solid #a371f7;border-radius:0 6px 6px 0;padding:9px 13px}
+.quiz-hint.show{display:block}
+.quiz-answer{display:none;margin-top:12px}
+.quiz-answer.show{display:block}
+.quiz-answer pre{margin:0;border-radius:8px}
+.quiz-answer pre code{font-size:.82rem}
+
+@media(max-width:600px){
+  .grid{padding:16px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  header{padding:16px}
+  .filters{padding:12px 16px}
+}
+/* 아이폰14 등 모바일 최적화 */
+@media(max-width:480px){
+  header h1{font-size:1.35rem}
+  header p{font-size:.85rem}
+  .grid{padding:13px;gap:11px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .overlay{padding:7px}
+  .modal{max-height:94vh;border-radius:13px}
+  .modal-header{padding:13px 15px}
+  .modal-title{font-size:1rem}
+  .tab{padding:11px 15px;font-size:.86rem}
+  .tab-content{padding:16px;-webkit-overflow-scrolling:touch}
+  .explain-text{font-size:.86rem;padding:14px}
+  pre code{font-size:.76rem}
+  .beginner-box,.trace-box,.cap-box{padding:12px 13px}
+  .cap-row{grid-template-columns:70px 1fr;gap:8px}
+  .bg-steps li{padding-left:26px;font-size:.85rem}
+  .tr-step{min-width:96px}
+  .gt-cell{width:19px;height:19px}
+  #mermaidChart svg{height:auto}
+}
+/* 큰 화면 — 카드가 너무 커지지 않게 */
+@media(min-width:1100px){ .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))} }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📚 백준 Class 1~3</h1>
+    <p>알고리즘 스터디 — 문제를 클릭하면 순서도와 Java 코드를 볼 수 있어요</p>
+  </div>
+</header>
+
+<div class="filters" id="filters"></div>
+<div class="grid" id="grid"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px">
+        <span class="modal-title" id="modalTitle"></span>
+        <span class="modal-badge" id="modalBadge"></span>
+        <span class="modal-badge" id="modalType" style="background:#21262d"></span>
+      </div>
+      <button class="close-btn" id="closeBtn">×</button>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="explain">설명 &amp; 순서도</button>
+      <button class="tab" data-tab="code">Java 코드</button>
+      <button class="tab" data-tab="quiz">🧩 퀴즈</button>
+    </div>
+    <div class="tab-content" id="explainTab">
+      <div class="problem-box">
+        <div class="problem-label">📋 문제</div>
+        <div id="modalProblem"></div>
+      </div>
+      <div class="cap-box" id="skillBox"></div>
+      <p class="explain-text" id="modalExplain"></p>
+      <div id="mermaidChart"><p style="color:#8b949e;text-align:center">순서도 로딩중...</p></div>
+    </div>
+    <div class="tab-content hidden" id="codeTab">
+      <div class="beginner-box" id="beginnerBox"></div>
+      <div class="trace-box" id="traceBox"></div>
+      <div class="code-header">
+        <span style="color:#8b949e;font-size:.85rem">Java 풀이</span>
+        <button class="copy-btn" id="copyBtn">📋 코드 복사</button>
+      </div>
+      <pre><code class="language-java" id="modalCode"></code></pre>
+    </div>
+    <div class="tab-content hidden" id="quizTab"></div>
+  </div>
+</div>
+
+<script>
+if (window.mermaid) mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+
+const TYPE_COLOR = {
+  '수학':'#3b82f6','자료구조':'#8b5cf6','해시/맵':'#ec4899',
+  '완전탐색':'#f59e0b','BFS/DFS':'#10b981','우선순위큐':'#f97316','구현/시뮬':'#14b8a6'
+};
+const DIFF_COLOR = { B:'#8b5a2b', S:'#4a6fa5', G:'#b8860b' };
+
+const problems = [
+// ───────────── 수학 ─────────────
+{id:1000,title:'A+B',type:'수학',diff:'B5',
+problem:'두 정수 A와 B가 주어집니다. 두 수를 더한 값을 출력하는, 입출력 연습용 기본 문제입니다.\n\n입력: 첫 줄에 A와 B가 공백으로 구분되어 주어진다. (0 < A, B < 10)\n출력: A+B의 결과를 한 줄에 출력',
+summary:'두 정수 A, B를 입력받아 A+B 출력',
+explain:'가장 기본적인 입출력 문제입니다. Scanner로 두 정수를 읽어 더한 뒤 출력합니다.',
+flow:`flowchart TD
+A([시작]) --> B["A, B 입력"]
+B --> C["sum = A + B"]
+C --> D["sum 출력"]
+D --> E([종료])`,
+code:`import java.util.Scanner;  // 입력을 편하게 읽기 위한 Scanner 사용 (입력량이 적어 속도 문제 없음)
+
+public class Main {
+    // [메서드 역할] 두 정수 A, B를 입력받아 A+B를 출력
+    public static void main(String[] args) {
+        // ▼ 예시 입력: 1 2
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt();   // a = 1
+        int b = sc.nextInt();   // b = 2
+        System.out.println(a + b);  // 1+2 → ✅ 출력: 3
+    }
+}`},
+
+{id:2609,title:'GCD와 LCM',type:'수학',diff:'B1',
+problem:'두 자연수 A, B가 주어집니다. 두 수를 모두 나누는 가장 큰 수(최대공약수)와, 두 수의 공통 배수 중 가장 작은 수(최소공배수)를 구하는 문제입니다.\n\n입력: 첫 줄에 A와 B가 공백으로 구분되어 주어진다. (1 ≤ A, B ≤ 10000)\n출력: 1행에 최대공약수, 2행에 최소공배수',
+summary:'최대공약수(GCD)와 최소공배수(LCM) 구하기',
+explain:'유클리드 호제법을 사용합니다. GCD(a,b) = GCD(b, a%b)이며 b=0이면 a가 GCD입니다. LCM = a ÷ GCD × b (오버플로우 방지를 위해 나누기 먼저).',
+flow:`flowchart TD
+A([시작]) --> B["a, b 입력"]
+B --> C["gcd(a, b) 호출"]
+C --> D{b == 0?}
+D -->|Yes| E[return a]
+D -->|No| F["gcd(b, a%b) 재귀"]
+F --> D
+E --> G["GCD 출력"]
+G --> H["LCM = a/GCD × b"]
+H --> I["LCM 출력"]
+I --> J([종료])`,
+code:`import java.util.Scanner;
+
+public class Main {
+    // [메서드 역할] 두 수의 최대공약수와 최소공배수를 출력
+    public static void main(String[] args) {
+        // ▼ 예시 입력: 24 18
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt(), b = sc.nextInt();   // a=24, b=18
+        int g = gcd(a, b);          // g=6 (최대공약수)
+        System.out.println(g);      // ✅ 출력(1행): 6
+        System.out.println((long) a / g * b);   // 24/6*18=72 → ✅ 출력(2행): 72
+    }
+    // [메서드 역할] 유클리드 호제법으로 최대공약수 계산
+    static int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
+        // gcd(24,18) → gcd(18,6) → gcd(6,0) → 6
+    }
+}`},
+
+
+{id:1978,title:'소수 찾기',type:'수학',diff:'B2',
+problem:'수 N개가 주어질 때, 그중 소수가 몇 개인지 세는 문제입니다. 소수는 1과 자기 자신만을 약수로 가지는 수이며, 1은 소수가 아닙니다.\n\n입력: 1행에 수의 개수 N, 2행에 N개의 수가 공백으로 구분되어 주어진다. (각 수는 1000 이하)\n출력: 주어진 수들 중 소수의 개수',
+summary:'주어진 수들 중 소수의 개수를 세기',
+explain:'각 수마다 2부터 √n까지 나누어 보아 약수가 없으면 소수입니다. 1은 소수가 아님에 주의합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 수 입력"]
+B --> C["각 수 num에 대해"]
+C --> D{num < 2?}
+D -->|Yes| H["소수 아님"]
+D -->|No| E["i = 2 ~ sqrt(num)"]
+E --> F{num % i == 0?}
+F -->|Yes| H
+F -->|No, 끝까지| G["소수! count++"]
+G --> C
+H --> C
+C -->|완료| I["count 출력"]
+I --> J([종료])`,
+code:`import java.util.Scanner;
+
+public class Main {
+    // [메서드 역할] 입력된 N개의 수 중 '소수'가 몇 개인지 세어 출력
+    public static void main(String[] args) {
+        // ▼ 예시 입력:  첫 줄 N=4 ,  둘째 줄  1 3 5 7
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(), count = 0;       // n=4, count=0
+        for (int i = 0; i < n; i++) {
+            if (isPrime(sc.nextInt())) count++;
+            // i=0: 입력 1 → isPrime(1)=false → count=0
+            // i=1: 입력 3 → isPrime(3)=true  → count=1
+            // i=2: 입력 5 → isPrime(5)=true  → count=2
+            // i=3: 입력 7 → isPrime(7)=true  → count=3
+        }
+        System.out.println(count);             // ✅ 출력: 3
+    }
+    // [메서드 역할] n이 소수면 true, 아니면 false (2~√n 까지 나눠 약수가 있는지 검사)
+    static boolean isPrime(int n) {
+        if (n < 2) return false;               // 예) isPrime(1) → 1<2 이므로 바로 false
+        for (int i = 2; i * i <= n; i++)       // 예) n=7 → i=2 일 때 2*2=4 <= 7 (검사)
+            if (n % i == 0) return false;       //      7%2=1 → 약수 아님, 다음 i=3은 3*3=9>7 종료
+        return true;                            // 예) isPrime(7) → 약수 없음 → true
+    }
+}`},
+
+{id:11050,title:'이항 계수 1',type:'수학',diff:'B1',
+problem:'서로 다른 N개 중에서 순서 없이 K개를 고르는 경우의 수, 즉 이항계수 C(N,K)를 구하는 문제입니다. C(N,K) = N! / (K! × (N−K)!) 로 계산됩니다.\n\n입력: 첫 줄에 N과 K가 공백으로 구분되어 주어진다. (1 ≤ N ≤ 10, 0 ≤ K ≤ N)\n출력: 이항계수 C(N,K)의 값',
+summary:'이항 계수 C(N, K) = N! / (K! × (N-K)!) 계산',
+explain:'팩토리얼을 직접 계산하여 C(N,K)를 구합니다. N≤10이므로 오버플로우 걱정 없이 long으로 계산합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N, K 입력"]
+B --> C["num = N×(N-1)×...×(N-K+1)"]
+C --> D["den = K!"]
+D --> E["결과 = num / den"]
+E --> F["결과 출력"]
+F --> G([종료])`,
+code:`import java.util.Scanner;
+
+public class Main {
+    // [메서드 역할] 이항계수 C(N,K)를 계산해 출력
+    public static void main(String[] args) {
+        // ▼ 예시 입력: 5 2
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(), k = sc.nextInt();   // n=5, k=2
+        System.out.println(comb(n, k));   // C(5,2) → ✅ 출력: 10
+    }
+    // [메서드 역할] C(n,k)=n!/(k!(n-k)!) 를 분자 k항·분모 k!로 계산
+    static long comb(int n, int k) {
+        if (k == 0 || k == n) return 1;
+        long num = 1, den = 1;
+        for (int i = 0; i < k; i++) {
+            num *= (n - i);                // i=0: num=5 / i=1: num=20  (5×4)
+            den *= (i + 1);                // i=0: den=1 / i=1: den=2   (1×2)
+        }
+        return num / den;                  // 20 / 2 = 10
+    }
+}`},
+
+{id:6064,title:'카잉 달력',type:'수학',diff:'S1',
+problem:'카잉 달력은 날짜를 <x:y> 두 수로 표현합니다. 해가 바뀔 때마다 x와 y가 각각 1씩 늘어나되, x는 M을 넘으면 다시 1로, y는 N을 넘으면 다시 1로 돌아갑니다. 첫 해는 <1:1>입니다. 찾고자 하는 날짜 <x:y>가 몇 번째 해에 나타나는지, 나타나지 않으면 −1을 구합니다.\n\n입력: 1행에 테스트케이스 수 T, 이후 각 줄에 M N x y가 주어진다. (1 ≤ M, N ≤ 40000)\n출력: 케이스마다 <x:y>가 나타나는 해의 번호 (없으면 -1)',
+summary:'두 주기 M, N이 있는 달력에서 <x:y>가 몇 번째 해인지',
+explain:'x에서 시작해 M씩 더하면서 (k-1)%N == y-1인 k를 찾습니다. LCM(M,N)을 초과하면 -1입니다. 유클리드 호제법으로 LCM을 구합니다.',
+flow:`flowchart TD
+A([시작]) --> B["M, N, x, y 입력"]
+B --> C["lcm = LCM(M, N)"]
+C --> D["k = x"]
+D --> E{k > lcm?}
+E -->|Yes| F["-1 출력"]
+E -->|No| G{"(k-1) % N == y-1?"}
+G -->|Yes| H["k 출력"]
+G -->|No| I["k += M"]
+I --> E
+F --> J([종료])
+H --> J`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] <x:y>가 몇 번째 해인지 출력 (없으면 -1)
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  첫 줄 T=1 ,  둘째 줄  10 12 3 9
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());   // T=1
+        StringBuilder sb = new StringBuilder();
+        while (T-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            long M = Long.parseLong(st.nextToken());      // M=10
+            long N = Long.parseLong(st.nextToken());      // N=12
+            long x = Long.parseLong(st.nextToken());      // x=3
+            long y = Long.parseLong(st.nextToken());      // y=9
+            long lcm = M / gcd(M, N) * N;     // 10/2*12 = 60
+            long ans = -1;
+            for (long k = x; k <= lcm; k += M) {
+                if ((k - y) % N == 0) { ans = k; break; }
+                // k=3:(3-9)%12≠0 / 13,23 ≠0 / k=33:(33-9)=24 → 24%12=0 → ans=33
+            }
+            sb.append(ans).append('\\n');
+        }
+        System.out.print(sb);   // ✅ 출력: 33
+    }
+    // [메서드 역할] LCM 계산용 최대공약수 (유클리드 호제법)
+    static long gcd(long a, long b) { return b == 0 ? a : gcd(b, a % b); }
+}`},
+
+// ───────────── 자료구조 ─────────────
+{id:10828,title:'스택',type:'자료구조',diff:'S4',
+problem:'나중에 넣은 것이 먼저 나오는(LIFO) 스택을 직접 구현하는 문제입니다. 명령은 5종류입니다.\n· push X : 정수 X를 맨 위에 넣기\n· pop : 맨 위 값을 빼서 출력 (비었으면 -1)\n· size : 들어 있는 정수 개수\n· empty : 비었으면 1, 아니면 0\n· top : 맨 위 값 출력 (비었으면 -1)\n\n입력: 1행에 명령 수 N, 이후 N개 줄에 명령이 하나씩 주어진다.\n출력: pop·size·empty·top 명령마다 결과를 한 줄씩',
+summary:'스택 자료구조 직접 구현하기',
+explain:'push, pop, size, empty, top 연산을 구현합니다. Java의 ArrayDeque를 스택처럼 사용하면 Stack 클래스보다 빠릅니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 명령 입력"]
+B --> C["명령 읽기"]
+C --> D{명령 종류}
+D -->|push X| E["스택에 X 추가"]
+D -->|pop| F{스택 비어있음?}
+D -->|top| G{스택 비어있음?}
+D -->|size| H["크기 출력"]
+D -->|empty| I["0 또는 1 출력"]
+F -->|Yes| J["-1 출력"]
+F -->|No| K["맨 위 제거 후 출력"]
+G -->|Yes| J
+G -->|No| L["맨 위 출력(제거X)"]
+E --> C
+J --> C
+K --> C
+L --> C
+H --> C
+I --> C
+C -->|완료| M([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 스택 명령(push/pop/top/size/empty)을 처리해 결과 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / push 1 / push 2 / top / pop / size
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        Deque<Integer> stack = new ArrayDeque<>();       // stack=[]
+        int n = Integer.parseInt(br.readLine().trim());  // n=5
+        while (n-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            String cmd = st.nextToken();
+            switch (cmd) {
+                case "push": stack.push(Integer.parseInt(st.nextToken())); break;
+                case "pop":  sb.append(stack.isEmpty() ? -1 : stack.pop()).append('\\n'); break;
+                case "top":  sb.append(stack.isEmpty() ? -1 : stack.peek()).append('\\n'); break;
+                case "size": sb.append(stack.size()).append('\\n'); break;
+                case "empty":sb.append(stack.isEmpty() ? 1 : 0).append('\\n'); break;
+            }
+            // push 1 → stack=[1]
+            // push 2 → stack=[2,1]   (2가 top)
+            // top    → 출력 2,  stack 그대로
+            // pop    → 출력 2,  stack=[1]
+            // size   → 출력 1
+        }
+        System.out.print(sb);   // ✅ 출력: 2 / 2 / 1
+    }
+}`},
+
+{id:10845,title:'큐',type:'자료구조',diff:'S4',
+problem:'먼저 넣은 것이 먼저 나오는(FIFO) 큐를 직접 구현하는 문제입니다. 명령은 6종류입니다.\n· push X : 정수 X를 뒤에 넣기\n· pop : 맨 앞 값을 빼서 출력 (비었으면 -1)\n· size : 들어 있는 정수 개수\n· empty : 비었으면 1, 아니면 0\n· front / back : 맨 앞 / 맨 뒤 값 출력 (비었으면 -1)\n\n입력: 1행에 명령 수 N, 이후 N개 줄에 명령이 하나씩 주어진다.\n출력: pop·size·empty·front·back 명령마다 결과를 한 줄씩',
+summary:'큐 자료구조 직접 구현하기',
+explain:'push, pop, size, empty, front, back 연산을 구현합니다. ArrayDeque를 사용하면 LinkedList보다 성능이 좋습니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 명령"]
+B --> C["명령 읽기"]
+C --> D{명령}
+D -->|push X| E["큐 뒤에 추가"]
+D -->|pop| F{비어있음?}
+D -->|front| G{비어있음?}
+D -->|back| H{비어있음?}
+D -->|size| I["크기 출력"]
+D -->|empty| J["0/1 출력"]
+F -->|Yes| K["-1"]
+F -->|No| L["앞 제거 후 출력"]
+G -->|Yes| K
+G -->|No| M["앞 원소 출력"]
+H -->|Yes| K
+H -->|No| N["뒤 원소 출력"]
+E --> C
+K --> C
+L --> C
+M --> C
+N --> C
+I --> C
+J --> C
+C -->|완료| O([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 큐 명령(push/pop/front/back/size/empty)을 처리해 결과 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / push 1 / push 2 / front / pop / back
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        Deque<Integer> q = new ArrayDeque<>();   // q=[] (앞 ← … ← 뒤)
+        int n = Integer.parseInt(br.readLine().trim());   // n=5
+        while (n-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            String cmd = st.nextToken();
+            switch (cmd) {
+                case "push":  q.addLast(Integer.parseInt(st.nextToken())); break;
+                case "pop":   sb.append(q.isEmpty() ? -1 : q.pollFirst()).append('\\n'); break;
+                case "front": sb.append(q.isEmpty() ? -1 : q.peekFirst()).append('\\n'); break;
+                case "back":  sb.append(q.isEmpty() ? -1 : q.peekLast()).append('\\n'); break;
+                case "size":  sb.append(q.size()).append('\\n'); break;
+                case "empty": sb.append(q.isEmpty() ? 1 : 0).append('\\n'); break;
+            }
+            // push 1 → q=[1]
+            // push 2 → q=[1,2]
+            // front  → 출력 1 (맨 앞)
+            // pop    → 출력 1, q=[2]
+            // back   → 출력 2 (맨 뒤)
+        }
+        System.out.print(sb);   // ✅ 출력: 1 / 1 / 2
+    }
+}`},
+
+{id:10866,title:'덱',type:'자료구조',diff:'S4',
+problem:'양쪽 끝에서 모두 넣고 뺄 수 있는 덱(deque)을 직접 구현하는 문제입니다. 명령은 8종류입니다.\n· push_front X / push_back X : 앞 / 뒤에 X 넣기\n· pop_front / pop_back : 앞 / 뒤 값 빼서 출력 (비었으면 -1)\n· front / back : 앞 / 뒤 값 출력 (비었으면 -1)\n· size : 개수, empty : 비었으면 1 아니면 0\n\n입력: 1행에 명령 수 N, 이후 N개 줄에 명령이 하나씩 주어진다.\n출력: 출력이 필요한 명령마다 결과를 한 줄씩',
+summary:'덱(Double-ended Queue) 자료구조 구현',
+explain:'앞뒤 모두 삽입/삭제가 가능한 덱을 구현합니다. Java의 ArrayDeque가 덱을 그대로 지원합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 명령"]
+B --> C{명령 종류}
+C -->|push_front X| D["앞에 추가"]
+C -->|push_back X| E["뒤에 추가"]
+C -->|pop_front| F{비어있음?}
+C -->|pop_back| G{비어있음?}
+C -->|front| H["앞 원소 출력"]
+C -->|back| I["뒤 원소 출력"]
+C -->|size/empty| J["크기/비었는지 출력"]
+F -->|No| K["앞 제거 출력"]
+F -->|Yes| L["-1"]
+G -->|No| M["뒤 제거 출력"]
+G -->|Yes| L
+D --> C
+E --> C
+K --> C
+L --> C
+M --> C
+H --> C
+I --> C
+J --> C
+C -->|완료| N([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 덱 명령(push/pop_front·back, front/back, size/empty) 처리
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력: 6 / push_front 1 / push_back 2 / front / back / pop_front / size
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        Deque<Integer> dq = new ArrayDeque<>();   // dq=[]
+        int n = Integer.parseInt(br.readLine().trim());   // n=6
+        while (n-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            String cmd = st.nextToken();
+            switch (cmd) {
+                case "push_front": dq.addFirst(Integer.parseInt(st.nextToken())); break;
+                case "push_back":  dq.addLast(Integer.parseInt(st.nextToken())); break;
+                case "pop_front":  sb.append(dq.isEmpty() ? -1 : dq.pollFirst()).append('\\n'); break;
+                case "pop_back":   sb.append(dq.isEmpty() ? -1 : dq.pollLast()).append('\\n'); break;
+                case "front":      sb.append(dq.isEmpty() ? -1 : dq.peekFirst()).append('\\n'); break;
+                case "back":       sb.append(dq.isEmpty() ? -1 : dq.peekLast()).append('\\n'); break;
+                case "size":       sb.append(dq.size()).append('\\n'); break;
+                case "empty":      sb.append(dq.isEmpty() ? 1 : 0).append('\\n'); break;
+            }
+            // push_front 1 → dq=[1]
+            // push_back 2  → dq=[1,2]
+            // front        → 출력 1
+            // back         → 출력 2
+            // pop_front    → 출력 1, dq=[2]
+            // size         → 출력 1
+        }
+        System.out.print(sb);   // ✅ 출력: 1 / 2 / 1 / 1
+    }
+}`},
+
+{id:11866,title:'요세푸스 문제 0',type:'자료구조',diff:'S4',
+problem:'1번부터 N번까지 N명이 원을 이루어 앉아 있습니다. 1번부터 세기 시작해 K번째 사람을 뽑아 제거하고, 다시 그 다음 사람부터 세어 K번째를 제거하는 과정을 반복합니다. 사람들이 제거되는 순서를 (N, K)-요세푸스 순열이라고 합니다.\n\n입력: 첫 줄에 N과 K가 공백으로 구분되어 주어진다. (1 ≤ K ≤ N ≤ 1000)\n출력: 요세푸스 순열을 <3, 6, 2, 7, ...> 형식으로 출력',
+summary:'원형으로 앉은 N명 중 K번째마다 제거하는 순서 출력',
+explain:'큐를 이용한 시뮬레이션입니다. K-1명을 앞에서 빼서 뒤에 추가하고, K번째를 제거합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N, K 입력"]
+B --> C["큐에 1~N 추가"]
+C --> D{큐 비어있음?}
+D -->|No| E["K-1명을 앞→뒤로 이동"]
+E --> F["K번째 원소 제거 출력"]
+F --> D
+D -->|Yes| G["결과 출력"]
+G --> H([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 요세푸스 순열(K번째마다 제거하는 순서) 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력: 7 3
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());  // n=7
+        int k = Integer.parseInt(st.nextToken());  // k=3
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 1; i <= n; i++) q.add(i);   // q=[1,2,3,4,5,6,7]
+        StringBuilder sb = new StringBuilder("<");
+        while (!q.isEmpty()) {
+            for (int i = 0; i < k - 1; i++) q.add(q.poll());  // 앞 2명을 뒤로 회전
+            sb.append(q.poll());                 // 3번째 사람 제거
+            if (!q.isEmpty()) sb.append(", ");
+            // 1,2 뒤로→3 제거 / 4,5 뒤로→6 제거 / 7,1 뒤로→2 제거 / …
+            // 제거 순서: 3 → 6 → 2 → 7 → 5 → 1 → 4
+        }
+        sb.append(">");
+        System.out.println(sb);   // ✅ 출력: <3, 6, 2, 7, 5, 1, 4>
+    }
+}`},
+
+{id:1874,title:'스택 수열',type:'자료구조',diff:'S2',
+problem:'1부터 N까지의 수를 오름차순으로 스택에 push할 수 있고, 원하는 시점에 pop할 수 있습니다. 이 push/pop 연산만으로 주어진 수열을 순서대로 만들 수 있는지 판단하는 문제입니다. 가능하면 사용한 연산을(push=+, pop=−) 차례로, 불가능하면 NO를 출력합니다.\n\n입력: 1행에 수열의 길이 N, 이후 N개 줄에 만들고자 하는 수열이 하나씩 주어진다.\n출력: 가능하면 + / − 기호를 한 줄에 하나씩, 불가능하면 NO',
+summary:'1~N을 순서대로 push/pop해서 목표 수열 만들기',
+explain:'1부터 N까지 순서대로 스택에 push합니다. 스택 top이 목표값과 같으면 pop합니다. 불가능한 경우 "NO"를 출력합니다.',
+flow:`flowchart TD
+A([시작]) --> B["수열 입력"]
+B --> C["cur=1, 스택 비어있음"]
+C --> D["목표값 target 읽기"]
+D --> E{"스택 top == target?"}
+E -->|Yes| F["pop, + 기록"]
+F --> G{다음 target?}
+G -->|있음| D
+E -->|No| H{cur <= N?}
+H -->|Yes| I["cur push, - 기록, cur++"]
+I --> E
+H -->|No| J["NO 출력"]
+F -->|스택 top != target| J
+G -->|없음| K["+/- 출력"]
+K --> L([종료])
+J --> L`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 1~N push/pop으로 목표 수열을 만들면 +/- 기록, 불가하면 NO
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  8 / 4 3 6 8 7 5 2 1
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());   // n=8
+        Deque<Integer> stack = new ArrayDeque<>();
+        StringBuilder sb = new StringBuilder();
+        int cur = 1;          // 다음에 push할 자연수
+        boolean ok = true;
+        for (int i = 0; i < n; i++) {
+            int target = Integer.parseInt(br.readLine().trim());
+            while (cur <= target) {
+                stack.push(cur++);
+                sb.append('+').append('\\n');
+            }
+            if (stack.peek() == target) {
+                stack.pop();
+                sb.append('-').append('\\n');
+            } else {
+                ok = false;
+                break;
+            }
+            // target=4: 1,2,3,4 push(++++) → 4 pop(-)
+            // target=3: 3 pop(-)
+            // target=6: 5,6 push(++) → 6 pop(-)
+            // target=8: 7,8 push(++) → 8 pop(-)
+            // target=7,5,2,1: 차례로 pop(- - - -)
+        }
+        System.out.print(ok ? sb : "NO\\n");   // ✅ 출력: ++++--++-++------
+    }
+}`},
+
+{id:1966,title:'프린터 큐',type:'자료구조',diff:'S3',
+problem:'프린터는 큐 맨 앞 문서를 꺼낸 뒤, 큐에 더 높은 중요도의 문서가 남아 있으면 꺼낸 문서를 맨 뒤로 보내고, 그렇지 않으면 바로 인쇄합니다. 내가 궁금한 문서가 몇 번째로 인쇄되는지 구하는 문제입니다.\n\n입력: 1행에 테스트케이스 수 T. 각 케이스는 두 줄로, 1행에 문서 수 N과 궁금한 문서의 현재 위치 M(0부터 시작), 2행에 N개 문서의 중요도가 주어진다.\n출력: 케이스마다 궁금한 문서가 인쇄되는 순번',
+summary:'우선순위가 높은 문서를 먼저 출력하는 프린터 시뮬레이션',
+explain:'큐에서 앞 문서보다 높은 우선순위가 뒤에 있으면 앞 문서를 뒤로 보냅니다. 목표 문서가 출력될 때 순서를 반환합니다.',
+flow:`flowchart TD
+A([시작]) --> B["큐에 문서 추가(우선순위+인덱스)"]
+B --> C["큐 앞 문서 꺼내기"]
+C --> D{"큐에 더 높은 우선순위 존재?"}
+D -->|Yes| E["문서를 큐 뒤로"]
+D -->|No| F["출력! count++"]
+F --> G{"출력된 게 목표 문서?"}
+G -->|Yes| H["count 출력"]
+G -->|No| C
+E --> C
+H --> I([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 목표 문서(M번째)가 몇 번째로 인쇄되는지 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  T=1 / N=4 M=2 / 중요도 1 2 3 4
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());   // T=1
+        StringBuilder sb = new StringBuilder();
+        while (T-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int n = Integer.parseInt(st.nextToken());   // n=4
+            int m = Integer.parseInt(st.nextToken());   // m=2 (목표 문서 위치)
+            int[] pri = new int[n];
+            st = new StringTokenizer(br.readLine());
+            for (int i = 0; i < n; i++) pri[i] = Integer.parseInt(st.nextToken());  // pri=[1,2,3,4]
+            Queue<int[]> q = new LinkedList<>();
+            for (int i = 0; i < n; i++) q.add(new int[]{pri[i], i});   // {중요도, 위치}
+            PriorityQueue<Integer> maxPQ = new PriorityQueue<>(Collections.reverseOrder());
+            for (int p : pri) maxPQ.add(p);   // 최상단=4
+            int cnt = 0;
+            while (!q.isEmpty()) {
+                int[] cur = q.poll();
+                if (cur[0] == maxPQ.peek()) {
+                    maxPQ.poll();
+                    cnt++;
+                    if (cur[1] == m) { sb.append(cnt).append('\\n'); break; }
+                } else {
+                    q.add(cur);
+                }
+                // 1,2,3 은 최고(4) 아님 → 뒤로 / 4 인쇄(cnt=1)
+                // 1,2 뒤로 → 3 인쇄(cnt=2), 위치2==m → 출력 2
+            }
+        }
+        System.out.print(sb);   // ✅ 출력: 2
+    }
+}`},
+
+// ───────────── 해시/맵 ─────────────
+{id:1620,title:'포켓몬 마스터',type:'해시/맵',diff:'S4',
+problem:'도감에 1번부터 N번까지 포켓몬 이름이 순서대로 등록되어 있습니다. 번호를 물으면 그 번호의 이름을, 이름을 물으면 그 이름의 번호를 답하는 양방향 조회 문제입니다.\n\n입력: 1행에 포켓몬 수 N과 질문 수 M. 이후 N개 줄에 1번부터 순서대로 이름이, 이어서 M개 줄에 질문(숫자 또는 이름)이 주어진다.\n출력: 각 질문마다 대응하는 이름 또는 번호를 한 줄씩',
+summary:'포켓몬 이름↔번호 양방향 조회',
+explain:'HashMap 두 개를 사용합니다. 이름→번호, 번호→이름 방향으로 각각 저장합니다. 입력이 숫자면 번호로, 문자면 이름으로 조회합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 포켓몬 이름 입력"]
+B --> C["nameToId, idToName Map에 저장"]
+C --> D["M개 쿼리 처리"]
+D --> E{숫자인가?}
+E -->|Yes| F["idToName 출력"]
+E -->|No| G["nameToId 출력"]
+F --> D
+G --> D
+D -->|완료| H([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 포켓몬 번호↔이름 양방향 조회 결과 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: 3 2 / Bulbasaur / Ivysaur / Venusaur / 질의: 2 , Bulbasaur
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());   // n=3
+        int m = Integer.parseInt(st.nextToken());   // m=2
+        Map<String,Integer> nameToId = new HashMap<>();
+        Map<Integer,String> idToName = new HashMap<>();
+        for (int i = 1; i <= n; i++) {
+            String name = br.readLine().trim();
+            nameToId.put(name, i);
+            idToName.put(i, name);
+            // 1=Bulbasaur, 2=Ivysaur, 3=Venusaur
+        }
+        StringBuilder sb = new StringBuilder();
+        while (m-- > 0) {
+            String q = br.readLine().trim();
+            if (Character.isDigit(q.charAt(0)))
+                sb.append(idToName.get(Integer.parseInt(q)));   // "2" → Ivysaur
+            else
+                sb.append(nameToId.get(q));                     // "Bulbasaur" → 1
+            sb.append('\\n');
+        }
+        System.out.print(sb);   // ✅ 출력: Ivysaur / 1
+    }
+}`},
+
+{id:1764,title:'듣보잡',type:'해시/맵',diff:'S4',
+problem:'듣도 못한 사람의 명단과 보도 못한 사람의 명단이 주어집니다. 두 명단에 모두 들어 있는 사람(=듣도 보도 못한 사람, 교집합)을 찾는 문제입니다.\n\n입력: 1행에 듣도 못한 사람 수 N과 보도 못한 사람 수 M. 이후 N개 줄에 듣도 못한 사람, 이어서 M개 줄에 보도 못한 사람의 이름이 주어진다.\n출력: 1행에 교집합 인원 수, 이후 해당 이름들을 사전순으로 한 줄씩',
+summary:'듣도 못한 사람과 보도 못한 사람의 교집합 구하기',
+explain:'첫 번째 목록을 HashSet에 저장하고, 두 번째 목록을 순회하며 HashSet에 있는지 확인합니다. 결과를 정렬하여 출력합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 이름을 HashSet에 저장"]
+B --> C["M개 이름 순회"]
+C --> D{HashSet에 있음?}
+D -->|Yes| E["결과 리스트에 추가"]
+D -->|No| F["넘어감"]
+E --> C
+F --> C
+C -->|완료| G["결과 정렬"]
+G --> H["개수와 목록 출력"]
+H --> I([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 듣도·보도 못한 사람의 교집합 개수와 사전순 명단 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: 3 4 / (듣)ohhenrie,charlie,baesangwook / (보)obama,baesangwook,ohhenrie,clinton
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());   // n=3
+        int m = Integer.parseInt(st.nextToken());   // m=4
+        Set<String> heard = new HashSet<>();
+        for (int i = 0; i < n; i++) heard.add(br.readLine().trim());
+        // heard = {ohhenrie, charlie, baesangwook}
+        List<String> result = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            String name = br.readLine().trim();
+            if (heard.contains(name)) result.add(name);
+            // obama✗ / baesangwook✓ / ohhenrie✓ / clinton✗
+        }
+        Collections.sort(result);   // 정렬 → [baesangwook, ohhenrie]
+        StringBuilder sb = new StringBuilder();
+        sb.append(result.size()).append('\\n');   // 2
+        for (String s : result) sb.append(s).append('\\n');
+        System.out.print(sb);   // ✅ 출력: 2 / baesangwook / ohhenrie
+    }
+}`},
+
+{id:17219,title:'비밀번호 찾기',type:'해시/맵',diff:'S4',
+problem:'사이트 주소와 그 비밀번호 쌍이 N개 저장되어 있습니다. 비밀번호를 외우지 못하는 김지민을 위해, 질문으로 주어진 사이트의 비밀번호를 찾아 주는 문제입니다.\n\n입력: 1행에 저장된 쌍의 수 N과 질문 수 M. 이후 N개 줄에 "사이트 비밀번호"가, 이어서 M개 줄에 비밀번호를 알고 싶은 사이트가 주어진다.\n출력: 각 질문 사이트의 비밀번호를 한 줄씩',
+summary:'사이트 이름으로 비밀번호 조회하기',
+explain:'HashMap<사이트, 비밀번호>에 저장하고 쿼리에 맞게 조회합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 사이트,비밀번호 Map에 저장"]
+B --> C["M개 쿼리 사이트 입력"]
+C --> D["map.get(사이트) 출력"]
+D --> C
+C -->|완료| E([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 사이트로 비밀번호 조회 결과 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: 2 2 / wikipedia hashing / namuwiki spammer / 질의: wikipedia, namuwiki
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());   // n=2
+        int m = Integer.parseInt(st.nextToken());   // m=2
+        Map<String,String> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            map.put(st.nextToken(), st.nextToken());
+            // {wikipedia:hashing, namuwiki:spammer}
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < m; i++)
+            sb.append(map.get(br.readLine().trim())).append('\\n');
+            // wikipedia→hashing, namuwiki→spammer
+        System.out.print(sb);   // ✅ 출력: hashing / spammer
+    }
+}`},
+
+// ───────────── 완전탐색 ─────────────
+{id:2798,title:'블랙잭',type:'완전탐색',diff:'B2',
+problem:'카드 N장에 각각 숫자가 적혀 있습니다. 이 중 서로 다른 3장을 골라 합이 한도 M을 넘지 않으면서 최대가 되도록 할 때, 그 합을 구하는 문제입니다(블랙잭처럼 M에 최대한 가깝게).\n\n입력: 1행에 카드 수 N과 한도 M, 2행에 N장의 카드 숫자가 공백으로 구분되어 주어진다.\n출력: 3장의 합 중 M을 넘지 않는 최댓값',
+summary:'카드 3장 합이 M 이하인 최댓값 구하기',
+explain:'3중 반복문으로 가능한 모든 카드 3장 조합을 확인합니다. 합이 M 이하이면서 최댓값을 갱신합니다. O(N³) 완전탐색입니다.',
+flow:`flowchart TD
+A([시작]) --> B["N장 카드, 한도 M 입력"]
+B --> C["i=0~N-3 반복"]
+C --> D["j=i+1~N-2 반복"]
+D --> E["k=j+1~N-1 반복"]
+E --> F["sum = card_i+card_j+card_k"]
+F --> G{sum <= M?}
+G -->|Yes| H{sum > ans?}
+H -->|Yes| I["ans = sum"]
+G -->|No| E
+I --> E
+E -->|완료| D
+D -->|완료| C
+C -->|완료| J["ans 출력"]
+J --> K([종료])`,
+code:`import java.util.Scanner;
+
+public class Main {
+    // [메서드 역할] 카드 3장 합이 M 이하인 최댓값을 출력
+    public static void main(String[] args) {
+        // ▼ 예시 입력:  5 21 / 5 6 7 8 9
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(), m = sc.nextInt();   // n=5, m=21
+        int[] c = new int[n];
+        for (int i = 0; i < n; i++) c[i] = sc.nextInt();   // c=[5,6,7,8,9]
+        int ans = 0;
+        for (int i = 0; i < n; i++)
+            for (int j = i+1; j < n; j++)
+                for (int k = j+1; k < n; k++) {
+                    int s = c[i]+c[j]+c[k];
+                    if (s <= m) ans = Math.max(ans, s);
+                    // 5+6+7=18<=21 → ans=18
+                    // 6+7+8=21<=21 → ans=21
+                    // 7+8+9=24>21  → 무시
+                }
+        System.out.println(ans);   // ✅ 출력: 21
+    }
+}`},
+
+{id:2231,title:'분해합',type:'완전탐색',diff:'B2',
+problem:'어떤 자연수 M과 M의 각 자리 숫자를 더한 값을 "M의 분해합"이라 합니다. 예를 들어 245의 분해합은 245+2+4+5 = 256입니다. 분해합이 N이 되는 가장 작은 M(이를 N의 생성자라 함)을 구하는 문제이며, 생성자가 없을 수도 있습니다.\n\n입력: 자연수 N (1 ≤ N ≤ 1,000,000)\n출력: N의 가장 작은 생성자. 없으면 0',
+summary:'N의 분해합이 되는 가장 작은 생성자 찾기',
+explain:'분해합(N) = M + M의 각 자릿수 합. M=1부터 N-1까지 순서대로 분해합을 계산해서 N과 같으면 출력합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N 입력"]
+B --> C["m = 1부터 N-1까지"]
+C --> D["sum = m + m의 각 자릿수 합"]
+D --> E{sum == N?}
+E -->|Yes| F["m 출력"]
+E -->|No| C
+C -->|못찾음| G["0 출력"]
+F --> H([종료])
+G --> H`,
+code:`import java.util.Scanner;
+
+public class Main {
+    // [메서드 역할] 분해합이 N이 되는 가장 작은 생성자 M을 출력 (없으면 0)
+    public static void main(String[] args) {
+        // ▼ 예시 입력: 216
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();   // n=216
+        for (int m = 1; m < n; m++) {
+            int sum = m;
+            int tmp = m;
+            while (tmp > 0) { sum += tmp % 10; tmp /= 10; }
+            if (sum == n) { System.out.println(m); return; }
+            // m=198: sum = 198 + (1+9+8) = 216 == n → 출력 198 후 종료
+        }
+        System.out.println(0);   // ✅ 출력: 198
+    }
+}`},
+
+{id:1018,title:'체스판 다시 칠하기',type:'완전탐색',diff:'S4',
+problem:'흰색(W)과 검은색(B)으로 칠해진 N×M 보드가 있습니다. 여기서 8×8 크기를 잘라내 올바른 체스판(인접한 칸은 항상 다른 색)으로 만들려고 합니다. 가능한 모든 8×8 위치를 따져, 다시 칠해야 하는 칸 수가 가장 적은 경우의 칸 수를 구합니다.\n\n입력: 1행에 N과 M (8 ≤ N, M ≤ 50), 이후 N개 줄에 각 칸의 색(W/B)이 주어진다.\n출력: 다시 칠해야 하는 칸 수의 최솟값',
+summary:'N×M 보드에서 8×8 체스판 만들 때 최소로 다시 칠해야 하는 칸 수',
+explain:'8×8 부분 보드의 왼쪽 위 시작점 (i,j)을 완전탐색합니다. 각 위치가 B시작 또는 W시작 체스판과 얼마나 다른지 세고, min을 구합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N, M, 보드 입력"]
+B --> C["모든 8x8 시작점(i,j) 탐색"]
+C --> D["W시작 패턴과 비교: 다른칸 수 = cntW"]
+D --> E["B시작 = 64 - cntW"]
+E --> F["ans = min(ans, min(cntW, 64-cntW))"]
+F --> C
+C -->|완료| G["ans 출력"]
+G --> H([종료])`,
+code:`import java.util.Scanner;
+
+public class Main {
+    // [메서드 역할] 8×8로 잘라 체스판으로 만들 때 다시 칠할 최소 칸 수 출력
+    public static void main(String[] args) {
+        // ▼ 예시 입력: N=8, M=8 보드  (8×8 이라 잘라낼 영역은 (0,0) 한 곳뿐)
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(), m = sc.nextInt();   // n=8, m=8
+        char[][] b = new char[n][m];
+        for (int i = 0; i < n; i++) b[i] = sc.next().toCharArray();
+        int ans = Integer.MAX_VALUE;
+        for (int r = 0; r <= n-8; r++) {        // n=m=8 → (r,c)=(0,0)만 검사
+            for (int c = 0; c <= m-8; c++) {
+                int cnt = 0;   // 이 영역이 'W로 시작하는 체스판'과 다른 칸 수
+                for (int i = 0; i < 8; i++)
+                    for (int j = 0; j < 8; j++) {
+                        char expected = ((i+j) % 2 == 0) ? 'W' : 'B';
+                        if (b[r+i][c+j] != expected) cnt++;   // 기대색과 다르면 +1
+                    }
+                ans = Math.min(ans, Math.min(cnt, 64-cnt));
+                // 예) cnt=32 → B시작 비용=64-32=32 → min=32, 전체 최솟값 갱신
+            }
+        }
+        System.out.println(ans);   // ✅ 출력: 다시 칠할 최소 칸 수
+    }
+}`},
+
+// ───────────── BFS/DFS ─────────────
+{id:1260,title:'DFS와 BFS',type:'BFS/DFS',diff:'S2',
+problem:'정점과 간선으로 이루어진 그래프를, 시작 정점 V에서 출발해 DFS(깊이 우선)와 BFS(너비 우선)로 각각 탐색하는 문제입니다. 다음에 갈 수 있는 정점이 여러 개라면 번호가 작은 정점부터 방문합니다.\n\n입력: 1행에 정점 수 N, 간선 수 M, 시작 정점 V. 이후 M개 줄에 간선으로 연결된 두 정점이 주어진다.\n출력: 1행에 DFS 방문 순서, 2행에 BFS 방문 순서',
+summary:'그래프를 DFS와 BFS로 탐색한 순서 출력',
+explain:'인접 리스트로 그래프를 저장합니다. 같은 깊이의 노드는 번호가 작은 것부터 방문하므로 정렬이 필요합니다. DFS는 재귀, BFS는 큐를 사용합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N,M,V 입력 + 그래프 구성"]
+B --> C["각 인접 리스트 정렬"]
+C --> D["DFS(V) 실행"]
+D --> E["방문 순서 출력"]
+E --> F["방문 배열 초기화"]
+F --> G["BFS(V) 실행 - 큐 사용"]
+G --> H["방문 순서 출력"]
+H --> I([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // 인접 리스트: 각 정점에 연결된 정점들을 리스트로 저장 (간선이 적을 때 메모리 효율적)
+    static List<Integer>[] graph;
+    static boolean[] visited;   // 같은 정점을 두 번 방문하지 않도록 체크
+    static StringBuilder sb = new StringBuilder();
+
+    // [메서드 역할] 그래프를 DFS·BFS로 탐색한 방문 순서를 각각 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  4 5 1 / 간선 1-2, 1-3, 1-4, 2-4, 3-4
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());   // n=4 (정점 수)
+        int m = Integer.parseInt(st.nextToken());   // m=5 (간선 수)
+        int v = Integer.parseInt(st.nextToken());   // v=1 (시작 정점)
+        graph = new ArrayList[n+1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b); graph[b].add(a);
+        }
+        for (int i = 1; i <= n; i++) Collections.sort(graph[i]);
+        // graph: 1→[2,3,4], 2→[1,4], 3→[1,4], 4→[1,2,3]
+        visited = new boolean[n+1];
+        dfs(v); sb.append('\\n');     // DFS 결과 한 줄
+        visited = new boolean[n+1];
+        bfs(v); sb.append('\\n');     // BFS 결과 한 줄
+        System.out.print(sb);   // ✅ 출력:  1 2 4 3  (DFS) /  1 2 3 4  (BFS)
+    }
+    // [메서드 역할] DFS: 한 방향으로 끝까지 파고든 뒤 되돌아옴(재귀)
+    static void dfs(int node) {
+        visited[node] = true;
+        sb.append(node).append(' ');
+        for (int next : graph[node])
+            if (!visited[next]) dfs(next);
+        // 1 → 2 → 4 → 3  (작은 번호 + 깊이 우선) = "1 2 4 3"
+    }
+    // [메서드 역할] BFS: 가까운 정점부터 큐(FIFO)로 차례 방문
+    static void bfs(int start) {
+        Queue<Integer> q = new LinkedList<>();
+        q.add(start); visited[start] = true;
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            sb.append(cur).append(' ');
+            for (int next : graph[cur])
+                if (!visited[next]) { visited[next]=true; q.add(next); }
+        }
+        // 1 → (2,3,4 동시 적재) → "1 2 3 4"
+    }
+}`},
+
+{id:2606,title:'바이러스',type:'BFS/DFS',diff:'S3',
+problem:'컴퓨터들이 네트워크로 연결되어 있습니다. 한 컴퓨터가 웜 바이러스에 걸리면 직접·간접으로 연결된 모든 컴퓨터로 바이러스가 퍼집니다. 1번 컴퓨터가 감염됐을 때, 바이러스에 함께 걸리는 컴퓨터 수를 구합니다(1번 자신은 제외).\n\n입력: 1행에 컴퓨터 수, 2행에 연결 쌍의 수, 이후 각 줄에 직접 연결된 두 컴퓨터 번호가 주어진다.\n출력: 1번을 통해 감염되는 컴퓨터의 수',
+summary:'1번 컴퓨터와 연결된 모든 컴퓨터 수 구하기',
+explain:'1번 노드에서 BFS/DFS로 탐색하여 연결된 노드 수를 세면 됩니다. 1번 자신은 제외합니다.',
+flow:`flowchart TD
+A([시작]) --> B["그래프 입력"]
+B --> C["1번에서 BFS 시작"]
+C --> D["방문 큐에서 꺼내기"]
+D --> E["인접 노드 확인"]
+E --> F{미방문?}
+F -->|Yes| G["방문 표시 + 큐 추가 + count++"]
+F -->|No| E
+G --> E
+E -->|완료| H{큐 비었음?}
+H -->|No| D
+H -->|Yes| I["count 출력"]
+I --> J([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 1번과 연결된(감염되는) 컴퓨터 수 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: 7 / 6 / 간선 1-2, 2-3, 1-5, 5-2, 5-6, 4-7
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());   // n=7 (컴퓨터 수)
+        int m = Integer.parseInt(br.readLine().trim());   // m=6 (연결 수)
+        List<Integer>[] graph = new ArrayList[n+1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b); graph[b].add(a);
+        }
+        // graph: 1→[2,5], 2→[1,3,5], 3→[2], 5→[1,2,6], 6→[5], 4→[7], 7→[4]
+        boolean[] visited = new boolean[n+1];
+        Queue<Integer> q = new LinkedList<>();
+        q.add(1); visited[1] = true;
+        int cnt = 0;   // 1번 제외, 새로 감염되는 컴퓨터 수
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            for (int next : graph[cur])
+                if (!visited[next]) { visited[next]=true; q.add(next); cnt++; }
+            // 1 → 2(cnt1),5(cnt2) → 3(cnt3) → 6(cnt4)
+        }
+        System.out.println(cnt);   // ✅ 출력: 4
+    }
+}`},
+
+{id:1012,title:'유기농 배추',type:'BFS/DFS',diff:'S2',
+problem:'밭에 배추가 심어진 위치들이 주어집니다. 상하좌우로 인접한 배추끼리는 한 무리를 이루며, 한 무리에는 배추흰지렁이 한 마리만 있으면 전체를 보호할 수 있습니다. 필요한 지렁이의 최소 수(= 배추 무리의 개수, 즉 연결 요소 수)를 구하는 문제입니다.\n\n입력: 1행에 테스트케이스 수 T. 각 케이스는 1행에 밭의 가로 M·세로 N·배추 수 K, 이후 K개 줄에 배추가 심어진 좌표가 주어진다.\n출력: 케이스마다 필요한 배추흰지렁이의 수',
+summary:'배추밭에서 배추흰지렁이가 몇 마리 필요한지 (연결 요소 수)',
+explain:'배추가 있는 칸을 BFS로 탐색하며 연결 영역 수를 셉니다. 상하좌우로 인접한 배추는 하나의 영역입니다.',
+flow:`flowchart TD
+A([시작]) --> B["배추밭 입력"]
+B --> C["모든 칸 순회"]
+C --> D{배추 있음 & 미방문?}
+D -->|Yes| E["BFS 시작 + count++"]
+E --> F["인접 배추 모두 방문 처리"]
+F --> C
+D -->|No| C
+C -->|완료| G["count 출력"]
+G --> H([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // 상하좌우 4방향 이동용 좌표 변화량 (dx[d], dy[d]를 짝지어 사용)
+    static int[] dx={0,0,1,-1}, dy={1,-1,0,0};
+    // [메서드 역할] 인접 배추 묶음(연결 요소) 수 = 필요한 지렁이 수 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: T=1 / M=3 N=3 K=3 / 배추 좌표 (0,0) (1,0) (2,2)
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());   // T=1
+        StringBuilder sb = new StringBuilder();
+        while (T-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int M=Integer.parseInt(st.nextToken()), N=Integer.parseInt(st.nextToken()), K=Integer.parseInt(st.nextToken());  // M=3,N=3,K=3
+            int[][] field = new int[N][M];
+            boolean[][] visited = new boolean[N][M];
+            for (int i = 0; i < K; i++) {
+                st = new StringTokenizer(br.readLine());
+                int x=Integer.parseInt(st.nextToken()), y=Integer.parseInt(st.nextToken());
+                field[y][x] = 1;   // (0,0),(1,0),(2,2) → field[0][0],field[0][1],field[2][2]=1
+            }
+            int cnt = 0;
+            for (int i = 0; i < N; i++) for (int j = 0; j < M; j++) {
+                if (field[i][j] == 1 && !visited[i][j]) {
+                    cnt++;   // 새 덩어리 발견
+                    Queue<int[]> q = new LinkedList<>();
+                    q.add(new int[]{i,j}); visited[i][j]=true;
+                    while (!q.isEmpty()) {
+                        int[] cur = q.poll();
+                        for (int d = 0; d < 4; d++) {
+                            int ni=cur[0]+dx[d], nj=cur[1]+dy[d];
+                            if (ni>=0&&ni<N&&nj>=0&&nj<M&&field[ni][nj]==1&&!visited[ni][nj]) {
+                                visited[ni][nj]=true; q.add(new int[]{ni,nj});
+                            }
+                        }
+                    }
+                }
+                // 덩어리1: (0,0)+(1,0) 인접 → cnt=1 / 덩어리2: (2,2) 단독 → cnt=2
+            }
+            sb.append(cnt).append('\\n');
+        }
+        System.out.print(sb);   // ✅ 출력: 2
+    }
+}`},
+
+{id:2667,title:'단지번호붙이기',type:'BFS/DFS',diff:'S1',
+problem:'0(집 없음)과 1(집)로 이루어진 N×N 지도가 있습니다. 상하좌우로 연결된 집들의 모임을 하나의 "단지"라고 합니다. 지도에 단지가 몇 개 있는지, 그리고 각 단지에 속한 집의 수를 구하는 문제입니다.\n\n입력: 1행에 지도 크기 N, 이후 N개 줄에 N자리 숫자(0/1)로 지도가 주어진다.\n출력: 1행에 총 단지 수, 이후 각 단지에 속한 집의 수를 오름차순으로 한 줄씩',
+summary:'아파트 단지 수와 각 단지의 가구 수를 출력',
+explain:'연결 요소마다 BFS를 수행하며 방문한 칸 수(가구 수)를 셉니다. 단지 수와 각 단지 크기를 정렬하여 출력합니다.',
+flow:`flowchart TD
+A([시작]) --> B["지도 입력"]
+B --> C["모든 칸 순회"]
+C --> D{집 있음 & 미방문?}
+D -->|Yes| E["BFS + 가구수 세기"]
+E --> F["결과 리스트에 추가"]
+F --> C
+D -->|No| C
+C -->|완료| G["단지 수 출력"]
+G --> H["크기 오름차순 정렬 후 출력"]
+H --> I([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    static int[] dx={0,0,1,-1}, dy={1,-1,0,0};   // 상하좌우 4방향
+    static int[][] map;            // 1이면 집이 있는 칸
+    static boolean[][] visited;
+    static int N;
+    // [메서드 역할] 단지 수와 각 단지 가구 수(오름차순)를 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: N=7, 7×7 지도(0/1) → 단지 3개, 크기 7·8·9
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine().trim());   // N=7
+        map = new int[N][N]; visited = new boolean[N][N];
+        for (int i = 0; i < N; i++) {
+            String line = br.readLine().trim();
+            for (int j = 0; j < N; j++) map[i][j] = line.charAt(j)-'0';  // "0110100"→[0,1,1,0,1,0,0]
+        }
+        List<Integer> sizes = new ArrayList<>();
+        for (int i = 0; i < N; i++) for (int j = 0; j < N; j++) {
+            if (map[i][j]==1 && !visited[i][j]) sizes.add(bfs(i,j));
+            // 미방문 집을 만날 때마다 그 단지 가구 수를 sizes에 추가 → sizes=[8,9,7]
+        }
+        Collections.sort(sizes);   // 오름차순 정렬 → [7, 8, 9]
+        StringBuilder sb = new StringBuilder();
+        sb.append(sizes.size()).append('\\n');   // 단지 수 = 3
+        for (int s : sizes) sb.append(s).append('\\n');
+        System.out.print(sb);   // ✅ 출력: 3 / 7 / 8 / 9
+    }
+    // [메서드 역할] (r,c)에서 연결된 집을 모두 방문하며 가구 수 반환
+    static int bfs(int r, int c) {
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{r,c}); visited[r][c]=true;
+        int cnt = 1;   // 시작 칸 자신 1채
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            for (int d = 0; d < 4; d++) {
+                int ni=cur[0]+dx[d], nj=cur[1]+dy[d];
+                if (ni>=0&&ni<N&&nj>=0&&nj<N&&map[ni][nj]==1&&!visited[ni][nj]) {
+                    visited[ni][nj]=true; q.add(new int[]{ni,nj}); cnt++;   // 인접 집마다 +1
+                }
+            }
+        }
+        return cnt;   // 이 단지의 총 가구 수
+    }
+}`},
+
+{id:1697,title:'숨바꼭질',type:'BFS/DFS',diff:'S1',
+problem:'수빈이는 수직선 위 점 N에, 동생은 점 K에 있습니다. 수빈이는 1초마다 현재 위치 X에서 X−1, X+1, 또는 2X 중 한 곳으로 순간이동할 수 있습니다. 동생이 있는 점 K에 도착하는 가장 빠른 시간을 구하는 문제입니다.\n\n입력: 수빈이의 위치 N과 동생의 위치 K가 공백으로 구분되어 주어진다. (0 ≤ N, K ≤ 100,000)\n출력: 동생을 찾는 데 걸리는 최소 시간(초)',
+summary:'수직선에서 N→K로 최단 시간 이동 (±1, ×2)',
+explain:'BFS 최단경로 문제입니다. 현재 위치에서 x-1, x+1, x*2 세 방향을 탐색합니다. 각 위치를 처음 방문할 때의 시간이 최솟값입니다.',
+flow:`flowchart TD
+A([시작]) --> B["N, K 입력"]
+B --> C{N == K?}
+C -->|Yes| D["0 출력"]
+C -->|No| E["BFS 시작 - 위치N, 시간0"]
+E --> F["현재 위치 x 꺼내기"]
+F --> G["x-1, x+1, x*2 탐색"]
+G --> H{미방문 & 범위 내?}
+H -->|Yes| I["방문 표시 + 큐 추가"]
+I --> J{== K?}
+J -->|Yes| K["시간 출력"]
+J -->|No| F
+H -->|No| G
+G -->|완료| F
+D --> L([종료])
+K --> L`,
+code:`import java.util.*;
+
+public class Main {
+    // [메서드 역할] N에서 K까지 가는 최소 시간(초) 출력 (BFS 최단경로)
+    public static void main(String[] args) {
+        // ▼ 예시 입력: 5 17
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(), k = sc.nextInt();   // n=5, k=17
+        int MAX = 100001;
+        int[] dist = new int[MAX];                 // dist[x] = n→x 최소 시간
+        Arrays.fill(dist, -1);                     // -1 = 미방문
+        Queue<Integer> q = new LinkedList<>();
+        q.add(n); dist[n] = 0;
+        while (!q.isEmpty()) {
+            int x = q.poll();
+            if (x == k) { System.out.println(dist[x]); return; }
+            for (int nx : new int[]{x-1, x+1, x*2}) {
+                if (nx >= 0 && nx < MAX && dist[nx] == -1) {
+                    dist[nx] = dist[x]+1; q.add(nx);
+                }
+            }
+            // 5 → 4,6,10 (1초) → 3,7,8,9,11,12,20 …(2초) → … → 17 도달(4초)
+            // 최단 경로 예: 5 →10 →9 →18 →17  (×2, -1, ×2, -1)
+        }
+        // ✅ 출력: 4
+    }
+}`},
+
+{id:7576,title:'토마토 (2D)',type:'BFS/DFS',diff:'G5',
+problem:'창고에 격자 모양으로 토마토가 담겨 있습니다. 익은 토마토(1)는 하루가 지나면 상하좌우로 인접한 안 익은 토마토(0)를 익게 만듭니다. 토마토가 모두 익을 때까지 걸리는 최소 일수를 구하는 문제입니다. (빈 칸은 -1)\n\n입력: 1행에 상자의 가로 M·세로 N, 이후 N개 줄에 상자 상태가 주어진다. (1=익음, 0=안 익음, -1=빈 칸)\n출력: 모두 익는 최소 일수. 이미 다 익어 있으면 0, 끝내 다 익을 수 없으면 -1',
+summary:'익은 토마토가 인접 토마토를 익히는 최소 날짜 (멀티소스 BFS)',
+explain:'처음에 모든 익은 토마토(1)를 큐에 넣고 BFS를 시작합니다. 상하좌우로 0인 칸을 익히면서 날짜를 기록합니다. 마지막에 0이 남아있으면 -1입니다.',
+flow:`flowchart TD
+A([시작]) --> B["토마토 상자 입력"]
+B --> C["모든 익은 토마토(1)를 큐에 추가"]
+C --> D["BFS 시작"]
+D --> E["큐에서 위치 꺼내기"]
+E --> F["상하좌우 확인"]
+F --> G{0인 칸?}
+G -->|Yes| H["1로 변경 + 날짜+1 + 큐 추가"]
+G -->|No| F
+H --> F
+F -->|완료| E
+E -->|큐 비었음| I{0 남아있음?}
+I -->|Yes| J["-1 출력"]
+I -->|No| K["최대 날짜 출력"]
+J --> L([종료])
+K --> L`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 모든 토마토가 익는 최소 일수 출력 (멀티소스 BFS, 불가 -1)
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: M=6 N=4, 우하단 한 칸만 익음(1) 나머지 0 → 모두 익는 데 8일
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int M=Integer.parseInt(st.nextToken()), N=Integer.parseInt(st.nextToken());  // M=6, N=4
+        int[][] box = new int[N][M];     // 1=익음, 0=안 익음, -1=토마토 없음
+        int[][] dist = new int[N][M];    // dist[i][j] = 그 칸이 익기까지 걸린 날짜
+        // 멀티소스 BFS: 처음부터 익은 토마토(1)들을 모두 큐에 넣고 동시에 퍼뜨린다
+        Queue<int[]> q = new LinkedList<>();
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < M; j++) {
+                box[i][j] = Integer.parseInt(st.nextToken());
+                if (box[i][j] == 1) q.add(new int[]{i,j});   // 익은 토마토는 BFS 시작점
+                else dist[i][j] = -1;   // 안 익었거나(0) 빈 칸(-1)은 아직 날짜 미정 표시
+            }
+        }
+        int[] dx={0,0,1,-1}, dy={1,-1,0,0};   // 상하좌우
+        int ans = 0;   // 모든 토마토가 익는 데 걸린 최대 날짜
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            for (int d = 0; d < 4; d++) {
+                int ni=cur[0]+dx[d], nj=cur[1]+dy[d];
+                if (ni>=0&&ni<N&&nj>=0&&nj<M&&box[ni][nj]==0) {   // 인접한 '안 익은' 토마토만
+                    box[ni][nj]=1;                          // 익힘
+                    dist[ni][nj]=dist[cur[0]][cur[1]]+1;    // 현재 칸보다 하루 뒤에 익음
+                    ans=Math.max(ans, dist[ni][nj]);        // 가장 늦게 익는 날짜 갱신
+                    q.add(new int[]{ni,nj});
+                }
+            }
+        }
+        // BFS 종료 후에도 0이 남으면 고립된 토마토 → -1
+        for (int[] row : box) for (int v : row) if (v==0) { System.out.println(-1); return; }
+        System.out.println(ans);
+        // 익은 토마토에서 한 칸씩 퍼져 가장 먼 칸까지 거리(=날짜) 누적 → ✅ 출력: 8
+    }
+}`},
+
+{id:7569,title:'토마토 (3D)',type:'BFS/DFS',diff:'G5',
+problem:'토마토(2D) 문제의 3차원 버전입니다. 상자가 여러 층으로 쌓여 있고, 익은 토마토는 하루가 지나면 상하좌우뿐 아니라 위·아래 층까지 6방향으로 인접한 토마토를 익게 만듭니다. 모두 익는 최소 일수를 구합니다.\n\n입력: 1행에 가로 M·세로 N·높이 H, 이후 H개 층의 상자 상태가 차례로 주어진다. (1=익음, 0=안 익음, -1=빈 칸)\n출력: 모두 익는 최소 일수. 이미 다 익어 있으면 0, 끝내 다 익을 수 없으면 -1',
+summary:'3차원 상자에서 토마토 익히기 — 위아래 방향 추가',
+explain:'7576 토마토 2D와 동일한 멀티소스 BFS이지만 위아래(H축) 방향이 추가되어 6방향을 탐색합니다.',
+flow:`flowchart TD
+A([시작]) --> B["3D 상자 입력 (M,N,H)"]
+B --> C["익은 토마토 모두 큐에 추가"]
+C --> D["BFS - 6방향 탐색"]
+D --> E["상하좌우앞뒤 인접 확인"]
+E --> F{0인 칸?}
+F -->|Yes| G["익히고 날짜 기록"]
+F -->|No| E
+G --> D
+D -->|완료| H{0 남아있음?}
+H -->|Yes| I["-1"]
+H -->|No| J["최대 날짜 출력"]
+I --> K([종료])
+J --> K`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 3차원 상자에서 모두 익는 최소 일수 출력 (6방향 멀티소스 BFS)
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: M=4 N=3 H=2, 익은 토마토 1개 → 6방향으로 퍼져 모두 익는 일수
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int M=Integer.parseInt(st.nextToken()), N=Integer.parseInt(st.nextToken()), H=Integer.parseInt(st.nextToken());  // M=4, N=3, H=2
+        int[][][] box = new int[H][N][M];     // 2D 토마토에 층(H) 차원만 추가된 3차원 배열
+        int[][][] dist = new int[H][N][M];
+        // 2D 풀이와 동일한 멀티소스 BFS — 익은 토마토를 모두 큐에 넣고 시작
+        Queue<int[]> q = new LinkedList<>();
+        for (int h=0;h<H;h++) for (int i=0;i<N;i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j=0;j<M;j++) {
+                box[h][i][j]=Integer.parseInt(st.nextToken());
+                if(box[h][i][j]==1) q.add(new int[]{h,i,j});   // 익은 토마토 = 시작점
+                else dist[h][i][j]=-1;
+            }
+        }
+        // 2D의 상하좌우 4방향에 위층/아래층(±h)이 더해져 6방향
+        int[] dh={0,0,0,0,1,-1}, di={0,0,1,-1,0,0}, dj={1,-1,0,0,0,0};
+        int ans=0;   // 모두 익는 데 걸린 최대 날짜
+        while (!q.isEmpty()) {
+            int[] cur=q.poll();
+            for(int d=0;d<6;d++){
+                int nh=cur[0]+dh[d],ni=cur[1]+di[d],nj=cur[2]+dj[d];
+                if(nh>=0&&nh<H&&ni>=0&&ni<N&&nj>=0&&nj<M&&box[nh][ni][nj]==0){   // 6방향 중 안 익은 칸
+                    box[nh][ni][nj]=1;
+                    dist[nh][ni][nj]=dist[cur[0]][cur[1]][cur[2]]+1;   // 하루 뒤에 익음
+                    ans=Math.max(ans,dist[nh][ni][nj]);
+                    q.add(new int[]{nh,ni,nj});
+                }
+            }
+        }
+        // 끝나도 안 익은(0) 칸이 있으면 모두 익힐 수 없음 → -1
+        for(int[][]layer:box)for(int[]row:layer)for(int v:row)if(v==0){System.out.println(-1);return;}
+        System.out.println(ans);
+        // 2D와 동일하되 위/아래 층까지 6방향으로 퍼짐 → ✅ 출력: 모두 익는 최대 날짜
+    }
+}`},
+
+{id:10026,title:'적록색약',type:'BFS/DFS',diff:'G5',
+problem:'R(빨강)·G(초록)·B(파랑)으로 칠해진 N×N 그림이 있습니다. 같은 색끼리 상하좌우로 연결된 칸들을 하나의 구역이라 합니다. 일반인이 봤을 때의 구역 수와, 빨강·초록을 구분하지 못하는 적록색약(R과 G를 같은 색으로 봄)이 봤을 때의 구역 수를 각각 구하는 문제입니다.\n\n입력: 1행에 그림 크기 N, 이후 N개 줄에 각 칸의 색(R/G/B)이 주어진다.\n출력: 일반인이 보는 구역 수와 적록색약이 보는 구역 수를 공백으로 구분해 출력',
+summary:'일반인과 적록색약자가 보는 구역 수 각각 구하기',
+explain:'정상 시각: R,G,B를 각각 다른 색으로 BFS. 색약 시각: R과 G를 같은 색으로 취급하여 BFS. 두 경우 모두 연결 요소 수를 셉니다.',
+flow:`flowchart TD
+A([시작]) --> B["색상 그리드 입력"]
+B --> C["일반 BFS: R/G/B 구분"]
+C --> D["연결 요소 수 = normal"]
+D --> E["색약 BFS: G를 R로 변환"]
+E --> F["연결 요소 수 = weak"]
+F --> G["normal weak 출력"]
+G --> H([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    static int N;
+    static int[] dx={0,0,1,-1}, dy={1,-1,0,0};   // 상하좌우
+    // [메서드 역할] 일반인·적록색약이 보는 구역 수를 각각 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: N=5, RRRBB/GGBBB/BBBRR/BBRRR/RRRRR → 일반 4구역, 색약 3구역
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine().trim());   // N=5
+        char[][] grid = new char[N][N];
+        for (int i = 0; i < N; i++) grid[i] = br.readLine().toCharArray();
+        System.out.println(count(grid, false) + " " + count(grid, true));
+        // 일반(R/G/B 구분)=4, 색약(R=G 취급)=3 → ✅ 출력: 4 3
+    }
+    // 인접한 같은 색끼리 묶은 구역(연결 요소) 수를 BFS로 센다
+    static int count(char[][] grid, boolean weak) {
+        char[][] g = new char[N][N];
+        for (int i=0;i<N;i++) for (int j=0;j<N;j++)
+            // 색약 모드면 G를 R로 바꿔 둘을 같은 색으로 취급 → 코드 한 벌로 두 경우 처리
+            g[i][j] = (weak && grid[i][j]=='G') ? 'R' : grid[i][j];
+        boolean[][] visited = new boolean[N][N];
+        int cnt = 0;
+        for (int i=0;i<N;i++) for (int j=0;j<N;j++) {
+            if (!visited[i][j]) {   // 아직 안 묶인 칸 = 새로운 구역 시작
+                cnt++;
+                Queue<int[]> q = new LinkedList<>();
+                q.add(new int[]{i,j}); visited[i][j]=true;
+                while (!q.isEmpty()) {
+                    int[] cur=q.poll();
+                    for (int d=0;d<4;d++) {
+                        int ni=cur[0]+dx[d], nj=cur[1]+dy[d];
+                        // 범위 안 + 미방문 + '같은 색'일 때만 같은 구역으로 묶음
+                        if(ni>=0&&ni<N&&nj>=0&&nj<N&&!visited[ni][nj]&&g[ni][nj]==g[cur[0]][cur[1]]){
+                            visited[ni][nj]=true; q.add(new int[]{ni,nj});
+                        }
+                    }
+                }
+            }
+        }
+        return cnt;
+    }
+}`},
+
+{id:11724,title:'연결 요소의 개수',type:'BFS/DFS',diff:'S2',
+problem:'방향이 없는 그래프가 주어질 때, 서로 연결된 정점들의 묶음(연결 요소)이 몇 개인지 구하는 문제입니다. 어떤 정점에서 간선을 따라 도달할 수 있는 정점들끼리 하나의 연결 요소를 이룹니다.\n\n입력: 1행에 정점 수 N과 간선 수 M, 이후 M개 줄에 간선으로 연결된 두 정점이 주어진다.\n출력: 그래프의 연결 요소 개수',
+summary:'방향 없는 그래프의 연결 요소 개수 구하기',
+explain:'모든 노드를 순회하면서 방문하지 않은 노드에서 BFS를 시작합니다. BFS 시작 횟수가 연결 요소 수입니다.',
+flow:`flowchart TD
+A([시작]) --> B["그래프 입력"]
+B --> C["모든 노드 순회"]
+C --> D{미방문 노드?}
+D -->|Yes| E["BFS 시작 + cnt++"]
+E --> F["연결된 모든 노드 방문"]
+F --> C
+D -->|No| C
+C -->|완료| G["cnt 출력"]
+G --> H([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 방향 없는 그래프의 연결 요소 개수 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: N=6 M=5 / 간선 1-2, 2-5, 5-1, 3-4, 4-6
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n=Integer.parseInt(st.nextToken()), m=Integer.parseInt(st.nextToken());  // n=6, m=5
+        List<Integer>[] graph = new ArrayList[n+1];
+        for (int i=1;i<=n;i++) graph[i]=new ArrayList<>();
+        for (int i=0;i<m;i++) {
+            st = new StringTokenizer(br.readLine());
+            int a=Integer.parseInt(st.nextToken()), b=Integer.parseInt(st.nextToken());
+            graph[a].add(b); graph[b].add(a);
+        }
+        // graph: 1↔2, 2↔5, 5↔1, 3↔4, 4↔6  →  덩어리 {1,2,5} 와 {3,4,6}
+        boolean[] visited = new boolean[n+1];
+        int cnt = 0;
+        for (int i=1;i<=n;i++) {
+            if (!visited[i]) {
+                cnt++;   // 미방문 정점에서 새 덩어리 시작
+                Queue<Integer> q = new LinkedList<>();
+                q.add(i); visited[i]=true;
+                while (!q.isEmpty()) {
+                    int cur=q.poll();
+                    for (int next:graph[cur]) if (!visited[next]) { visited[next]=true; q.add(next); }
+                }
+            }
+            // i=1: {1,2,5} 방문 → cnt=1 / i=3: {3,4,6} 방문 → cnt=2
+        }
+        System.out.println(cnt);   // ✅ 출력: 2
+    }
+}`},
+
+// ───────────── 우선순위 큐 ─────────────
+{id:1927,title:'최소 힙',type:'우선순위큐',diff:'S2',
+problem:'자연수를 저장하는 최소 힙을 이용해 다음 연산을 처리하는 문제입니다. 입력으로 자연수 x(>0)가 주어지면 x를 배열에 넣고, x가 0이면 배열에서 가장 작은 값을 빼서 출력합니다(배열이 비어 있으면 0을 출력).\n\n입력: 1행에 연산 수 N, 이후 N개 줄에 정수 x가 하나씩 주어진다. (0 ≤ x)\n출력: x가 0일 때마다 빠져나온 가장 작은 값을 한 줄씩 (비어 있으면 0)',
+summary:'최솟값을 빠르게 꺼내는 자료구조 구현',
+explain:'Java의 PriorityQueue는 기본이 최소 힙입니다. 0이 입력되면 최솟값을 꺼내어 출력하고, 양수면 삽입합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 연산 입력"]
+B --> C{x == 0?}
+C -->|Yes| D{힙 비어있음?}
+D -->|Yes| E["0 출력"]
+D -->|No| F["최솟값 꺼내어 출력"]
+C -->|No| G["x를 힙에 삽입"]
+E --> B
+F --> B
+G --> B
+B -->|완료| H([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 최소 힙: 0이면 최솟값 출력·제거, 그 외 값은 삽입
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / 1 / 3 / 0 / 0 / 0
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());   // n=5
+        PriorityQueue<Integer> pq = new PriorityQueue<>();   // 기본=최소 힙
+        StringBuilder sb = new StringBuilder();
+        while (n-- > 0) {
+            int x = Integer.parseInt(br.readLine().trim());
+            if (x == 0) sb.append(pq.isEmpty() ? 0 : pq.poll()).append('\\n');
+            else pq.add(x);
+            // 1 → pq=[1]
+            // 3 → pq=[1,3]
+            // 0 → 최솟값 1 출력, pq=[3]
+            // 0 → 최솟값 3 출력, pq=[]
+            // 0 → 비었음 → 0 출력
+        }
+        System.out.print(sb);   // ✅ 출력: 1 / 3 / 0
+    }
+}`},
+
+{id:11279,title:'최대 힙',type:'우선순위큐',diff:'S2',
+problem:'자연수를 저장하는 최대 힙을 이용해 다음 연산을 처리하는 문제입니다. 입력으로 자연수 x(>0)가 주어지면 x를 배열에 넣고, x가 0이면 배열에서 가장 큰 값을 빼서 출력합니다(배열이 비어 있으면 0을 출력).\n\n입력: 1행에 연산 수 N, 이후 N개 줄에 정수 x가 하나씩 주어진다. (0 ≤ x)\n출력: x가 0일 때마다 빠져나온 가장 큰 값을 한 줄씩 (비어 있으면 0)',
+summary:'최댓값을 빠르게 꺼내는 자료구조 구현',
+explain:'PriorityQueue에 Collections.reverseOrder()를 전달하면 최대 힙이 됩니다. 나머지 로직은 최소 힙과 동일합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 연산"]
+B --> C{x == 0?}
+C -->|Yes| D{힙 비어있음?}
+D -->|Yes| E["0 출력"]
+D -->|No| F["최댓값 꺼내어 출력"]
+C -->|No| G["x를 최대힙에 삽입"]
+E --> B
+F --> B
+G --> B
+B -->|완료| H([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 최대 힙: 0이면 최댓값 출력·제거, 그 외 값은 삽입
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / 1 / 3 / 0 / 0 / 0
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());   // n=5
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());   // 최대 힙
+        StringBuilder sb = new StringBuilder();
+        while (n-- > 0) {
+            int x = Integer.parseInt(br.readLine().trim());
+            if (x == 0) sb.append(pq.isEmpty() ? 0 : pq.poll()).append('\\n');
+            else pq.add(x);
+            // 1 → pq=[1]
+            // 3 → pq=[3,1]   (3이 top)
+            // 0 → 최댓값 3 출력, pq=[1]
+            // 0 → 최댓값 1 출력, pq=[]
+            // 0 → 비었음 → 0 출력
+        }
+        System.out.print(sb);   // ✅ 출력: 3 / 1 / 0
+    }
+}`},
+
+{id:11286,title:'절댓값 힙',type:'우선순위큐',diff:'S1',
+problem:'정수를 저장하는 "절댓값 힙"으로 다음 연산을 처리하는 문제입니다. 입력 x가 0이 아니면 x를 배열에 넣고, x가 0이면 배열에서 절댓값이 가장 작은 값을 빼서 출력합니다. 절댓값이 같은 값이 둘 있으면 더 작은(음수) 값을 먼저 뺍니다. 배열이 비어 있으면 0을 출력합니다.\n\n입력: 1행에 연산 수 N, 이후 N개 줄에 정수 x가 하나씩 주어진다. (x의 절댓값은 2^31 미만, 0은 빼기 연산)\n출력: x가 0일 때마다 빠져나온 값을 한 줄씩 (비어 있으면 0)',
+summary:'절댓값 기준 최솟값을 꺼내는 힙 (같으면 음수 우선)',
+explain:'커스텀 Comparator를 사용합니다. 절댓값이 같으면 음수를 먼저 꺼냅니다. (a,b) → |a|≠|b|이면 |a|-|b|, 같으면 a-b로 정렬합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 연산"]
+B --> C{x == 0?}
+C -->|Yes| D{힙 비어있음?}
+D -->|Yes| E["0 출력"]
+D -->|No| F["절댓값 최솟값 꺼내어 출력"]
+C -->|No| G["x 삽입"]
+E --> B
+F --> B
+G --> B
+B -->|완료| H([종료])
+style F fill:#1a3a2a`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 절댓값 최솟값(같으면 음수 먼저) 출력·제거, 그 외 값은 삽입
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / 1 / -1 / 0 / 0 / 0
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());   // n=5
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {
+            int absA = Math.abs(a), absB = Math.abs(b);
+            return absA != absB ? absA - absB : a - b;  // 절댓값 같으면 작은(음수) 값 먼저
+        });
+        StringBuilder sb = new StringBuilder();
+        while (n-- > 0) {
+            int x = Integer.parseInt(br.readLine().trim());
+            if (x == 0) sb.append(pq.isEmpty() ? 0 : pq.poll()).append('\\n');
+            else pq.add(x);
+            // 1  → pq=[1]
+            // -1 → pq=[-1, 1]   (|−1|=|1| 동률 → 음수 -1이 먼저)
+            // 0  → -1 출력, pq=[1]
+            // 0  → 1 출력,  pq=[]
+            // 0  → 비었음 → 0 출력
+        }
+        System.out.print(sb);   // ✅ 출력: -1 / 1 / 0
+    }
+}`},
+
+{id:7662,title:'이중 우선순위 큐',type:'우선순위큐',diff:'G4',
+problem:'양쪽 끝(최댓값·최솟값)을 모두 빠르게 삭제할 수 있는 이중 우선순위 큐를 다루는 문제입니다. 명령 "I n"은 정수 n을 삽입, "D 1"은 현재 최댓값을 삭제, "D -1"은 현재 최솟값을 삭제합니다. 큐가 비어 있을 때의 D 명령은 무시합니다.\n\n입력: 1행에 테스트케이스 수 T. 각 케이스는 1행에 명령 수 k, 이후 k개 줄에 명령(I n 또는 D ±1)이 주어진다.\n출력: 케이스마다, 모든 명령 후 큐가 비어 있으면 EMPTY, 아니면 "최댓값 최솟값"을 공백으로 구분해 출력',
+summary:'최솟값과 최댓값을 모두 꺼낼 수 있는 큐',
+explain:'TreeMap<값, 개수>를 사용합니다. firstKey()로 최솟값, lastKey()로 최댓값을 O(logN)에 가져올 수 있습니다. 값이 중복될 수 있으므로 개수를 관리합니다.',
+flow:`flowchart TD
+A([시작]) --> B["T번 반복"]
+B --> C["TreeMap 초기화"]
+C --> D["명령 입력"]
+D --> E{I or D?}
+E -->|I n| F["map에 n 추가 (count++)"]
+E -->|D 1| G{비어있음?}
+E -->|D -1| H{비어있음?}
+G -->|No| I["최댓값 제거"]
+H -->|No| J["최솟값 제거"]
+G -->|Yes| D
+H -->|Yes| D
+F --> D
+I --> D
+J --> D
+D -->|완료| K{비어있음?}
+K -->|Yes| L["EMPTY 출력"]
+K -->|No| M["최솟값 최댓값 출력"]
+L --> B
+M --> B
+B -->|완료| N([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] D 1=최댓값/D -1=최솟값 삭제 후, 비면 EMPTY 아니면 "최댓값 최솟값"
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: T=1 / k=7 / I 16, I -5643, D -1, D 1, D 1, I 123, D -1
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());   // T=1
+        StringBuilder sb = new StringBuilder();
+        while (T-- > 0) {
+            int k = Integer.parseInt(br.readLine().trim());   // k=7
+            TreeMap<Integer,Integer> map = new TreeMap<>();   // <값, 개수>
+            while (k-- > 0) {
+                StringTokenizer st = new StringTokenizer(br.readLine());
+                char op = st.nextToken().charAt(0);
+                int n = Integer.parseInt(st.nextToken());
+                if (op == 'I') {
+                    map.merge(n, 1, Integer::sum);
+                } else {
+                    if (map.isEmpty()) continue;
+                    int key = (n == 1) ? map.lastKey() : map.firstKey();
+                    if (map.get(key) == 1) map.remove(key);
+                    else map.put(key, map.get(key)-1);
+                }
+                // I 16,-5643 → {-5643,16} / D -1 → 최솟값 -5643 삭제 → {16}
+                // D 1 → 최댓값 16 삭제 → {} / D 1 → 무시 / I 123 → {123} / D -1 → {}
+            }
+            if (map.isEmpty()) sb.append("EMPTY\\n");
+            else sb.append(map.lastKey()).append(' ').append(map.firstKey()).append('\\n');
+        }
+        System.out.print(sb);   // ✅ 출력: EMPTY
+    }
+}`},
+
+// ───────────── 구현/시뮬 ─────────────
+{id:2108,title:'통계학',type:'구현/시뮬',diff:'S3',
+problem:'N개의 정수에 대해 네 가지 통계값을 구하는 문제입니다.\n· 산술평균 : 전체 합을 N으로 나눈 값(소수 첫째 자리에서 반올림)\n· 중앙값 : 크기순으로 정렬했을 때 정확히 가운데 위치한 값\n· 최빈값 : 가장 많이 나타난 값(여러 개면 그중 두 번째로 작은 값)\n· 범위 : 최댓값 − 최솟값\n\n입력: 1행에 정수의 개수 N(홀수), 이후 N개 줄에 정수가 하나씩 주어진다.\n출력: 산술평균·중앙값·최빈값·범위를 차례로 한 줄씩',
+summary:'평균, 중앙값, 최빈값, 범위를 구하는 통계 문제',
+explain:'정렬 후 평균(반올림), 중앙값(N/2번 인덱스), 최빈값(빈도 배열로 계산, 2번째로 많이 나온 값), 범위(최대-최소)를 출력합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N개 정수 입력"]
+B --> C["정렬"]
+C --> D["평균 = 반올림(합/N)"]
+D --> E["중앙값 = arr[N/2]"]
+E --> F["최빈값: 빈도 배열 생성"]
+F --> G["빈도 최대 찾기"]
+G --> H{최빈값 여럿?}
+H -->|Yes| I["두 번째로 작은 것"]
+H -->|No| I2["그 값"]
+I --> J["범위 = 최대 - 최소"]
+I2 --> J
+J --> K["4가지 출력"]
+K --> L([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 평균·중앙값·최빈값·범위를 구해 4줄 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시 입력:  5 / 1 / 3 / 8 / -2 / 2
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine().trim());   // n=5
+        int[] arr = new int[n];
+        int[] freq = new int[8001];   // -4000~4000 → +4000 시프트해 빈도 카운트
+        long sum = 0;
+        for (int i = 0; i < n; i++) {
+            arr[i] = Integer.parseInt(br.readLine().trim());
+            freq[arr[i]+4000]++;
+            sum += arr[i];
+        }
+        Arrays.sort(arr);   // arr=[-2,1,2,3,8], sum=12
+        int mean = (int) Math.round((double)sum/n);   // 12/5=2.4 → 2
+        int median = arr[n/2];   // arr[2]=2
+        int maxFreq = 0;
+        for (int f : freq) maxFreq = Math.max(maxFreq, f);   // 모두 1번 등장 → maxFreq=1
+        int mode = 0; boolean found = false;
+        for (int i = 0; i <= 8000; i++) {
+            if (freq[i] == maxFreq) {
+                if (!found) { mode = i-4000; found = true; }   // 첫 후보 -2 기억
+                else { mode = i-4000; break; }                 // 두 번째 후보 1 → 최빈값
+            }
+        }
+        int range = arr[n-1] - arr[0];   // 8 - (-2) = 10
+        System.out.println(mean+"\\n"+median+"\\n"+mode+"\\n"+range);   // ✅ 출력: 2 / 2 / 1 / 10
+    }
+}`},
+
+{id:1074,title:'Z',type:'구현/시뮬',diff:'S1',
+problem:'2^N × 2^N 크기의 배열을 Z 모양으로 방문합니다. 배열을 4등분한 뒤 왼쪽 위 → 오른쪽 위 → 왼쪽 아래 → 오른쪽 아래 순서로, 각 사분면을 다시 같은 방식으로 재귀적으로 방문합니다. 이때 r행 c열 칸이 몇 번째(0부터 시작)로 방문되는지 구하는 문제입니다.\n\n입력: N, r, c가 공백으로 구분되어 주어진다.\n출력: (r, c) 칸을 방문하는 순서 번호',
+summary:'Z 모양으로 탐색할 때 (r,c)가 몇 번째인지',
+explain:'분할정복으로 풀어냅니다. 2^n × 2^n 을 4등분하여 (r,c)가 어느 사분면에 있는지 결정합니다. 해당 사분면 크기(2^(n-1) × 2^(n-1))를 오프셋으로 더합니다.',
+flow:`flowchart TD
+A([시작]) --> B["N, r, c 입력"]
+B --> C["solve(size, r, c, 0) 호출"]
+C --> D{size == 1?}
+D -->|Yes| E["현재 offset 반환"]
+D -->|No| F["절반 = size/2"]
+F --> G{r < 절반?}
+G -->|Yes r<절반| H{c < 절반?}
+G -->|No| I{c < 절반?}
+H -->|Yes| J["1사분면: offset 그대로"]
+H -->|No| K["2사분면: offset += 절반²"]
+I -->|Yes| L["3사분면: offset += 절반²×2"]
+I -->|No| M["4사분면: offset += 절반²×3"]
+J --> C
+K --> C
+L --> C
+M --> C
+E --> N["결과 출력"]
+N --> O([종료])`,
+code:`import java.util.Scanner;
+
+public class Main {
+    // [메서드 역할] Z 순서로 방문할 때 (r,c)가 몇 번째인지 출력
+    public static void main(String[] args) {
+        // ▼ 예시 입력: 2 3 1   (2^2 × 2^2 = 4×4 판)
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(), r = sc.nextInt(), c = sc.nextInt();   // n=2, r=3, c=1
+        System.out.println(solve(1 << n, r, c));   // 1<<2=4 → solve(4,3,1)
+    }
+    // [메서드 역할] size×size를 4사분면으로 나눠 (r,c)가 든 곳만 재귀로 추적
+    static long solve(int size, int r, int c) {
+        if (size == 1) return 0;
+        int half = size / 2;
+        long area = (long) half * half;   // 한 사분면의 칸 수
+        if (r < half && c < half) return solve(half, r, c);                    // 1사분면(좌상)
+        if (r < half && c >= half) return area + solve(half, r, c-half);       // 2사분면(우상)
+        if (r >= half && c < half) return area*2 + solve(half, r-half, c);     // 3사분면(좌하)
+        return area*3 + solve(half, r-half, c-half);                           // 4사분면(우하)
+        // solve(4,3,1): 좌하 → 4*2 + solve(2,1,1)
+        //   solve(2,1,1): 우하 → 1*3 + solve(1,0,0)=3
+        //   → 8 + 3 = 11
+    }
+}`},
+
+{id:14500,title:'테트로미노',type:'구현/시뮬',diff:'G4',
+problem:'각 칸에 숫자가 적힌 N×M 보드가 있습니다. 정사각형 4개를 이어 붙인 도형인 테트로미노 한 개를(회전·대칭 모두 허용) 보드 위에 겹치지 않게 딱 한 번 놓을 때, 도형이 덮은 4칸의 숫자 합이 최대가 되도록 하는 문제입니다.\n\n입력: 1행에 N과 M, 이후 N개 줄에 각 칸의 숫자가 주어진다.\n출력: 테트로미노가 덮은 칸들의 합 중 최댓값',
+summary:'테트로미노를 놓아 합이 최대인 경우 구하기',
+explain:'DFS로 4칸을 연결하여 탐색합니다. 재귀적으로 4방향을 탐색하며 방문한 칸의 합 최댓값을 구합니다. T자 포함 모든 테트로미노를 DFS 백트래킹으로 커버할 수 있습니다.',
+flow:`flowchart TD
+A([시작]) --> B["N×M 보드 입력"]
+B --> C["모든 칸에서 DFS 시작"]
+C --> D["현재 칸 방문 표시"]
+D --> E{depth == 4?}
+E -->|Yes| F["합 최댓값 갱신"]
+E -->|No| G["4방향으로 DFS 재귀"]
+G --> H["백트래킹 (방문 해제)"]
+H --> C
+F --> C
+C -->|완료| I["최댓값 출력"]
+I --> J([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    static int[] dx={0,0,1,-1}, dy={1,-1,0,0};   // 상하좌우
+    static int[][] board;
+    static boolean[][] visited;
+    static int N, M, ans = 0;   // ans: 어떤 테트로미노로 얻을 수 있는 칸 합의 최댓값
+    // [메서드 역할] 테트로미노 하나를 놓아 덮은 칸 숫자 합의 최댓값 출력
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: N=4 M=5 보드 (각 칸 숫자 주어짐)
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N=Integer.parseInt(st.nextToken()); M=Integer.parseInt(st.nextToken());   // N=4, M=5
+        board=new int[N][M]; visited=new boolean[N][M];
+        for(int i=0;i<N;i++){
+            st=new StringTokenizer(br.readLine());
+            for(int j=0;j<M;j++) board[i][j]=Integer.parseInt(st.nextToken());
+        }
+        for(int i=0;i<N;i++) for(int j=0;j<M;j++){
+            visited[i][j]=true;
+            dfs(i,j,1,board[i][j]);   // (i,j)에서 시작해 연결된 4칸 조합 탐색
+            visited[i][j]=false;      // 다음 시작점 위해 방문 해제(백트래킹)
+        }
+        System.out.println(ans);   // ✅ 출력: 가능한 테트로미노 중 칸 합 최댓값
+    }
+    // [메서드 역할] depth칸까지 골랐을 때 4칸이면 합 갱신, 아니면 인접칸으로 확장(DFS)
+    static void dfs(int r, int c, int depth, int sum){
+        if(depth==4){ ans=Math.max(ans,sum); return; }   // 4칸 완성 → 합 비교
+        for(int d=0;d<4;d++){
+            int nr=r+dx[d], nc=c+dy[d];
+            if(nr>=0&&nr<N&&nc>=0&&nc<M&&!visited[nr][nc]){
+                visited[nr][nc]=true;
+                dfs(nr,nc,depth+1,sum+board[nr][nc]);   // depth=1→2→3→4 로 한 칸씩 확장
+                visited[nr][nc]=false;                  // 백트래킹: 다른 모양 시도
+            }
+        }
+        // 주의: 이 경로형 DFS는 'ㅗ(T)' 모양은 못 만들어 → 실제 제출 시 별도 처리 필요
+    }
+}`},
+
+{id:5430,title:'AC',type:'구현/시뮬',diff:'G5',
+problem:'정수 배열에 두 가지 함수를 적용하는 문제입니다. R은 배열의 순서를 뒤집고, D는 맨 앞 원소 하나를 버립니다. 단, 비어 있는 배열에 D를 수행하면 에러가 발생합니다. 함수들이 이어진 명령 문자열 p를 앞에서부터 차례로 적용한 최종 배열을 구합니다(R이 연속되면 실제로 뒤집지 않고 방향만 바꿔 효율적으로 처리).\n\n입력: 1행에 테스트케이스 수 T. 각 케이스는 명령 문자열 p, 배열 크기 n, [x1,x2,...] 형태의 배열이 차례로 주어진다.\n출력: 케이스마다 최종 배열을 [...] 형태로 출력. 도중에 에러가 나면 error',
+summary:'R(뒤집기)과 D(앞 삭제) 연산으로 배열 변환',
+explain:'실제로 배열을 뒤집으면 O(N)이 반복되어 TLE. 대신 덱과 boolean 반전 플래그를 사용합니다. R은 플래그 토글, D는 플래그에 따라 앞 또는 뒤에서 삭제합니다.',
+flow:`flowchart TD
+A([시작]) --> B["명령 문자열, 배열 입력"]
+B --> C["덱에 원소 추가"]
+C --> D["명령 순서대로 처리"]
+D --> E{명령 R?}
+E -->|Yes| F["reversed 플래그 토글"]
+E -->|No D| G{덱 비어있음?}
+G -->|Yes| H["error 출력 종료"]
+G -->|No| I{reversed?}
+I -->|Yes| J["덱 뒤에서 삭제"]
+I -->|No| K["덱 앞에서 삭제"]
+F --> D
+J --> D
+K --> D
+D -->|완료| L{reversed?}
+L -->|Yes| M["역순으로 출력"]
+L -->|No| N["순서대로 출력"]
+M --> O([종료])
+N --> O`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] R(뒤집기)·D(앞 삭제) 명령 수행 후 배열 출력 (불가하면 error)
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: T=1 / p="RDD" / n=4 / 배열 [1,2,3,4]
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());   // T=1
+        StringBuilder sb = new StringBuilder();
+        while (T-- > 0) {
+            String cmds = br.readLine().trim();          // cmds="RDD"
+            int n = Integer.parseInt(br.readLine().trim());  // n=4
+            String line = br.readLine().trim();          // line="[1,2,3,4]"
+            Deque<Integer> dq = new ArrayDeque<>();       // dq=[1,2,3,4]
+            if (n > 0) {
+                String[] parts = line.substring(1, line.length()-1).split(",");
+                for (String p : parts) dq.addLast(Integer.parseInt(p));
+            }
+            boolean reversed = false, error = false;
+            for (char c : cmds.toCharArray()) {
+                if (c == 'R') { reversed = !reversed; }   // 방향만 반전 (O(1))
+                else {
+                    if (dq.isEmpty()) { error = true; break; }
+                    if (reversed) dq.pollLast(); else dq.pollFirst();
+                }
+                // 'R' → reversed=true (뒤집힌 상태)
+                // 'D' → 뒤에서 삭제: 4 제거 → dq=[1,2,3]
+                // 'D' → 뒤에서 삭제: 3 제거 → dq=[1,2]
+            }
+            if (error) { sb.append("error\\n"); continue; }
+            StringJoiner sj = new StringJoiner(",","[","]");
+            if (reversed) { Integer[] arr=dq.toArray(new Integer[0]); for(int i=arr.length-1;i>=0;i--) sj.add(String.valueOf(arr[i])); }
+            else for (int v : dq) sj.add(String.valueOf(v));
+            sb.append(sj).append('\\n');
+            // reversed=true → 남은 [1,2]를 역순으로 → ✅ 출력: [2,1]
+        }
+        System.out.print(sb);
+    }
+}`},
+
+{id:16928,title:'뱀과 사다리 게임',type:'구현/시뮬',diff:'G5',
+problem:'1번 칸에서 출발해 100번 칸 도착을 목표로 하는 보드게임입니다. 매 턴 주사위를 굴려 나온 수(1~6)만큼 앞으로 이동하며, 도착한 칸에 사다리가 있으면 그 끝으로 올라가고 뱀이 있으면 그 끝으로 내려갑니다. 100번 칸에 도달하기 위해 주사위를 굴려야 하는 최소 횟수를 구하는 문제입니다.\n\n입력: 1행에 사다리 수 N과 뱀 수 M, 이후 N+M개 줄에 각 사다리·뱀의 시작 칸과 도착 칸이 주어진다.\n출력: 100번 칸에 도달하기 위한 최소 주사위 굴림 횟수',
+summary:'뱀과 사다리가 있는 보드에서 1→100 최소 이동 횟수',
+explain:'BFS 최단경로 문제입니다. 주사위 1~6을 굴려 이동하되, 뱀이나 사다리가 있으면 해당 위치로 즉시 이동합니다. dist 배열로 방문 체크합니다.',
+flow:`flowchart TD
+A([시작]) --> B["사다리, 뱀 위치 입력"]
+B --> C["BFS 시작 (위치1, 이동0)"]
+C --> D["현재 위치 꺼내기"]
+D --> E["주사위 1~6 시도"]
+E --> F["next = 현재 + 주사위"]
+F --> G{next > 100?}
+G -->|Yes| E
+G -->|No| H{뱀/사다리?}
+H -->|Yes| I["해당 도착점으로 이동"]
+H -->|No| I
+I --> J{next==100?}
+J -->|Yes| K["이동 수 출력"]
+J -->|No| L{미방문?}
+L -->|Yes| M["큐에 추가"]
+L -->|No| E
+M --> E
+E -->|완료| D
+K --> N([종료])`,
+code:`import java.util.*;
+import java.io.*;
+
+public class Main {
+    // [메서드 역할] 1번 칸에서 100번 칸까지 최소 주사위 횟수 출력 (BFS)
+    public static void main(String[] args) throws Exception {
+        // ▼ 예시: 사다리 3개, 뱀 7개 → 1번에서 100번까지 최소 3번
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N=Integer.parseInt(st.nextToken()), M=Integer.parseInt(st.nextToken());  // N=3(사다리), M=7(뱀)
+        // move[x] = x칸에 사다리/뱀이 있으면 도착 칸, 없으면 0
+        int[] move = new int[101];
+        for (int i = 0; i < N+M; i++) {   // 사다리·뱀 모두 "from→to 이동"이라 똑같이 처리
+            st = new StringTokenizer(br.readLine());
+            int from=Integer.parseInt(st.nextToken()), to=Integer.parseInt(st.nextToken());
+            move[from] = to;
+        }
+        int[] dist = new int[101];   // dist[x] = 1번 칸에서 x까지의 최소 주사위 횟수
+        Arrays.fill(dist, -1);       // -1 = 미방문
+        // BFS 최단경로: 한 번에 한 칸씩(주사위 한 번씩) 퍼지므로 처음 도달 = 최소 횟수
+        Queue<Integer> q = new LinkedList<>();
+        q.add(1); dist[1] = 0;
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            for (int dice = 1; dice <= 6; dice++) {   // 주사위 눈 1~6 모두 시도
+                int next = cur + dice;
+                if (next > 100) continue;             // 100을 넘는 이동은 불가
+                if (move[next] != 0) next = move[next];   // 사다리는 위로/뱀은 아래로 즉시 이동
+                if (dist[next] == -1) {               // 아직 안 가본 칸만
+                    dist[next] = dist[cur]+1;
+                    if (next == 100) { System.out.println(dist[next]); return; }   // ✅ 출력: 3
+                    q.add(next);
+                }
+            }
+            // 1 → 주사위로 2~7 도달(1번) → 사다리 점프 … → 최소 3번 만에 100 도달
+        }
+    }
+}`}
+]; // end problems array
+
+// ─────────── Render ───────────
+let mermaidCounter = 0;
+
+function diffColor(diff) {
+  const c = diff.charAt(0);
+  return DIFF_COLOR[c] || '#555';
+}
+
+function renderCards(type) {
+  const grid = document.getElementById('grid');
+  const filtered = type === '전체' ? problems : problems.filter(p => p.type === type);
+  grid.innerHTML = filtered.map(p => `
+    <div class="card" data-id="${p.id}" style="border-top:3px solid ${TYPE_COLOR[p.type]}">
+      <div class="card-bar" style="background:${TYPE_COLOR[p.type]}22"></div>
+      <div class="card-type" style="color:${TYPE_COLOR[p.type]}">${p.type}</div>
+      <div class="card-id">#${p.id}</div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-summary">${p.summary}</div>
+      <div class="diff-badge" style="background:${diffColor(p.diff)}">${p.diff}</div>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => openModal(parseInt(card.dataset.id)));
+  });
+}
+
+function renderFilters() {
+  const types = ['전체','수학','자료구조','해시/맵','완전탐색','BFS/DFS','우선순위큐','구현/시뮬'];
+  const div = document.getElementById('filters');
+  div.innerHTML = types.map(t => `<button class="filter-btn${t==='전체'?' active':''}" data-type="${t}">${t}</button>`).join('');
+  div.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      div.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderCards(btn.dataset.type);
+    });
+  });
+}
+
+// HTML 특수문자 이스케이프 (문제에 <x:y> 같은 표기가 있어 필수)
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+// 입력 스펙 안의 "N행 …, M행 …" 을 줄바꿈으로 분리해 가독성 향상
+function formatIO(s) {
+  let t = escHtml(s.trim());
+  t = t.replace(/,\s*(?=\d+행)/g, '\n');                 // ", 2행" → 줄바꿈
+  t = t.replace(/\s*(?:또는|혹은)\s*/g, ' <span class="vsep">|</span> ');
+  return t;
+}
+// 비개발자도 이해하는 코드 설명 (비유 한 줄 + 단계)
+const beginner = {
+1000:'계산기에 숫자 두 개를 넣고 "="를 누르는 것과 같아요.\n① 두 숫자 A, B를 받아온다 → ② 둘을 더한다 → ③ 결과를 화면에 보여준다',
+2609:'두 수의 "공통 약수 중 가장 큰 것(최대공약수)"과 "공통 배수 중 가장 작은 것(최소공배수)"을 구해요.\n① 큰 수를 작은 수로 나눈 나머지로 계속 바꿔 가며 최대공약수를 찾는다 → ② 두 수의 곱을 최대공약수로 나누면 최소공배수가 된다\n(나머지로 줄여 가는 방법을 "유클리드 호제법"이라고 해요)',
+1978:'적힌 수들 중에서 "소수"만 골라 개수를 세요. (소수 = 1과 자기 자신으로만 나눠지는 수)\n① 수를 하나씩 본다 → ② 2부터 그 수의 제곱근까지 어떤 수로도 안 나눠지면 소수 → ③ 소수일 때마다 개수를 1 올린다',
+11050:'예를 들어 "5명 중 2명 뽑는 경우의 수"를 구해요.\n① 분자는 5×4처럼 큰 수부터 K개를 곱한다 → ② 분모는 1×2처럼 K개를 곱한다 → ③ 분자를 분모로 나눈 값이 답',
+6064:'톱니가 M개·N개인 두 톱니바퀴가 같이 돌 때, 원하는 눈금 조합 <x:y>가 몇 바퀴째 나오는지 찾아요.\n① x에서 시작해 M씩 더하며 후보를 만든다 → ② 그 후보의 N쪽 눈금이 원하는 y와 맞는지 본다 → ③ 두 바퀴가 다시 처음처럼 맞물리는 지점까지 못 찾으면 -1',
+10828:'접시를 쌓듯, 맨 위에만 올리고 맨 위에서만 빼는 통이에요.\n① 명령을 하나씩 읽는다 → ② push면 위에 올리고, pop이면 맨 위를 빼서 보여준다 → ③ 비었는데 빼라고 하면 -1',
+10845:'줄 서기와 같아요. 먼저 온 사람이 먼저 나가요.\n① push면 줄 맨 뒤에 세운다 → ② pop이면 맨 앞 사람을 내보낸다 → ③ front·back은 맨 앞·맨 뒤만 살짝 확인',
+10866:'양쪽 문이 다 열린 통이에요. 앞으로도 뒤로도 넣고 뺄 수 있어요.\n① 명령에 front가 붙으면 앞쪽, back이면 뒤쪽을 다룬다 → ② push는 넣기, pop은 빼기 → ③ 비었으면 -1',
+11866:'둥글게 앉아 K번째마다 한 명씩 빼는 게임이에요.\n① 1~N을 줄(큐)에 세운다 → ② 앞에서 K-1명을 뒤로 보낸다 → ③ K번째에 온 사람을 빼서 기록한다 (아무도 안 남을 때까지 반복)',
+1874:'1,2,3…을 순서대로 통에 쌓다가, 원하는 숫자가 맨 위에 오면 빼서 목표 수열을 만들 수 있는지 봐요.\n① 목표 숫자까지 1씩 올려 쌓는다(+ 기록) → ② 맨 위가 목표면 뺀다(- 기록) → ③ 맨 위가 목표와 다르면 만들 수 없음(NO)',
+1966:'중요한 서류를 먼저 인쇄하는 프린터예요.\n① 맨 앞 문서를 꺼낸다 → ② 뒤에 더 중요한 게 있으면 맨 뒤로 보내고, 없으면 인쇄한다 → ③ 내가 찾는 문서가 인쇄되는 순번을 센다',
+1620:'전화번호부처럼 "번호↔이름"을 양방향으로 찾아요.\n① 이름→번호 표와 번호→이름 표, 두 개를 만든다 → ② 질문이 숫자면 번호표에서 이름을, 글자면 이름표에서 번호를 찾는다\n(표(HashMap)를 쓰면 수만 건도 즉시 찾아요)',
+1764:'두 명단에 모두 들어 있는 사람을 찾아요.\n① 첫 명단을 "주머니"에 담는다 → ② 둘째 명단 사람을 하나씩 보며 주머니에 있으면 정답에 넣는다 → ③ 정답을 가나다순으로 정렬해 출력',
+17219:'사이트 이름을 대면 비밀번호를 알려줘요.\n① "사이트→비밀번호" 표를 만든다 → ② 물어본 사이트를 표에서 찾아 비밀번호를 돌려준다',
+2798:'카드 3장을 골라 합이 한도(M)를 넘지 않으면서 최대한 크게 만들어요.\n① 가능한 3장 조합을 전부 만들어 본다 → ② 합이 M 이하인 것만 본다 → ③ 그중 가장 큰 합을 기록한다',
+2231:'"어떤 수 + 그 수의 자릿수 합 = N"이 되는 가장 작은 수를 찾아요.\n① 1부터 차례로 후보 m을 본다 → ② m + (m의 각 자리 숫자 합)을 계산한다 → ③ 그 값이 N과 같으면 정답 (없으면 0)',
+1018:'큰 보드에서 8×8을 오려 체스판으로 만들 때, 색칠을 가장 적게 고치는 위치를 찾아요.\n① 8×8을 오릴 수 있는 모든 위치를 본다 → ② 각 위치를 정상 체스판과 비교해 다른 칸 수를 센다 → ③ 가장 적게 고치는 경우를 답으로 한다',
+1260:'미로(그래프)를 두 가지 방식으로 둘러봐요.\n① DFS: 한 길을 끝까지 파고들었다가 막히면 되돌아온다 → ② BFS: 가까운 곳부터 동심원처럼 퍼져 나간다 → ③ 갈림길에선 번호가 작은 곳을 먼저 간다',
+2606:'1번 PC에서 시작해 선으로 이어진 모든 PC로 감염이 번져요.\n① 1번에서 출발한다 → ② 연결된 PC를 따라가며 감염 표시를 한다 → ③ 감염된 PC 수를 센다 (1번 자신은 제외)',
+1012:'밭에서 붙어 있는 배추 덩어리가 몇 개인지 세요. (덩어리마다 지렁이 1마리)\n① 아직 안 센 배추를 찾는다 → ② 거기에 붙은 배추를 모두 따라가며 한 덩어리로 처리한다 → ③ 새 덩어리를 찾을 때마다 개수를 1 올린다',
+2667:'지도에서 집들이 붙어 있는 "아파트 단지"를 찾아요.\n① 아직 안 가본 집을 찾으면 새 단지를 시작한다 → ② 붙어 있는 집을 모두 세며 단지 크기를 잰다 → ③ 단지 수와 각 크기를 정렬해 출력한다',
+1697:'수직선에서 한 칸씩(±1) 또는 순간이동(×2)으로 동생에게 가장 빨리 가요.\n① 현재 위치에서 갈 수 있는 세 곳을 동시에 펼친다 → ② 가까운 시간부터 차례로 도달한다 → ③ 동생 위치에 처음 닿는 순간이 최소 시간이다',
+7576:'익은 토마토 옆 칸이 하루마다 같이 익어요. 다 익는 날을 세요.\n① 처음부터 익어 있던 토마토들을 동시에 출발점으로 삼는다 → ② 하루씩 상하좌우로 익혀 나간다 → ③ 마지막 칸이 익는 날이 정답 (끝내 못 익으면 -1)',
+7569:'위 토마토 문제의 "3층 건물" 버전. 옆 4방향 + 위아래까지 6방향으로 익어요.\n① 익은 토마토들에서 동시에 시작한다 → ② 하루마다 6방향으로 퍼뜨린다 → ③ 다 익는 날을 계산한다 (못 익으면 -1)',
+10026:'그림의 구역 수를, 일반인과 적록색약(빨강=초록) 두 기준으로 세요.\n① 원래 색 그대로 붙은 구역 수를 센다 → ② R과 G를 같은 색으로 바꿔 다시 센다 → ③ 두 결과를 함께 출력한다',
+11724:'흩어진 점들이 몇 개의 무리로 이어져 있는지 세요.\n① 아직 안 가본 점을 찾으면 새 무리를 시작한다 → ② 이어진 점을 모두 방문한다 → ③ 새 무리를 찾을 때마다 개수를 1 올린다',
+1927:'넣은 숫자 중 "가장 작은 것"을 빠르게 꺼내는 상자예요.\n① 0이 아닌 수가 들어오면 상자에 넣는다 → ② 0이 들어오면 가장 작은 수를 꺼내 보여준다 → ③ 비었으면 0\n(항상 최솟값이 맨 위로 오게 정리되는 상자를 "최소 힙"이라 해요)',
+11279:'위와 똑같지만 "가장 큰 것"을 꺼내요.\n① 수가 들어오면 넣는다 → ② 0이면 가장 큰 수를 꺼낸다 → ③ 비었으면 0',
+11286:'부호를 떼고(절댓값) 0에 가장 가까운 수를 꺼내는 상자예요.\n① 0이 아닌 수가 오면 넣는다 → ② 0이 오면 절댓값이 가장 작은 수를 꺼낸다 → ③ 절댓값이 같으면(예: -1과 1) 음수를 먼저 꺼낸다 → ④ 비었으면 0',
+7662:'넣은 숫자 중 "가장 큰 것"과 "가장 작은 것"을 둘 다 바로 빼낼 수 있어요.\n① I면 숫자를 넣는다 → ② D 1이면 최댓값, D -1이면 최솟값을 뺀다 → ③ 끝나고 남았으면 "최댓값 최솟값", 비었으면 EMPTY',
+2108:'숫자 묶음의 평균·중앙값·최빈값·범위를 구해요.\n① 다 더해 개수로 나눠 평균을 낸다(반올림) → ② 크기순 정렬 후 가운데 값이 중앙값 → ③ 가장 많이 나온 값이 최빈값 → ④ 최댓값-최솟값이 범위',
+1074:'큰 정사각형을 4등분해 Z자(왼위→오위→왼아→오아) 순서로 훑을 때, 특정 칸이 몇 번째인지 구해요.\n① 사각형을 4등분한다 → ② 찾는 칸이 어느 사분면인지 본다 → ③ 앞 사분면들의 칸 수를 더하고, 그 사분면 안에서 다시 4등분을 반복한다',
+14500:'테트리스 조각 하나를 보드에 놓아, 덮인 칸들의 숫자 합을 최대로 만들어요.\n① 모든 칸을 시작점으로 삼는다 → ② 조각 모양(회전·대칭 포함)을 다 올려본다 → ③ 덮인 칸 합의 최댓값을 기록한다',
+5430:'배열에 R(뒤집기)·D(앞 버리기)를 잔뜩 적용한 결과를 구해요.\n① R이 나오면 실제로 뒤집지 않고 "방향"만 바꾼다(속도를 위해) → ② D는 현재 방향의 앞쪽을 하나 버린다 → ③ 다 버려서 빈 상태에 또 D가 오면 error',
+16928:'주사위로 1→100칸을 가는데, 사다리는 올려주고 뱀은 내려요. 최소 주사위 횟수를 구해요.\n① 현재 칸에서 주사위 1~6칸 앞을 모두 살핀다 → ② 사다리·뱀이 있으면 도착지로 이동한다 → ③ 100칸에 처음 닿는 횟수가 정답이다'
+};
+// 비개발자 설명을 [요약 + 단계 + 참고]로 렌더
+function renderBeginner(text) {
+  if (!text) return '';
+  let html = '<div class="beginner-title">🔰 비개발자도 이해하는 코드 설명</div>';
+  text.split('\n').map(s => s.trim()).filter(Boolean).forEach(part => {
+    if (/^\(/.test(part)) { html += `<div class="bg-note">${escHtml(part)}</div>`; return; }
+    if (/[①②③④⑤]/.test(part)) {
+      const steps = part.split(/(?=[①②③④⑤])/).map(s => s.replace(/^[①②③④⑤]\s*/, '').replace(/\s*→\s*$/, '').trim()).filter(Boolean);
+      html += '<ol class="bg-steps">' + steps.map(s => `<li>${escHtml(s)}</li>`).join('') + '</ol>';
+    } else {
+      html += `<div class="bg-lead">${escHtml(part)}</div>`;
+    }
+  });
+  return html;
+}
+// 예시 동작 트레이스 (자료구조가 단계별로 변하는 모습)
+const GC = {'.':'gc-empty','0':'gc-empty','1':'gc-house','O':'gc-ripe','+':'gc-new','#':'gc-wall',
+  'A':'gc-rA','B':'gc-rB','C':'gc-rC','R':'gc-R','G':'gc-G','L':'gc-L'};
+// 동작 트레이스 — 단계마다 [실행되는 코드 줄 + 그 순간의 그림]
+const traces = {
+10828:{input:'5 / push 1 / push 2 / top / pop / size', legend:'오른쪽 끝이 맨 위(top) — 마지막에 넣은 값', steps:[
+ {op:'입력 받기', code:'br = new BufferedReader(...);\nint n = 5;  // 명령 5개\nDeque<Integer> stack = new ArrayDeque<>();', box:[], note:'빈 스택 준비'},
+ {op:'push 1', code:'stack.push(1);', box:[1], hi:0},
+ {op:'push 2', code:'stack.push(2);', box:[1,2], hi:1},
+ {op:'top', code:'stack.peek();  // 맨 위만 확인(안 뺌)', box:[1,2], out:'2'},
+ {op:'pop', code:'stack.pop();  // 맨 위 빼기', box:[1], out:'2'},
+ {op:'size', code:'stack.size();', box:[1], out:'1'},
+ {op:'출력', code:'System.out.print(sb);', box:[1], note:'결과: 2 / 2 / 1'}]},
+10845:{input:'5 / push 1 / push 2 / front / pop / back', legend:'왼쪽 끝이 맨 앞(front) — 먼저 들어온 값', steps:[
+ {op:'입력 받기', code:'int n = 5;  // 명령 5개\nDeque<Integer> q = new ArrayDeque<>();', box:[], note:'빈 큐 준비'},
+ {op:'push 1', code:'q.addLast(1);', box:[1], hi:0},
+ {op:'push 2', code:'q.addLast(2);', box:[1,2], hi:1},
+ {op:'front', code:'q.peekFirst();  // 맨 앞 확인', box:[1,2], out:'1'},
+ {op:'pop', code:'q.pollFirst();  // 맨 앞 빼기', box:[2], out:'1'},
+ {op:'back', code:'q.peekLast();  // 맨 뒤 확인', box:[2], out:'2'},
+ {op:'출력', code:'System.out.print(sb);', box:[2], note:'결과: 1 / 1 / 2'}]},
+10866:{input:'6 / push_front 1 / push_back 2 / front / back / pop_front / size', legend:'왼쪽=앞, 오른쪽=뒤 (양쪽에서 넣고 뺌)', steps:[
+ {op:'입력 받기', code:'int n = 6;  // 명령 6개\nDeque<Integer> dq = new ArrayDeque<>();', box:[], note:'빈 덱 준비'},
+ {op:'push_front 1', code:'dq.addFirst(1);', box:[1], hi:0},
+ {op:'push_back 2', code:'dq.addLast(2);', box:[1,2], hi:1},
+ {op:'front', code:'dq.peekFirst();', box:[1,2], out:'1'},
+ {op:'back', code:'dq.peekLast();', box:[1,2], out:'2'},
+ {op:'pop_front', code:'dq.pollFirst();', box:[2], out:'1'},
+ {op:'size', code:'dq.size();', box:[2], out:'1'},
+ {op:'출력', code:'System.out.print(sb);', box:[2], note:'결과: 1 / 2 / 1 / 1'}]},
+11866:{input:'7 3', legend:'1~7이 원으로 앉아 3번째마다 제거', steps:[
+ {op:'입력 받기', code:'int n=7, k=3;\nQueue<Integer> q = new LinkedList<>();\nfor (i=1..7) q.add(i);', box:[1,2,3,4,5,6,7], note:'1~7을 원형 큐에'},
+ {op:'3번째 제거', code:'q.add(q.poll()) ×2;  // 1,2 뒤로\nq.poll();  // 3 제거', box:[4,5,6,7,1,2], out:'3'},
+ {op:'3번째 제거', code:'q.poll();  // 6 제거', box:[7,1,2,4,5], out:'6'},
+ {op:'3번째 제거', code:'q.poll();  // 2 제거', box:[4,5,7,1], out:'2'},
+ {op:'3번째 제거', code:'q.poll();  // 7 제거', box:[1,4,5], out:'7'},
+ {op:'3번째 제거', code:'q.poll();  // 5 제거', box:[1,4], out:'5'},
+ {op:'3번째 제거', code:'q.poll();  // 1 제거', box:[4], out:'1'},
+ {op:'3번째 제거', code:'q.poll();  // 4 제거', box:[], out:'4'},
+ {op:'출력', code:'System.out.print("<...>");', box:[], note:'<3, 6, 2, 7, 5, 1, 4>'}]},
+1874:{input:'8 / 목표수열 4 3 6 8 7 5 2 1', legend:'1부터 차례로 쌓다가(+), 맨 위가 목표면 뺀다(-)', steps:[
+ {op:'입력 받기', code:'int n = 8;  // 수열 길이\nint cur = 1;  // 다음 push할 수\nDeque<Integer> stack = new ArrayDeque<>();', box:[], note:'빈 스택, cur=1'},
+ {op:'목표 4 → 1~4 쌓기', code:'while (cur<=4) stack.push(cur++);  // + + + +', box:[1,2,3,4], hi:3},
+ {op:'4 빼기', code:'stack.pop();  // -', box:[1,2,3], out:'4'},
+ {op:'목표 3 → 빼기', code:'stack.pop();  // -', box:[1,2], out:'3'},
+ {op:'목표 6 → 5,6 쌓기', code:'while (cur<=6) stack.push(cur++);  // + +', box:[1,2,5,6], hi:3},
+ {op:'6 빼기', code:'stack.pop();  // -', box:[1,2,5], out:'6'},
+ {op:'…반복', code:'// 끝까지 반복', box:[], note:'결과: ++++--++-...'}]},
+1927:{input:'4 / 1 / 3 / 0 / 0  (0 = 최솟값 빼기)', legend:'정렬해서 보면 왼쪽이 가장 작은 값', steps:[
+ {op:'입력 받기', code:'int n = 4;\nPriorityQueue<Integer> pq =\n  new PriorityQueue<>();  // 최소 힙', box:[], note:'빈 최소 힙'},
+ {op:'x=1 → 넣기', code:'pq.add(1);', box:[1], hi:0},
+ {op:'x=3 → 넣기', code:'pq.add(3);', box:[1,3], hi:1},
+ {op:'x=0 → 빼기', code:'pq.poll();  // 가장 작은 1', cmp:{a:'1', b:'3', note:'1 < 3 → 더 작은 1을 꺼냄'}, box:[3], out:'1'},
+ {op:'x=0 → 빼기', code:'pq.poll();  // 3', box:[], out:'3'},
+ {op:'출력', code:'System.out.print(sb);', box:[], note:'결과: 1 / 3'}]},
+11279:{input:'4 / 1 / 3 / 0 / 0  (0 = 최댓값 빼기)', legend:'정렬해서 보면 오른쪽이 가장 큰 값', steps:[
+ {op:'입력 받기', code:'PriorityQueue<Integer> pq =\n  new PriorityQueue<>(Collections.reverseOrder());  // 최대 힙', box:[], note:'빈 최대 힙'},
+ {op:'x=1 → 넣기', code:'pq.add(1);', box:[1], hi:0},
+ {op:'x=3 → 넣기', code:'pq.add(3);', box:[1,3], hi:1},
+ {op:'x=0 → 빼기', code:'pq.poll();  // 가장 큰 3', cmp:{a:'1', b:'3', note:'1 < 3 → 더 큰 3을 꺼냄'}, box:[1], out:'3'},
+ {op:'x=0 → 빼기', code:'pq.poll();  // 1', box:[], out:'1'},
+ {op:'출력', code:'System.out.print(sb);', box:[], note:'결과: 3 / 1'}]},
+11286:{input:'5 / 1 / -1 / 0 / 0 / 0  (0 = 절댓값 최소 빼기)', legend:'절댓값이 작을수록 먼저, 같으면 음수가 먼저', steps:[
+ {op:'입력 받기', code:'int n = 5;  // 연산 5번\npq = new PriorityQueue<>(\n  (a,b) -> |a|!=|b| ? |a|-|b| : a-b);  // 절댓값 힙', box:[], note:'빈 절댓값 힙'},
+ {op:'x=1 → 넣기', code:'int x = 1;\npq.add(x);', box:[1], hi:0},
+ {op:'x=-1 → 넣기', code:'int x = -1;\npq.add(x);', box:[-1,1], hi:0},
+ {op:'x=0 → 빼기', code:'pq.poll();  // |-1|=|1| → 음수 먼저', cmp:{a:'-1', b:'1', note:'|−1| = |1| → 절댓값 같음 → 음수(-1)가 먼저'}, box:[1], out:'-1'},
+ {op:'x=0 → 빼기', code:'pq.poll();  // 1', box:[], out:'1'},
+ {op:'x=0 → 비었음', code:'pq.isEmpty() ? 0 : pq.poll();  // 0', box:[], out:'0'},
+ {op:'출력', code:'System.out.print(sb);', box:[], note:'결과: -1 / 1 / 0'}]},
+7662:{input:'5 / I 1 / I 2 / I 3 / D 1 / D -1', legend:'D 1=최댓값 삭제, D -1=최솟값 삭제', steps:[
+ {op:'입력 받기', code:'int k = 5;  // 명령 5개\n최대 힙 + 최소 힙을 함께 운영', box:[], note:'빈 이중 우선순위 큐'},
+ {op:'I 1', code:'add(1);', box:[1], hi:0},
+ {op:'I 2', code:'add(2);', box:[1,2], hi:1},
+ {op:'I 3', code:'add(3);', box:[1,2,3], hi:2},
+ {op:'D 1', code:'pollMax();  // 최댓값 3 삭제', box:[1,2]},
+ {op:'D -1', code:'pollMin();  // 최솟값 1 삭제', box:[2]},
+ {op:'결과 출력', code:'print(max + " " + min);', box:[2], out:'2 2'}]},
+7576:{input:'3×3, 가운데 토마토 1개만 익은 상태', legend:'익은 토마토(주황)가 하루마다 상하좌우로 번짐 — 밝은 칸이 새로 익은 칸', steps:[
+ {op:'0일째 (시작)', code:'queue ← 익은 토마토 좌표', rows:['...','.O.','...']},
+ {op:'1일째', code:'bfs: 상하좌우 익히기', rows:['.+.','+O+','.+.']},
+ {op:'2일째 (완료)', code:'bfs 계속  // 더 익힐 칸 없음', rows:['+O+','OOO','+O+'], out:'출력 2', note:'모두 익는 데 2일'}]},
+2667:{input:'3×3 지도 (1=집, 0=빈칸)', legend:'상하좌우로 붙은 집끼리 한 "단지" (색이 곧 단지)', steps:[
+ {op:'입력 지도', code:'// 지도 읽기', rows:['110','100','001']},
+ {op:'단지 ① 발견', code:'dfs(0,0);  // 연결된 집 탐색', rows:['AA0','A00','001'], note:'크기 3'},
+ {op:'단지 ② 발견', code:'dfs(2,2);', rows:['AA0','A00','00B'], note:'크기 1'},
+ {op:'결과', code:'// 단지 수 = 2', rows:['AA0','A00','00B'], out:'단지 2개 · 크기 1, 3'}]},
+1012:{input:'3×4 밭 (1=배추)', legend:'붙어 있는 배추 한 무리당 지렁이 1마리', steps:[
+ {op:'입력 밭', code:'// 밭 읽기', rows:['1100','0100','0001']},
+ {op:'무리 ①', code:'bfs(0,0);  // 연결 배추 묶기', rows:['AA00','0A00','0001'], note:'배추 3포기'},
+ {op:'무리 ②', code:'bfs(2,3);  // 다음 미방문 배추', rows:['AA00','0A00','000B'], note:'배추 1포기'},
+ {op:'결과', code:'// 무리 수 = 2', rows:['AA00','0A00','000B'], out:'지렁이 2마리'}]},
+10026:{input:'3×3 그림 (R·G·파랑)', legend:'일반인은 R·G를 구분, 적록색약은 R=G로 봄', steps:[
+ {op:'일반인 시야', code:'countAreas(grid);', rows:['RRG','RGG','LLG'], out:'구역 3', note:'R·G·파랑'},
+ {op:'적록색약 시야', code:'grid의 R→G 변환 후\ncountAreas(grid);', rows:['GGG','GGG','LLG'], out:'구역 2', note:'R이 G로 합쳐짐'}]}
+};
+// 자료구조 정체성 (아이콘·이름·다음 나갈 위치)
+const DS = {
+ 'stack'    :{icon:'🥞', name:'스택 (LIFO)',        cls:'ds-stack', no:b=>b.length-1},
+ 'queue'    :{icon:'🚶', name:'큐 (FIFO)',          cls:'ds-queue', no:b=>0},
+ 'deque'    :{icon:'🔁', name:'덱 (양쪽 입출력)',    cls:'ds-deque', no:b=>-1},
+ 'heap-min' :{icon:'⛰️', name:'우선순위 큐 (최소 힙)', cls:'ds-heap',  no:b=>0},
+ 'heap-max' :{icon:'🗻', name:'우선순위 큐 (최대 힙)', cls:'ds-heap',  no:b=>b.length-1},
+ 'heap-abs' :{icon:'⚖️', name:'우선순위 큐 (절댓값 힙)', cls:'ds-heap', no:b=>0},
+ 'heap-dual':{icon:'↕️', name:'이중 우선순위 큐',     cls:'ds-heap',  no:b=>-1}
+};
+const STRUCT = {10828:'stack',10845:'queue',10866:'deque',11866:'queue',1874:'stack',1927:'heap-min',11279:'heap-max',11286:'heap-abs',7662:'heap-dual'};
+const LOOP_LABEL = {10828:'명령을 하나씩 처리 (반복)',10845:'명령을 하나씩 처리 (반복)',10866:'명령을 하나씩 처리 (반복)',11866:'한 명 남을 때까지 반복',1874:'수열을 하나씩 처리 (반복)',1927:'입력을 하나씩 처리 (반복)',11279:'입력을 하나씩 처리 (반복)',11286:'입력을 하나씩 처리 (반복)',7662:'명령을 하나씩 처리 (반복)',7576:'하루씩 번지며 반복 (BFS)',2667:'미방문 칸마다 반복 (DFS)',1012:'미방문 배추마다 반복 (BFS)'};
+const LOOP_IDS = new Set(Object.keys(LOOP_LABEL).map(Number));
+Object.keys(traces).forEach(id => { traces[id].id = +id; if (STRUCT[id]) traces[id].struct = STRUCT[id]; if (LOOP_LABEL[id]) traces[id].loopLabel = LOOP_LABEL[id]; });
+// 코드 줄에서 // 주석 부분만 흐리게
+function fmtCode(c) {
+  return escHtml(c).replace(/(\/\/.*)$/gm, '<span class="cm">$1</span>');
+}
+// 동작 트레이스를 [코드 줄 + 그림]의 세로 순서도로 렌더 (박스/격자 자동 판별)
+// 값마다 고유 색 (같은 값 = 같은 색)
+function valHue(v) { let n = 0, s = String(v); for (const c of s) n = (n * 31 + c.charCodeAt(0)) >>> 0; return n % 360; }
+function cellHtml(v, hi, nx) {
+  const hue = valHue(v);
+  const style = `background:hsl(${hue} 78% 93%);border-color:hsl(${hue} 55% 70%);color:hsl(${hue} 50% 28%)`;
+  return `<span class="tr-cell${hi ? ' hi' : ''}${nx ? ' nx' : ''}" style="${style}">${nx ? '<span class="nx-crown">👑</span>' : ''}${escHtml(String(v))}</span>`;
+}
+// 비교 그림 (compare)
+function renderCmp(c) {
+  return `<div class="cmp-row"><span class="cmp-chip" style="background:hsl(${valHue(c.a)} 78% 93%)">${escHtml(String(c.a))}</span>`
+    + `<span class="cmp-vs">⚖️ 비교</span>`
+    + `<span class="cmp-chip" style="background:hsl(${valHue(c.b)} 78% 93%)">${escHtml(String(c.b))}</span>`
+    + (c.note ? `<span class="cmp-note">${escHtml(c.note)}</span>` : '') + '</div>';
+}
+// 한 단계 카드
+function renderStep(s, t) {
+  let h = `<div class="fstep"><div class="fs-op">${escHtml(s.op)}</div>`;
+  if (s.code) h += `<div class="fs-code">${fmtCode(s.code)}</div>`;
+  if (s.cmp)  h += renderCmp(s.cmp);
+  h += '<div class="fs-boxes">';
+  if (s.rows) {
+    h += `<div class="gt-grid" style="grid-template-columns:repeat(${s.rows[0].length},1fr)">`;
+    s.rows.forEach(row => { for (const ch of row) h += `<span class="gt-cell ${GC[ch] || 'gc-empty'}"></span>`; });
+    h += '</div>';
+  } else if (s.box) {
+    const op = s.op || '';
+    if (/(?:push|넣기|add|쌓기)|^I\s/.test(op))      h += '<span class="fs-dir in">⬇ 넣기</span>';
+    else if (/(?:pop|빼기|제거|삭제)|^D\s/.test(op)) h += '<span class="fs-dir out">⬆ 꺼내기</span>';
+    const st = DS[t.struct];
+    const noIdx = st ? st.no(s.box) : -1;
+    const inner = s.box.length === 0 ? '<span class="tr-empty">🗑 비어 있음</span>'
+      : s.box.map((v, i) => cellHtml(v, s.hi === i, noIdx === i)).join('');
+    if (st) {
+      h += `<div class="ds ${st.cls}"><div class="ds-head">${st.icon} <b>${escHtml(st.name)}</b></div><div class="ds-body">${inner}</div>`;
+      if (noIdx >= 0) h += `<div class="ds-next">👑 다음에 나갈 값: <b>${escHtml(String(s.box[noIdx]))}</b></div>`;
+      h += '</div>';
+    } else h += inner;
+  }
+  h += '</div>';
+  if (s.out != null) h += `<div class="tr-out">출력 ${escHtml(String(s.out))}</div>`;
+  if (s.note)        h += `<div class="tr-note">${escHtml(s.note)}</div>`;
+  return h + '</div>';
+}
+function renderTraceBox(t) {
+  if (!t) return '';
+  let h = `<div class="trace-title">🎬 코드 동작 따라가기<span class="trace-in">입력: ${escHtml(t.input || '')}</span></div>`;
+  if (t.legend) h += `<div class="trace-legend">📌 ${escHtml(t.legend)}</div>`;
+  h += '<div class="flow-steps">';
+  let lf = -1, lt = -1;
+  if (LOOP_IDS.has(t.id)) t.steps.forEach((s, i) => { if (!/^(입력|출력|결과)/.test(s.op || '')) { if (lf < 0) lf = i; lt = i; } });
+  t.steps.forEach((s, i) => {
+    if (i === lf) h += `<div class="loop-frame"><div class="loop-head">🔁 ${escHtml(t.loopLabel || '반복')}</div>`;
+    h += renderStep(s, t);
+    if (i === lt) h += '<div class="loop-back">↺ 다음 차례로 다시 반복</div></div>';
+  });
+  return h + '</div>';
+}
+// 이 문제로 검증되는 역량 (유형별)
+const skillInfo = {
+'수학':{ds:'배열·변수 (수식 중심)', kind:'수학 / 정수론 — 공식을 코드로 옮기기', how:'규칙을 수식화한 뒤 반복문으로 계산 (유클리드 호제법·소수판정 등)', evl:'<b>기본 수학적 사고력과 정확한 구현력</b>. 오버플로우·예외 처리 같은 디테일 감각'},
+'자료구조':{ds:'스택 / 큐 / 덱 (ArrayDeque)', kind:'자료구조 구현·활용', how:'LIFO(스택)·FIFO(큐) 특성을 이해하고 상황에 맞게 사용', evl:'<b>기본 자료구조를 적재적소에 쓰는 능력</b>. 모든 코딩테스트의 토대'},
+'해시/맵':{ds:'HashMap / HashSet', kind:'탐색 / 매핑 — 빠른 조회', how:'키–값으로 저장해 O(1)에 즉시 찾기', evl:'<b>대용량 데이터를 빠르게 조회·중복 처리하는 최적화 감각</b>'},
+'완전탐색':{ds:'배열 + 반복문', kind:'브루트포스 (완전탐색)', how:'가능한 모든 경우를 빠짐없이 시도하고 조건을 만족하는 답을 추림', evl:'<b>문제를 경우의 수로 빠짐없이 나누는 사고력</b>과 시간복잡도 가늠 능력'},
+'BFS/DFS':{ds:'그래프 / 2차원 배열 + 큐·재귀', kind:'그래프 탐색 — 연결성·최단거리', how:'BFS는 큐로 가까운 곳부터, DFS는 재귀로 깊이 우선', evl:'<b>현실 문제를 그래프로 모델링하고 탐색하는 핵심 역량</b>. 최단경로·영역 구분의 기반'},
+'우선순위큐':{ds:'힙(Heap) / PriorityQueue', kind:'우선순위 처리 — 최대·최소 즉시 추출', how:'힙으로 항상 최댓값/최솟값이 맨 위에 오도록 유지', evl:'<b>정렬 상태를 유지하며 최적값을 효율적으로 꺼내는 능력</b> (O(log N))'},
+'구현/시뮬':{ds:'배열 + 조건/반복 (복합)', kind:'시뮬레이션 / 구현', how:'문제에 적힌 규칙을 그대로, 정확히 코드로 옮김', evl:'<b>복잡하고 긴 요구사항을 빠짐없이 코드화하는 구현력</b>. 실무와 가장 닮은 유형'}
+};
+function renderCap(type) {
+  const c = skillInfo[type]; if (!c) return '';
+  return '<div class="cap-title">💪 이 문제를 풀 수 있다면?</div>'
+    + `<div class="cap-row"><span class="cap-k">자료구조</span><span class="cap-v">${c.ds}</span></div>`
+    + `<div class="cap-row"><span class="cap-k">문제 유형</span><span class="cap-v">${c.kind}</span></div>`
+    + `<div class="cap-row"><span class="cap-k">풀이 방식</span><span class="cap-v">${c.how}</span></div>`
+    + `<div class="cap-row"><span class="cap-k">평가 척도</span><span class="cap-v">${c.evl}</span></div>`;
+}
+// 문제별 퀴즈 (핵심 로직·자료구조를 묻는 객관식)
+const quizzes = {
+1000:[{q:'이 문제의 핵심 동작은?',options:['두 수를 더해 출력','두 수를 곱해 출력','큰 수만 출력','두 수를 정렬'],answer:0,explain:'A와 B를 입력받아 A+B를 출력하는 기본 입출력 문제입니다.'}],
+2609:[{q:'유클리드 호제법에서 gcd(a, b)는 무엇과 같나요?',options:['gcd(b, a%b)','gcd(a+b, b)','gcd(a*b, b)','gcd(a-b, b)'],answer:0,explain:'gcd(a,b)=gcd(b, a%b)이며, b가 0이 되는 순간의 a가 최대공약수입니다.'},
+ {q:'최소공배수(LCM)를 구하는 식은?',options:['a + b','a * b / gcd','gcd * 2','a % b'],answer:1,explain:'LCM = a*b/GCD. 오버플로 방지로 보통 a/gcd*b 로 계산합니다.'}],
+1978:[{q:'어떤 수 n이 소수인지 확인할 때 어디까지 나눠보면 충분할까요?',options:['n-1까지','n/2까지','√n(루트 n)까지','n까지'],answer:2,explain:'2부터 √n까지 나누어 떨어지는 수가 없으면 소수입니다. 그 이상은 볼 필요가 없습니다.'}],
+11050:[{q:'이항계수 C(N, K)가 세는 것은?',options:['N개 중 K개를 순서 없이 고르는 경우의 수','N개를 한 줄로 세우는 경우의 수','N의 약수 개수','K번째 소수'],answer:0,explain:'조합 C(N,K) = N! / (K!·(N-K)!), 순서 없이 K개를 고르는 경우의 수입니다.'}],
+6064:[{q:'<x:y>가 끝내 안 나타나면 출력값은?',options:['0','-1','마지막 해','x+y'],answer:1,explain:'두 주기의 최소공배수까지 확인해도 못 찾으면 -1을 출력합니다.'}],
+10828:[{q:'스택에서 가장 먼저 빠져나오는 값은?',options:['가장 먼저 넣은 값','가장 마지막에 넣은 값','가장 작은 값','가운데 값'],answer:1,explain:'스택은 LIFO(후입선출). 마지막에 넣은 값(top)이 가장 먼저 나옵니다.'}],
+10845:[{q:'큐에서 pop을 하면 어느 값이 나오나요?',options:['맨 앞(가장 먼저 넣은 값)','맨 뒤(가장 늦게 넣은 값)','가장 큰 값','무작위'],answer:0,explain:'큐는 FIFO(선입선출). 맨 앞(front) 값이 먼저 나옵니다.'}],
+10866:[{q:'덱(deque)의 가장 큰 특징은?',options:['한쪽 끝만 사용','양쪽 끝에서 모두 넣고 뺄 수 있음','항상 정렬됨','중복을 막음'],answer:1,explain:'덱은 앞·뒤 양쪽에서 모두 삽입/삭제가 가능합니다.'}],
+11866:[{q:'요세푸스 시뮬레이션에 가장 적합한 자료구조는?',options:['스택','큐','해시맵','이진트리'],answer:1,explain:'앞에서 K-1명을 빼 뒤로 보내고 K번째를 제거 → 회전이 자연스러운 큐가 적합합니다.'}],
+1874:[{q:'스택수열에서 "NO"가 출력되는 경우는?',options:['스택이 빌 때','꺼내야 할 값보다 스택 맨 위가 이미 작을 때','수열이 오름차순일 때','N이 홀수일 때'],answer:1,explain:'pop해야 하는데 맨 위가 목표와 다르면(이미 더 큰 값을 위에 쌓음) 만들 수 없어 NO입니다.'}],
+1966:[{q:'프린터 큐에서 앞 문서를 뒤로 보내는 조건은?',options:['뒤에 더 중요한 문서가 있을 때','큐가 비었을 때','목표 문서일 때','항상'],answer:0,explain:'큐에 더 높은 중요도가 남아 있으면 현재 문서를 뒤로 보내고, 아니면 인쇄합니다.'}],
+1620:[{q:'이름↔번호를 양방향으로 빠르게 조회하려면?',options:['배열 1개를 순회','HashMap 2개(이름→번호, 번호→이름)','매번 정렬','스택'],answer:1,explain:'두 방향의 HashMap을 만들면 각 질의를 O(1)에 조회할 수 있습니다.'}],
+1764:[{q:'두 명단의 교집합을 효율적으로 찾는 자료구조는?',options:['HashSet','스택','큐','우선순위큐'],answer:0,explain:'한 명단을 HashSet에 넣고 다른 명단을 조회하며 교집합을 찾습니다.'}],
+17219:[{q:'사이트로 비밀번호를 즉시 찾기 좋은 자료구조는?',options:['HashMap','배열 순차 탐색','스택','힙'],answer:0,explain:'사이트→비밀번호 HashMap으로 O(1) 조회가 가능합니다.'}],
+2798:[{q:'카드 3장 조합을 모두 확인하는 이 풀이의 방식은?',options:['완전탐색(브루트포스)','이분탐색','동적계획법','그리디'],answer:0,explain:'3중 반복으로 가능한 모든 3장 조합을 확인하는 완전탐색입니다.'}],
+2231:[{q:'분해합 풀이가 1부터 차례로 올라가며 확인하는 이유는?',options:['가장 작은 생성자를 찾기 위해','속도를 위해','정렬하려고','메모리 절약'],answer:0,explain:'가장 작은 생성자를 찾아야 하므로 1부터 올라가다 처음 맞는 값을 답으로 합니다.'}],
+1018:[{q:'8×8을 만들 모든 위치를 확인하는 이 풀이의 유형은?',options:['완전탐색','DP','그리디','이분탐색'],answer:0,explain:'잘라낼 수 있는 모든 8×8 시작 위치를 완전탐색하며 최소 수정 칸을 찾습니다.'},
+ {q:'각 8×8에서 다시 칠할 칸은 어떻게 빨리 구하나요?',options:['W시작 기준 다른 칸 수 cnt와 64-cnt 중 작은 값','매번 색을 바꿔봄','정렬','랜덤'],answer:0,explain:'W로 시작하는 체스판과 다른 칸 수가 cnt면, B로 시작하는 경우는 64-cnt. 둘 중 작은 값이 답입니다.'}],
+1260:[{q:'BFS 구현에 쓰는 자료구조는?',options:['스택','큐','힙','해시'],answer:1,explain:'BFS는 큐로 가까운 노드부터, DFS는 재귀/스택으로 깊이 우선 탐색합니다.'},
+ {q:'갈 수 있는 노드가 여러 개면 방문 순서는?',options:['큰 번호부터','작은 번호부터','입력 순서','무작위'],answer:1,explain:'문제 조건상 번호가 작은 노드부터 방문하므로 인접 리스트를 정렬합니다.'}],
+2606:[{q:'1번과 연결된 컴퓨터 수를 구하는 것은 무엇과 같나요?',options:['1번이 속한 연결요소의 크기','최단 경로','정렬 결과','최댓값'],answer:0,explain:'1번에서 BFS/DFS로 도달 가능한 노드 수(자기 제외)를 셉니다.'}],
+1012:[{q:'필요한 지렁이 수는 무엇과 같나요?',options:['붙어 있는 배추 무리(연결요소)의 수','배추 총 개수','밭의 넓이','가장 큰 무리 크기'],answer:0,explain:'상하좌우로 연결된 배추 덩어리 수 = 필요한 지렁이 수입니다.'}],
+2667:[{q:'단지 수를 세는 것은 무엇을 세는 것과 같나요?',options:['연결요소의 개수','간선의 수','최단 거리','집의 총 개수'],answer:0,explain:'상하좌우로 연결된 집 덩어리(연결요소)의 개수를 셉니다.'}],
+1697:[{q:'X-1, X+1, 2X 이동 중 최소 시간을 구하기 좋은 방법은?',options:['DFS','BFS','정렬','그리디'],answer:1,explain:'모든 이동 비용이 1초로 같아서, BFS로 처음 도달하는 시간이 곧 최소 시간입니다.'}],
+7576:[{q:'여러 익은 토마토에서 동시에 번질 때 적합한 방법은?',options:['다중 시작점 BFS','단일 DFS','정렬','이분탐색'],answer:0,explain:'처음부터 익은 토마토들을 모두 큐에 넣고 동시에 BFS로 퍼뜨립니다.'},
+ {q:'끝내 익지 않는 칸이 남으면 출력은?',options:['0','-1','칸 수','1'],answer:1,explain:'다 익힐 수 없으면 -1을 출력합니다.'}],
+7569:[{q:'3차원 토마토는 몇 방향으로 퍼지나요?',options:['4방향','6방향','8방향','2방향'],answer:1,explain:'상하좌우 4방향 + 위·아래 층 2방향 = 총 6방향으로 퍼집니다.'}],
+10026:[{q:'적록색약의 구역 수는 어떻게 구하나요?',options:['R을 G로 바꾼 그림에서 다시 구역 세기','파랑을 무시','전체를 반전','정렬'],answer:0,explain:'R과 G를 같은 색으로 본 그림에서 구역 수를 다시 셉니다.'}],
+11724:[{q:'연결 요소 개수를 세는 방법은?',options:['미방문 정점마다 탐색을 돌리고 새 그룹 시작 때 +1','간선 수 세기','정렬','최단경로'],answer:0,explain:'아직 방문 안 한 정점에서 BFS/DFS로 그룹을 묶고, 새 그룹이 시작될 때마다 카운트합니다.'}],
+1927:[{q:'0이 입력되면 최소 힙은 무엇을 출력하나요?',options:['가장 큰 값','가장 작은 값','0','마지막에 넣은 값'],answer:1,explain:'최소 힙은 최솟값이 항상 맨 위(루트)에 있어, 0일 때 최솟값을 꺼내 출력합니다.'}],
+11279:[{q:'Java에서 "최대 힙"을 만들려면?',options:['new PriorityQueue<>()','new PriorityQueue<>(Collections.reverseOrder())','Arrays.sort()','new Stack<>()'],answer:1,explain:'기본 PriorityQueue는 최소 힙입니다. reverseOrder를 넣으면 최대 힙이 됩니다.'}],
+11286:[{q:'절댓값이 같은 -1과 1이 있을 때, 빼기(0) 명령에서 먼저 나오는 값은?',options:['1','-1','0','동시에'],answer:1,explain:'절댓값이 같으면 더 작은(음수) 값이 먼저 나옵니다. 그래서 -1입니다.'},
+ {q:'x가 0이 아닐 때 코드가 하는 일은?',options:['값을 꺼내 출력','값을 힙에 넣기','힙을 비우기','정렬'],answer:1,explain:'x≠0이면 pq.add(x)로 힙에 넣고, x=0일 때만 절댓값 최소를 꺼냅니다.'}],
+7662:[{q:'최댓값·최솟값을 모두 빠르게 삭제하려면?',options:['최대 힙과 최소 힙을 함께 운영','배열을 매번 정렬','스택 사용','단일 힙'],answer:0,explain:'두 힙을 함께 쓰고 삭제 여부를 동기화해 양쪽 끝(최대·최소)을 모두 다룹니다.'}],
+2108:[{q:'중앙값을 구하려면 먼저 무엇을 해야 하나요?',options:['정렬','합산','최댓값 찾기','뒤집기'],answer:0,explain:'정렬한 뒤 가운데(N/2번째) 값이 중앙값입니다.'},
+ {q:'최빈값이 여러 개면 무엇을 고르나요?',options:['가장 작은 값','두 번째로 작은 값','가장 큰 값','평균'],answer:1,explain:'최빈값이 둘 이상이면 그중 두 번째로 작은 값을 출력합니다.'}],
+1074:[{q:'Z 문제를 효율적으로 푸는 방법은?',options:['사분면을 따져 재귀적으로 좁히기','모든 칸을 하나씩 세기','정렬','BFS'],answer:0,explain:'2^N×2^N을 4등분해 찾는 칸이 속한 사분면의 앞 칸 수를 더하며 재귀적으로 좁힙니다. 직접 세면 너무 큽니다.'}],
+14500:[{q:'테트로미노 풀이의 기본 접근은?',options:['모든 위치·모양을 대보는 완전탐색','DP','그리디','이분탐색'],answer:0,explain:'각 칸을 시작점으로 회전·대칭 모양을 모두 올려보는 완전탐색입니다(ㅏ 모양만 별도 처리).'}],
+5430:[{q:'R(뒤집기)을 빠르게 처리하는 방법은?',options:['실제로 뒤집지 않고 방향만 토글','매번 배열을 reverse','정렬','스택'],answer:0,explain:'매번 뒤집으면 느려서, 방향 플래그만 바꾸고 D는 그 방향의 앞에서 제거합니다.'}],
+16928:[{q:'주사위 최소 횟수를 구하기 적합한 방법은?',options:['BFS','DFS','정렬','그리디'],answer:0,explain:'칸을 노드로 보고 BFS로 탐색하면 100번 칸에 처음 닿는 횟수가 최소입니다.'}]
+};
+// 문제별 구현(서술형) 퀴즈 — 직접 떠올린 뒤 모범 답안과 비교
+const IMPL = {
+2609:[
+ {q:'유클리드 호제법으로 최대공약수를 구하는 gcd 메서드를 작성해 보세요.',
+  hint:'b가 0이면 a가 정답. 아니면 gcd(b, a%b) 재귀.',
+  code:'static int gcd(int a, int b) {\n    return b == 0 ? a : gcd(b, a % b);\n}',
+  explain:'나머지로 문제를 줄여가고, 나머지가 0이 되는 순간의 a가 최대공약수입니다.'},
+ {q:'최대공약수 g로 최소공배수(LCM)를 "오버플로 없이" 구하는 식을 작성해 보세요.',
+  hint:'a*b는 int 범위를 넘길 수 있어요. 곱하기 전에 나누고 long으로 받으세요.',
+  code:'long lcm = (long) a / g * b;   // a*b/g 이지만 곱하기 전에 나눠 오버플로 방지',
+  explain:'a*b를 먼저 곱하면 int 오버플로가 날 수 있습니다. a/g를 먼저 한 뒤 b를 곱하고 long으로 담는 게 안전 — 많이 하는 실수예요.'}
+],
+1978:[
+ {q:'정수 n이 소수인지 판별하는 isPrime(int n)을 작성해 보세요.',
+  hint:'1보다 작으면 false. 2부터 i*i<=n 까지 검사.',
+  code:'static boolean isPrime(int n) {\n    if (n < 2) return false;\n    for (int i = 2; i * i <= n; i++)\n        if (n % i == 0) return false;\n    return true;\n}',
+  explain:'√n까지만 보면 충분(i*i<=n). n=1을 소수로 착각하는 실수를 조심하세요.'},
+ {q:'2~N의 소수를 한 번에 거르는 "에라토스테네스의 체"를 작성해 보세요.',
+  hint:'i가 소수면 i*i부터 i씩 증가하며 배수를 지웁니다.',
+  code:'boolean[] notPrime = new boolean[N + 1];\nnotPrime[0] = notPrime[1] = true;\nfor (int i = 2; i * i <= N; i++)\n    if (!notPrime[i])\n        for (int j = i * i; j <= N; j += i) notPrime[j] = true;',
+  explain:'많은 수의 소수를 구할 땐 체가 훨씬 빠릅니다. 안쪽 루프를 i*i부터 시작하는 게 포인트(자주 까먹음).'}
+],
+10828:[
+ {q:'시간 초과를 막는 "빠른 입출력" 골격(BufferedReader + StringBuilder)을 작성해 보세요.',
+  hint:'Scanner·println은 느립니다. 모아서 한 번에 출력하세요.',
+  code:'BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\nStringBuilder sb = new StringBuilder();\nint n = Integer.parseInt(br.readLine().trim());\n// ... sb.append(결과).append(\'\\n\');\nSystem.out.print(sb);',
+  explain:'명령이 많은 문제는 Scanner/println이면 시간 초과가 납니다. 거의 모든 문제의 기본기예요.'},
+ {q:'스택 명령 push/pop/top을 처리하는 switch 골격을 작성해 보세요. (빈 경우 -1)',
+  hint:'pop·top은 isEmpty()를 먼저 확인.',
+  code:'switch (cmd) {\n    case "push": stack.push(x); break;\n    case "pop":  sb.append(stack.isEmpty() ? -1 : stack.pop()).append(\'\\n\'); break;\n    case "top":  sb.append(stack.isEmpty() ? -1 : stack.peek()).append(\'\\n\'); break;\n}',
+  explain:'비어 있는지 먼저 확인해 -1 처리하는 것이 핵심입니다.'}
+],
+10845:[
+ {q:'ArrayDeque를 "큐"로 쓸 때 넣기/빼기 메서드를 작성해 보세요.',
+  hint:'뒤로 넣고(addLast) 앞에서 뺍니다(pollFirst).',
+  code:'Deque<Integer> q = new ArrayDeque<>();\nq.addLast(x);               // push: 뒤에 넣기\nint front = q.pollFirst();  // pop: 앞에서 빼기',
+  explain:'큐=FIFO. addLast/pollFirst 조합이 헷갈리기 쉽습니다(LinkedList보다 ArrayDeque가 빠름).'},
+ {q:'front/back 명령(맨 앞·맨 뒤 "확인")을 작성해 보세요. pop과 어떻게 다를까요?',
+  hint:'확인은 peek(빼지 않음), pop은 poll(빼냄).',
+  code:'sb.append(q.isEmpty() ? -1 : q.peekFirst()).append(\'\\n\');  // front\nsb.append(q.isEmpty() ? -1 : q.peekLast()).append(\'\\n\');   // back',
+  explain:'peek은 값을 확인만 하고 그대로 두고, poll은 꺼내서 제거합니다. 이 둘을 헷갈리면 틀립니다.'}
+],
+1260:[
+ {q:'인접 리스트를 쓰는 재귀 DFS를 작성해 보세요.',
+  hint:'방문 표시 → 처리 → 미방문 인접 정점 재귀.',
+  code:'static void dfs(int node) {\n    visited[node] = true;\n    sb.append(node).append(\' \');\n    for (int next : graph[node])\n        if (!visited[next]) dfs(next);\n}',
+  explain:'방문 표시를 먼저 하지 않으면 무한 재귀에 빠집니다.'},
+ {q:'큐를 쓰는 반복 BFS를 작성해 보세요. (DFS와 가장 헷갈리는 부분)',
+  hint:'시작 노드를 큐에 넣고 방문 표시. 꺼내며 인접 미방문을 큐에 넣을 때 바로 방문 표시.',
+  code:'Queue<Integer> q = new LinkedList<>();\nq.add(start); visited[start] = true;\nwhile (!q.isEmpty()) {\n    int cur = q.poll();\n    sb.append(cur).append(\' \');\n    for (int next : graph[cur])\n        if (!visited[next]) { visited[next] = true; q.add(next); }\n}',
+  explain:'BFS는 "큐에 넣는 순간" 방문 표시해야 합니다. 꺼낼 때 표시하면 같은 노드가 여러 번 들어가는 버그가 나요(가장 흔한 실수!).'}
+],
+2667:[
+ {q:'상하좌우 4방향을 dx/dy 배열로 순회하는 패턴을 작성해 보세요.',
+  hint:'dx={1,-1,0,0}, dy={0,0,1,-1}.',
+  code:'int[] dx = {1, -1, 0, 0};\nint[] dy = {0, 0, 1, -1};\nfor (int d = 0; d < 4; d++) {\n    int nx = x + dx[d], ny = y + dy[d];\n    // nx, ny 사용\n}',
+  explain:'방향 배열은 격자 BFS/DFS의 필수 패턴입니다. if를 4번 쓰면 길고 실수가 늘어요.'},
+ {q:'(x,y)에서 연결된 집 수를 세는 DFS를 작성해 보세요. (경계·방문 체크 포함)',
+  hint:'범위 밖/집 아님/방문이면 0. 아니면 1 + 네 방향 합.',
+  code:'static int dfs(int x, int y) {\n    if (x<0 || y<0 || x>=n || y>=n || map[x][y]!=1 || visited[x][y]) return 0;\n    visited[x][y] = true;\n    return 1 + dfs(x+1,y) + dfs(x-1,y) + dfs(x,y+1) + dfs(x,y-1);\n}',
+  explain:'경계·방문 검사를 함수 맨 앞에 모으면 깔끔하고 실수가 줄어듭니다.'}
+],
+1697:[
+ {q:'현재 위치 cur를 3방향(−1, +1, ×2)으로 BFS 확장하는 코드를 작성해 보세요.',
+  hint:'범위(0~100000)와 미방문 확인 후 거리+1.',
+  code:'for (int nx : new int[]{cur-1, cur+1, cur*2}) {\n    if (nx >= 0 && nx <= 100000 && !visited[nx]) {\n        visited[nx] = true;\n        dist[nx] = dist[cur] + 1;\n        queue.add(nx);\n    }\n}',
+  explain:'모든 이동 비용이 1이라 BFS로 처음 도달한 dist가 최소 시간입니다.'},
+ {q:'BFS에서 방문 표시는 "언제" 해야 할까요? 그 부분을 코드로 보여 주세요.',
+  hint:'큐에서 꺼낼 때가 아니라, 큐에 "넣을 때".',
+  code:'if (!visited[nx]) {\n    visited[nx] = true;   // 큐에 넣는 순간 표시!\n    queue.add(nx);\n}',
+  explain:'꺼낼 때 표시하면 같은 칸이 큐에 여러 번 들어가 시간 초과·오답이 납니다. 넣을 때 표시가 정답.'}
+],
+11279:[
+ {q:'최대 힙으로 동작하는 PriorityQueue 선언을 작성해 보세요.',
+  hint:'기본은 최소 힙. 역순 정렬자.',
+  code:'PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());',
+  explain:'reverseOrder()를 넣으면 최댓값이 맨 위로 옵니다.'},
+ {q:'입력 x 처리 분기(0이면 빼서 출력, 아니면 넣기)를 작성해 보세요.',
+  hint:'x==0이면 isEmpty?0:poll, 아니면 add.',
+  code:'if (x == 0)\n    sb.append(pq.isEmpty() ? 0 : pq.poll()).append(\'\\n\');\nelse\n    pq.add(x);',
+  explain:'힙이 비었을 때 0을 출력하는 처리를 빠뜨리지 않는 것이 포인트입니다.'}
+],
+11286:[
+ {q:'절댓값 힙을 만드는 PriorityQueue 선언(비교자 포함)을 작성해 보세요.',
+  hint:'절댓값이 다르면 절댓값 오름차순, 같으면 값 오름차순.',
+  code:'PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {\n    int absA = Math.abs(a), absB = Math.abs(b);\n    return absA != absB ? absA - absB : a - b;\n});',
+  explain:'절댓값이 같을 때 a-b로 비교하면 음수가 먼저 나옵니다.'},
+ {q:'입력 x 처리 분기(0이면 빼서 출력, 아니면 넣기)를 작성해 보세요.',
+  hint:'x==0이면 isEmpty?0:poll.',
+  code:'if (x == 0)\n    sb.append(pq.isEmpty() ? 0 : pq.poll()).append(\'\\n\');\nelse\n    pq.add(x);',
+  explain:'비교자만 다를 뿐, 빼기/넣기 분기 구조는 최소·최대 힙과 똑같습니다.'}
+],
+1874:[
+ {q:'1부터 target까지 스택에 push하며 "+"를 기록하는 코드를 작성해 보세요.',
+  hint:'cur가 target 이하인 동안 push하고 cur++.',
+  code:'while (cur <= target) {\n    stack.push(cur++);\n    sb.append("+\\n");\n}',
+  explain:'다음에 넣을 수 cur를 증가시키며 target까지 채웁니다.'},
+ {q:'스택으로 수열을 만들 수 있는지 판정하고 pop/NO를 처리하는 코드를 작성해 보세요.',
+  hint:'맨 위가 target이면 pop("-"), 아니면 불가능.',
+  code:'if (stack.peek() == target) {\n    stack.pop();\n    sb.append("-\\n");\n} else {\n    ok = false;   // 만들 수 없음 → NO\n    break;\n}',
+  explain:'push로 target까지 올린 뒤 맨 위가 target이 아니면(이미 더 큰 값이 위에 있음) 절대 만들 수 없습니다.'}
+]
+};
+function renderImpl(im, idx) {
+  let h = `<div class="quiz-q impl"><div class="quiz-qnum">✍️ 구현 ${idx + 1}</div><div class="quiz-text">${escHtml(im.q)}</div>`;
+  if (im.hint) h += `<button class="qa-btn" data-act="hint">💡 힌트</button>`;
+  h += `<button class="qa-btn" data-act="reveal">✅ 모범 답안 보기</button>`;
+  if (im.hint) h += `<div class="quiz-hint">${escHtml(im.hint)}</div>`;
+  h += `<div class="quiz-answer"><pre><code class="language-java">${escHtml(im.code)}</code></pre>`;
+  if (im.explain) h += `<div class="quiz-explain show" style="margin-top:11px"><b>💡 해설</b> ${escHtml(im.explain)}</div>`;
+  return h + '</div></div>';
+}
+function renderQuiz(id) {
+  const qs = quizzes[id], im = IMPL[id];
+  if (!qs && !im) return '<div class="quiz-empty">이 문제의 퀴즈는 곧 추가될 예정이에요 🙌</div>';
+  let h = '<div class="quiz-intro">💡 객관식은 보기를 눌러 채점하고, ✍️ 구현 문제는 직접 떠올린 뒤 모범 답안과 비교해 보세요!</div>';
+  (qs || []).forEach((quiz, qi) => {
+    h += `<div class="quiz-q"><div class="quiz-qnum">Q${qi + 1}</div><div class="quiz-text">${escHtml(quiz.q)}</div><div class="quiz-opts">`;
+    quiz.options.forEach((o, oi) => {
+      h += `<button class="quiz-opt" data-oi="${oi}" data-correct="${quiz.answer}">${escHtml(o)}</button>`;
+    });
+    h += `</div><div class="quiz-explain"><b>💡 해설</b> ${escHtml(quiz.explain)}</div></div>`;
+  });
+  if (im) (Array.isArray(im) ? im : [im]).forEach((q, i) => h += renderImpl(q, i));
+  return h;
+}
+// 코드 주석을 종류별로 색 구분 (역할 / 예시입력 / 출력 / 일반)
+function styleComments(el) {
+  el.querySelectorAll('.hljs-comment').forEach(c => {
+    const t = c.textContent;
+    if (t.includes('✅') || /출력\s*[:：(]/.test(t))            c.classList.add('cm-out');
+    else if (t.includes('▼') || t.includes('예시') || t.includes('예)')) c.classList.add('cm-eg');
+    else if (t.includes('[메서드') || t.includes('역할]'))  c.classList.add('cm-role');
+    else c.classList.add('cm-note');
+  });
+}
+// 인라인 강조: **굵게**, "따옴표" 자동 굵게
+function inlineFmt(s) {
+  let t = escHtml(s);
+  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  t = t.replace(/"([^"]+)"/g, '<strong>$1</strong>');
+  return t;
+}
+// 한국어 문장 단위로 분리 (마침표+공백 기준) — lookbehind 미사용(iOS 사파리 호환)
+function splitSentences(s) {
+  const out = []; let buf = '';
+  for (let i = 0; i < s.length; i++) {
+    buf += s[i];
+    if (s[i] === '.' && (i + 1 >= s.length || s[i + 1] === ' ')) { out.push(buf.trim()); buf = ''; }
+  }
+  if (buf.trim()) out.push(buf.trim());
+  return out.filter(Boolean);
+}
+// 설명을 [핵심 한 줄(lead) + 규칙 불릿 + 예시 박스]로 구조화
+function renderDesc(d) {
+  const lines = d.split('\n').map(l => l.trim()).filter(Boolean);
+  const bullets = [], prose = [];
+  let sawBullet = false;
+  for (const l of lines) {
+    if (/^[·\-]\s*/.test(l)) { bullets.push(l.replace(/^[·\-]\s*/, '')); sawBullet = true; }
+    else prose.push(l);
+  }
+  let leads = [], items = [];
+  if (sawBullet) { leads = prose; items = bullets; }          // 명령형: 프로세 전부 lead + ·항목 불릿
+  else {                                                       // 서술형: 첫 문장 lead + 나머지 문장 불릿
+    const sents = splitSentences(prose.join(' '));
+    leads = sents.slice(0, 1); items = sents.slice(1);
+  }
+  // 블록 순서대로 구성 (예시 문장은 별도 박스)
+  let html = '';
+  for (const s of leads) html += `<div class="pd-lead">${inlineFmt(s)}</div>`;
+  let listOpen = false;
+  const openList  = () => { if (!listOpen) { html += '<ul class="pd-list">'; listOpen = true; } };
+  const closeList = () => { if (listOpen)  { html += '</ul>'; listOpen = false; } };
+  for (const b of items) {
+    if (/^예\)|^예를 들어|^예:/.test(b)) { closeList(); html += `<div class="pd-eg">${inlineFmt(b)}</div>`; }
+    else { openList(); html += `<li>${inlineFmt(b)}</li>`; }
+  }
+  closeList();
+  return html;
+}
+// 문제 텍스트를 [설명 / 입력 / 출력] 블록으로 구조화
+function renderProblem(text) {
+  const lines = text.split('\n');
+  const desc = [];
+  let input = null, output = null, mode = 'desc';
+  for (const line of lines) {
+    const t = line.trim();
+    if (/^입력\s*[:：]/.test(t))      { mode = 'in';  input  = t.replace(/^입력\s*[:：]\s*/, ''); continue; }
+    if (/^출력\s*[:：]/.test(t))      { mode = 'out'; output = t.replace(/^출력\s*[:：]\s*/, ''); continue; }
+    if (mode === 'desc') desc.push(line);
+    else if (mode === 'in')  input  += '\n' + line;
+    else                     output += '\n' + line;
+  }
+  let html = '';
+  const d = desc.join('\n').trim();
+  if (d) html += `<div class="problem-desc">${renderDesc(d)}</div>`;
+  if (input != null || output != null) {
+    html += '<div class="io-grid">';
+    if (input  != null) html += `<div class="io-box"><span class="io-label in">입력</span><div class="io-text">${formatIO(input)}</div></div>`;
+    if (output != null) html += `<div class="io-box"><span class="io-label out">출력</span><div class="io-text">${formatIO(output)}</div></div>`;
+    html += '</div>';
+  }
+  return html || `<div class="problem-desc">${escHtml(text)}</div>`;
+}
+
+async function openModal(id) {
+  const p = problems.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = `#${p.id} ${p.title}`;
+  document.getElementById('modalBadge').textContent = p.diff;
+  document.getElementById('modalBadge').style.background = diffColor(p.diff);
+  document.getElementById('modalType').textContent = p.type;
+  document.getElementById('modalType').style.color = TYPE_COLOR[p.type];
+  document.getElementById('modalProblem').innerHTML = renderProblem(p.problem);
+  document.getElementById('skillBox').innerHTML = renderCap(p.type);
+  document.getElementById('modalExplain').textContent = p.explain;
+  const chartDiv = document.getElementById('mermaidChart');
+  chartDiv.innerHTML = '<p style="color:#8b949e;text-align:center">순서도 생성 중...</p>';
+  const bbox = document.getElementById('beginnerBox');
+  bbox.innerHTML = renderBeginner(beginner[p.id]);
+  bbox.style.display = beginner[p.id] ? 'block' : 'none';
+  const tbox = document.getElementById('traceBox');
+  const traceHtml = renderTraceBox(traces[p.id]);
+  tbox.innerHTML = traceHtml;
+  tbox.style.display = traceHtml ? 'block' : 'none';
+  document.getElementById('quizTab').innerHTML = renderQuiz(p.id);
+  const codeEl = document.getElementById('modalCode');
+  codeEl.textContent = p.code;
+  codeEl.removeAttribute('data-highlighted');
+  if (window.hljs) { hljs.highlightElement(codeEl); styleComments(codeEl); }
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('explainTab').classList.remove('hidden');
+  document.getElementById('codeTab').classList.add('hidden');
+  document.getElementById('quizTab').classList.add('hidden');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.tab[data-tab="explain"]').classList.add('active');
+  if (!window.mermaid) {
+    chartDiv.innerHTML = '<p style="color:#8b949e;text-align:center;font-size:.85rem">📊 순서도는 인터넷 연결 시 표시됩니다<br>(나머지 내용은 그대로 보실 수 있어요)</p>';
+  } else {
+    try {
+      const uid = 'mermaid-' + (++mermaidCounter);
+      const { svg } = await mermaid.render(uid, p.flow);
+      chartDiv.innerHTML = svg;
+    } catch(e) {
+      chartDiv.innerHTML = '<p style="color:#8b949e;text-align:center;font-size:.85rem">순서도를 표시할 수 없습니다</p>';
+    }
+  }
+}
+
+// ─────────── Modal Controls ───────────
+document.getElementById('closeBtn').addEventListener('click', () => {
+  document.getElementById('overlay').classList.remove('show');
+});
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay'))
+    document.getElementById('overlay').classList.remove('show');
+});
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.tab;
+    document.getElementById('explainTab').classList.toggle('hidden', target !== 'explain');
+    document.getElementById('codeTab').classList.toggle('hidden', target !== 'code');
+    document.getElementById('quizTab').classList.toggle('hidden', target !== 'quiz');
+  });
+});
+// 퀴즈 정답 채점 (이벤트 위임 — 한 번만 등록)
+document.getElementById('quizTab').addEventListener('click', e => {
+  const btn = e.target.closest('.qa-btn');
+  if (btn) {
+    const card = btn.closest('.quiz-q');
+    if (btn.dataset.act === 'hint') {
+      card.querySelector('.quiz-hint').classList.toggle('show');
+    } else {
+      const ans = card.querySelector('.quiz-answer');
+      ans.classList.add('show');
+      const code = ans.querySelector('code');
+      if (code && !code.dataset.hl && window.hljs) { hljs.highlightElement(code); styleComments(code); code.dataset.hl = '1'; }
+      btn.style.display = 'none';
+    }
+    return;
+  }
+  const opt = e.target.closest('.quiz-opt');
+  if (!opt) return;
+  const card = opt.closest('.quiz-q');
+  if (card.classList.contains('answered')) return;
+  card.classList.add('answered');
+  const correct = +opt.dataset.correct;
+  const picked = +opt.dataset.oi;
+  card.querySelectorAll('.quiz-opt').forEach((o, i) => {
+    o.classList.add('disabled');
+    if (i === correct) { o.classList.add('correct'); o.innerHTML += '<span class="mk">✓</span>'; }
+  });
+  if (picked !== correct) opt.innerHTML += '<span class="mk">✗</span>', opt.classList.add('wrong');
+  const ex = card.querySelector('.quiz-explain');
+  if (ex) ex.classList.add('show');
+});
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const code = document.getElementById('modalCode').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ 복사됨!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 코드 복사'; btn.classList.remove('copied'); }, 2000);
+  });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('overlay').classList.remove('show');
+});
+
+// ─────────── Init ───────────
+renderFilters();
+renderCards('전체');
+</script>
+</body>
+</html>
