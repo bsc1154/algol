@@ -168,6 +168,13 @@ pre code .hljs-comment{font-style:normal;color:#7d8590}
 .quiz-opt.wrong{background:rgba(248,81,73,.14);border-color:#f85149;color:#ff7b72}
 .quiz-opt.disabled{cursor:default;pointer-events:none}
 .quiz-opt .mk{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-weight:800}
+/* 코드 블록 객관식 보기 */
+.bq-opts{gap:9px}
+.code-opt{padding:9px 12px 9px 14px;text-align:left;cursor:pointer}
+.code-opt pre{margin:0;border-radius:0;background:transparent;overflow-x:auto}
+.code-opt pre code{font-size:.78rem;background:transparent;padding:0;white-space:pre}
+.code-opt.correct{background:rgba(46,160,67,.13);border-color:#2ea043}
+.code-opt.wrong{background:rgba(248,81,73,.12);border-color:#f85149}
 .quiz-explain{margin-top:12px;font-size:.85rem;line-height:1.65;color:#adbac7;background:#161b22;border-left:3px solid #2ea043;border-radius:0 6px 6px 0;padding:10px 13px;display:none}
 .quiz-explain.show{display:block}
 .quiz-explain b{color:#f0f6fc}
@@ -3524,9 +3531,69 @@ function renderCodeMCQ(q, idx) {
   q.options.forEach((o, oi) => h += `<button class="quiz-opt" data-oi="${oi}" data-correct="${q.answer}">${escHtml(o)}</button>`);
   return h + `</div><div class="quiz-explain"><b>💡 해설</b> ${escHtml(q.explain)}</div></div>`;
 }
+// 코드 블록 객관식 — 비슷한 코드 덩어리 4개 중 맞는 로직 고르기
+const BLOCKQ = {
+1260:[{q:'BFS의 while 안 ____ 에 들어갈 코드 덩어리는? (헷갈리는 4개 중 고르기)',code:'Queue<Integer> q = new LinkedList<>();\nq.add(start); visited[start] = true;\nwhile (!q.isEmpty()) {\n    int cur = q.poll();\n    ____\n}',options:[
+ 'for (int next : graph[cur])\n    if (!visited[next]) { visited[next] = true; q.add(next); }',
+ 'for (int next : graph[cur])\n    if (!visited[next]) q.add(next);',
+ 'for (int next : graph[cur])\n    if (!visited[next]) { visited[cur] = true; q.add(next); }',
+ 'for (int next : graph[cur])\n    if (!visited[next]) { visited[next] = true; q.poll(); }'
+],answer:0,explain:'미방문 next를 큐에 "넣을 때" visited[next]=true로 표시. ②는 방문 표시 누락(중복 삽입), ③은 cur를 표시(틀림), ④는 add 대신 poll(틀림).'}],
+2667:[{q:'DFS의 return ____ 에 들어갈 식은?',code:'static int dfs(int x, int y) {\n    if (x<0||y<0||x>=n||y>=n||map[x][y]!=1||visited[x][y]) return 0;\n    visited[x][y] = true;\n    return ____;\n}',options:[
+ '1 + dfs(x+1,y) + dfs(x-1,y) + dfs(x,y+1) + dfs(x,y-1)',
+ 'dfs(x+1,y) + dfs(x-1,y) + dfs(x,y+1) + dfs(x,y-1)',
+ '1 + dfs(x+1,y+1) + dfs(x-1,y-1) + dfs(x+1,y-1) + dfs(x-1,y+1)',
+ '1 + dfs(x+1,y) + dfs(x,y+1)'
+],answer:0,explain:'자기 칸 1 + 상하좌우 4방향 합. ②는 자기 1 누락, ③은 대각선(연결 아님), ④는 2방향만.'}],
+11286:[{q:'절댓값 힙 처리에서 ____ 에 들어갈 덩어리는?',code:'int x = Integer.parseInt(br.readLine().trim());\n____',options:[
+ 'if (x == 0) sb.append(pq.isEmpty() ? 0 : pq.poll()).append(\'\\n\');\nelse pq.add(x);',
+ 'if (x == 0) sb.append(pq.isEmpty() ? 0 : pq.peek()).append(\'\\n\');\nelse pq.add(x);',
+ 'if (x != 0) sb.append(pq.isEmpty() ? 0 : pq.poll()).append(\'\\n\');\nelse pq.add(x);',
+ 'if (x == 0) sb.append(pq.poll()).append(\'\\n\');\nelse pq.add(x);'
+],answer:0,explain:'x=0이면 비었는지 보고 poll(꺼내 제거). ②는 peek(제거 안 함), ③은 조건 반대, ④는 빈 힙 검사 누락(예외 발생).'}],
+1697:[{q:'숨바꼭질 BFS 확장에서 ____ 덩어리는?',code:'int cur = q.poll();\nfor (int nx : new int[]{cur-1, cur+1, cur*2}) {\n    ____\n}',options:[
+ 'if (nx >= 0 && nx <= 100000 && !visited[nx]) {\n    visited[nx] = true;\n    dist[nx] = dist[cur] + 1;\n    q.add(nx);\n}',
+ 'if (nx >= 0 && nx <= 100000) {\n    dist[nx] = dist[cur] + 1;\n    q.add(nx);\n}',
+ 'if (nx >= 0 && nx <= 100000 && !visited[nx]) {\n    visited[nx] = true;\n    dist[nx] = dist[cur];\n    q.add(nx);\n}',
+ 'if (nx >= 0 && !visited[nx]) {\n    visited[nx] = true;\n    dist[nx] = dist[cur] + 1;\n    q.add(nx);\n}'
+],answer:0,explain:'범위·미방문 확인 후 거리+1. ②는 방문 표시 누락, ③은 +1 빠짐, ④는 상한(100000) 검사 누락(인덱스 오류).'}],
+8001:[{q:'1회 매매 최대 수익 루프 안 ____ 덩어리는?',code:'int minPrice = p[0], best = 0;\nfor (int i = 1; i < n; i++) {\n    ____\n}',options:[
+ 'best = Math.max(best, p[i] - minPrice);\nminPrice = Math.min(minPrice, p[i]);',
+ 'best = Math.max(best, minPrice - p[i]);\nminPrice = Math.min(minPrice, p[i]);',
+ 'best = best + (p[i] - minPrice);\nminPrice = Math.min(minPrice, p[i]);',
+ 'best = Math.max(best, p[i] - p[i-1]);'
+],answer:0,explain:'오늘 팔 때 수익 = 오늘가-최저가, 그 최댓값. ②는 부호 반대, ③은 누적(틀림), ④는 인접 차이만.'}],
+8007:[{q:'카데인 루프 안 ____ 덩어리는?',code:'int cur = 0, best = Integer.MIN_VALUE;\nfor (int i = 0; i < n; i++) {\n    int x = arr[i];\n    ____\n}',options:[
+ 'cur = Math.max(x, cur + x);\nbest = Math.max(best, cur);',
+ 'cur = Math.max(0, cur + x);\nbest = Math.max(best, cur);',
+ 'cur = cur + x;\nbest = Math.max(best, cur);',
+ 'cur = Math.max(x, cur);\nbest = Math.max(best, cur);'
+],answer:0,explain:'"새로 시작(x)" vs "이어가기(cur+x)". ②는 0 리셋(전부 음수면 오답), ③은 리셋 없음, ④는 x를 안 더함.'}],
+8009:[{q:'이동평균 슬라이딩 윈도우에서 ____ 덩어리는?',code:'int sum = 0;\nfor (int i = 0; i < n; i++) {\n    sum += p[i];\n    ____\n    if (i >= k - 1) sb.append((double) sum / k).append(\' \');\n}',options:[
+ 'if (i >= k) sum -= p[i - k];',
+ 'if (i >= k) sum -= p[i];',
+ 'if (i > k) sum -= p[i - k];',
+ 'sum -= p[i - k];'
+],answer:0,explain:'창이 K를 넘으면 K칸 전 값을 뺍니다. ②는 방금 더한 값을 뺌, ③은 경계 오류, ④는 i<k에서 음수 인덱스 오류.'}],
+8004:[{q:'두 힙 중앙값에서 균형 맞추는 ____ 덩어리는?',code:'if (lo.isEmpty() || x <= lo.peek()) lo.add(x); else hi.add(x);\n____\nsb.append(lo.peek()).append(\'\\n\');',options:[
+ 'if (lo.size() > hi.size() + 1) hi.add(lo.poll());\nelse if (hi.size() > lo.size()) lo.add(hi.poll());',
+ 'if (lo.size() > hi.size()) hi.add(lo.poll());\nelse if (hi.size() > lo.size()) lo.add(hi.poll());',
+ 'if (lo.size() > hi.size() + 1) lo.add(hi.poll());\nelse if (hi.size() > lo.size()) hi.add(lo.poll());',
+ 'if (lo.size() < hi.size()) hi.add(lo.poll());'
+],answer:0,explain:'lo가 2 이상 많으면 hi로 넘기고, hi가 더 많으면 lo로 가져옵니다. ②는 1만 많아도 옮겨 틀어짐, ③은 방향 반대, ④는 한쪽만 처리.'}]
+};
+function renderBlockQ(q, idx) {
+  let h = `<div class="quiz-q"><div class="quiz-qnum">🧠 로직 고르기 ${idx + 1}</div><div class="quiz-text">${escHtml(q.q)}</div>`;
+  h += `<pre><code class="language-java">${escHtml(q.code)}</code></pre>`;
+  h += '<div class="quiz-opts bq-opts">';
+  q.options.forEach((o, oi) => {
+    h += `<button class="quiz-opt code-opt" data-oi="${oi}" data-correct="${q.answer}"><pre><code class="language-java">${escHtml(o)}</code></pre></button>`;
+  });
+  return h + `</div><div class="quiz-explain"><b>💡 해설</b> ${escHtml(q.explain)}</div></div>`;
+}
 function renderQuiz(id) {
-  const qs = quizzes[id], im = IMPL[id], cq = CODEQ[id];
-  if (!qs && !im && !cq) return '<div class="quiz-empty">이 문제의 퀴즈는 곧 추가될 예정이에요 🙌</div>';
+  const qs = quizzes[id], im = IMPL[id], cq = CODEQ[id], bq = BLOCKQ[id];
+  if (!qs && !im && !cq && !bq) return '<div class="quiz-empty">이 문제의 퀴즈는 곧 추가될 예정이에요 🙌</div>';
   let h = '<div class="quiz-intro">💡 객관식·코드(빈칸)는 보기를 눌러 채점하고, ✍️ 구현 문제는 직접 떠올린 뒤 모범 답안과 비교해 보세요!</div>';
   (qs || []).forEach((quiz, qi) => {
     h += `<div class="quiz-q"><div class="quiz-qnum">Q${qi + 1}</div><div class="quiz-text">${escHtml(quiz.q)}</div><div class="quiz-opts">`;
@@ -3535,6 +3602,7 @@ function renderQuiz(id) {
     });
     h += `</div><div class="quiz-explain"><b>💡 해설</b> ${escHtml(quiz.explain)}</div></div>`;
   });
+  if (bq) bq.forEach((q, i) => h += renderBlockQ(q, i));
   if (cq) cq.forEach((q, i) => h += renderCodeMCQ(q, i));
   if (im) (Array.isArray(im) ? im : [im]).forEach((q, i) => h += renderImpl(q, i));
   return h;
