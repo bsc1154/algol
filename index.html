@@ -3484,7 +3484,6 @@ const CODEQ = {
 1018:[{q:'체스판에서 다시 칠할 칸 최솟값 빈칸 ____ 은?',code:'ans = Math.min(ans, Math.min(cnt, ____));',options:['64 - cnt','cnt - 64','cnt','64'],answer:0,explain:'W시작 비용이 cnt면 B시작 비용은 64-cnt입니다.'}],
 2606:[{q:'감염 수를 세는 빈칸 ____ 은?',code:'if (!visited[next]) { visited[next] = true; ____; q.add(next); }',options:['count++','count--','count = 0','next++'],answer:0,explain:'새로 감염되는 컴퓨터마다 count를 늘립니다.'}],
 1012:[{q:'새 무리를 셀 때 빈칸 ____ 은?',code:'if (field[i][j]==1 && !visited[i][j]) { bfs(i,j); ____; }',options:['worms++','worms--','worms = 0','j++'],answer:0,explain:'무리 하나를 묶을 때마다 지렁이 수를 1 늘립니다.'}],
-10026:[{q:'적록색약 시야를 위해 R을 무엇으로 바꾸나 ____?',code:'// 적록색약: R을 ____ 로 바꾼 grid로 다시 구역 세기',options:['G','B','공백','R 그대로'],answer:0,explain:'R과 G를 같은 색으로 보므로 R을 G로 바꿔 다시 셉니다.'}],
 11724:[{q:'연결요소 수를 세는 빈칸 ____ 은?',code:'for (int v = 1; v <= n; v++)\n    if (!visited[v]) { bfs(v); ____; }',options:['components++','components--','components = 0','v++'],answer:0,explain:'새 그룹이 시작될 때마다 연결요소를 1 늘립니다.'}],
 1927:[{q:'최소힙에서 0일 때 빈칸 ____ 은?',code:'if (x == 0) sb.append(pq.isEmpty() ? 0 : ____).append(\'\\n\');',options:['pq.poll()','pq.peek()','pq.add(0)','pq.size()'],answer:0,explain:'최솟값을 꺼내(poll) 출력합니다.'}],
 7662:[{q:'D 1(최댓값 삭제) 빈칸 ____ 은?',code:'if (op.equals("I")) insert(n);\nelse if (n == 1) ____;',options:['deleteMax()','deleteMin()','insert(n)','clear()'],answer:0,explain:'D 1은 최댓값 삭제입니다.'}],
@@ -3580,7 +3579,13 @@ const BLOCKQ = {
  'if (lo.size() > hi.size()) hi.add(lo.poll());\nelse if (hi.size() > lo.size()) lo.add(hi.poll());',
  'if (lo.size() > hi.size() + 1) lo.add(hi.poll());\nelse if (hi.size() > lo.size()) hi.add(lo.poll());',
  'if (lo.size() < hi.size()) hi.add(lo.poll());'
-],answer:0,explain:'lo가 2 이상 많으면 hi로 넘기고, hi가 더 많으면 lo로 가져옵니다. ②는 1만 많아도 옮겨 틀어짐, ③은 방향 반대, ④는 한쪽만 처리.'}]
+],answer:0,explain:'lo가 2 이상 많으면 hi로 넘기고, hi가 더 많으면 lo로 가져옵니다. ②는 1만 많아도 옮겨 틀어짐, ③은 방향 반대, ④는 한쪽만 처리.'}],
+10026:[{q:'적록색약 구역 세기 count() 안에서, 그림을 변환하는 ____ 로 맞는 코드 덩어리는? (weak=색약 모드)',code:'static int count(char[][] grid, boolean weak) {\n    char[][] g = new char[N][N];\n    for (int i=0; i<N; i++)\n      for (int j=0; j<N; j++)\n        ____\n    // 이 g 로 BFS/DFS 구역 세기\n}',options:[
+ 'g[i][j] = (weak && grid[i][j]==\'G\') ? \'R\' : grid[i][j];',
+ 'g[i][j] = (weak && grid[i][j]==\'B\') ? \'R\' : grid[i][j];',
+ 'g[i][j] = weak ? \'R\' : grid[i][j];',
+ 'g[i][j] = (weak && grid[i][j]==\'G\') ? \'B\' : grid[i][j];'
+],answer:0,explain:'색약은 R·G를 같은 색으로 봅니다. weak일 때 G를 R로 바꾸면 둘이 합쳐져 한 구역이 됩니다. ②는 B를 바꿔 엉뚱, ③은 전부 R로(파랑까지 합침), ④는 G→B라 R과 안 합쳐짐.'}]
 };
 function renderBlockQ(q, idx) {
   let h = `<div class="quiz-q"><div class="quiz-qnum">🧠 로직 고르기 ${idx + 1}</div><div class="quiz-text">${escHtml(q.q)}</div>`;
