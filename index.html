@@ -3532,24 +3532,66 @@ function renderCodeMCQ(q, idx) {
 }
 // 코드 블록 객관식 — 비슷한 코드 덩어리 4개 중 맞는 로직 고르기
 const BLOCKQ = {
-1260:[{q:'BFS의 while 안 ____ 에 들어갈 코드 덩어리는? (헷갈리는 4개 중 고르기)',code:'Queue<Integer> q = new LinkedList<>();\nq.add(start); visited[start] = true;\nwhile (!q.isEmpty()) {\n    int cur = q.poll();\n    ____\n}',options:[
- 'for (int next : graph[cur])\n    if (!visited[next]) { visited[next] = true; q.add(next); }',
- 'for (int next : graph[cur])\n    if (!visited[next]) q.add(next);',
- 'for (int next : graph[cur])\n    if (!visited[next]) { visited[cur] = true; q.add(next); }',
- 'for (int next : graph[cur])\n    if (!visited[next]) { visited[next] = true; q.poll(); }'
-],answer:0,explain:'미방문 next를 큐에 "넣을 때" visited[next]=true로 표시. ②는 방문 표시 누락(중복 삽입), ③은 cur를 표시(틀림), ④는 add 대신 poll(틀림).'}],
-2667:[{q:'DFS의 return ____ 에 들어갈 식은?',code:'static int dfs(int x, int y) {\n    if (x<0||y<0||x>=n||y>=n||map[x][y]!=1||visited[x][y]) return 0;\n    visited[x][y] = true;\n    return ____;\n}',options:[
- '1 + dfs(x+1,y) + dfs(x-1,y) + dfs(x,y+1) + dfs(x,y-1)',
- 'dfs(x+1,y) + dfs(x-1,y) + dfs(x,y+1) + dfs(x,y-1)',
- '1 + dfs(x+1,y+1) + dfs(x-1,y-1) + dfs(x+1,y-1) + dfs(x-1,y+1)',
- '1 + dfs(x+1,y) + dfs(x,y+1)'
-],answer:0,explain:'자기 칸 1 + 상하좌우 4방향 합. ②는 자기 1 누락, ③은 대각선(연결 아님), ④는 2방향만.'}],
-11286:[{q:'절댓값 힙 처리에서 ____ 에 들어갈 덩어리는?',code:'int x = Integer.parseInt(br.readLine().trim());\n____',options:[
+1260:[{q:'DFS 메서드 전체로 맞는 것은? (비슷한 4개 중 고르기)',code:'static void dfs(int node) {\n    ____\n}',options:[
+ 'visited[node] = true;\nsb.append(node).append(\' \');\nfor (int next : graph[node])\n    if (!visited[next]) dfs(next);',
+ 'sb.append(node).append(\' \');\nfor (int next : graph[node])\n    if (!visited[next]) dfs(next);',
+ 'visited[node] = true;\nsb.append(node).append(\' \');\nfor (int next : graph[node])\n    dfs(next);',
+ 'for (int next : graph[node])\n    if (!visited[next]) dfs(next);\nvisited[node] = true;\nsb.append(node).append(\' \');'
+],answer:0,explain:'방문 표시 → 출력 → 미방문 인접 재귀. ②는 node 방문 표시 누락(무한 재귀), ③은 미방문 체크 없음(무한 재귀), ④는 표시·출력이 재귀 뒤라 순서·종료가 깨짐.'},
+ {q:'BFS 메서드의 while 루프 전체로 맞는 것은?',code:'static void bfs(int start) {\n    Queue<Integer> q = new LinkedList<>();\n    q.add(start); visited[start] = true;\n    ____\n}',options:[
+ 'while (!q.isEmpty()) {\n    int cur = q.poll();\n    sb.append(cur).append(\' \');\n    for (int next : graph[cur])\n        if (!visited[next]) { visited[next] = true; q.add(next); }\n}',
+ 'while (!q.isEmpty()) {\n    int cur = q.poll();\n    sb.append(cur).append(\' \');\n    for (int next : graph[cur])\n        if (!visited[next]) q.add(next);\n}',
+ 'while (!q.isEmpty()) {\n    int cur = q.peek();\n    sb.append(cur).append(\' \');\n    for (int next : graph[cur])\n        if (!visited[next]) { visited[next] = true; q.add(next); }\n}',
+ 'while (!q.isEmpty()) {\n    int cur = q.poll();\n    sb.append(cur).append(\' \');\n    for (int next : graph[cur])\n        if (!visited[next]) { visited[cur] = true; q.add(next); }\n}'
+],answer:0,explain:'꺼내(poll) 출력 후 인접을 "넣을 때" 방문 표시. ②는 방문 표시 누락(중복), ③은 peek라 안 빠져 무한 루프, ④는 cur를 표시(틀림).'}],
+2667:[{q:'단지 수를 세는 바깥 루프 전체로 맞는 것은?',code:'int count = 0;\nfor (int i = 0; i < n; i++)\n  for (int j = 0; j < n; j++)\n    ____',options:[
+ 'if (map[i][j] == 1 && !visited[i][j]) { dfs(i, j); count++; }',
+ 'if (map[i][j] == 1) { dfs(i, j); count++; }',
+ 'if (!visited[i][j]) { dfs(i, j); count++; }',
+ 'if (map[i][j] == 1 && !visited[i][j]) dfs(i, j);'
+],answer:0,explain:'집(1)이고 미방문일 때만 새 단지 시작 + count++. ②는 방문 체크 없음(재방문), ③은 빈칸도 셈, ④는 count++ 누락.'},
+ {q:'단지 크기를 구하는 DFS 메서드 전체로 맞는 것은?',code:'static int dfs(int x, int y) {\n    ____\n}',options:[
+ 'if (x<0||y<0||x>=n||y>=n||map[x][y]!=1||visited[x][y]) return 0;\nvisited[x][y] = true;\nreturn 1 + dfs(x+1,y)+dfs(x-1,y)+dfs(x,y+1)+dfs(x,y-1);',
+ 'if (x<0||y<0||x>=n||y>=n||map[x][y]!=1||visited[x][y]) return 0;\nvisited[x][y] = true;\nreturn dfs(x+1,y)+dfs(x-1,y)+dfs(x,y+1)+dfs(x,y-1);',
+ 'if (x<0||y<0||x>=n||y>=n||map[x][y]!=1) return 0;\nreturn 1 + dfs(x+1,y)+dfs(x-1,y)+dfs(x,y+1)+dfs(x,y-1);',
+ 'visited[x][y] = true;\nreturn 1 + dfs(x+1,y)+dfs(x-1,y)+dfs(x,y+1)+dfs(x,y-1);'
+],answer:0,explain:'경계·집·방문 체크 → 표시 → 자기 1 + 4방향 합. ②는 자기 1 누락(크기 0), ③은 방문 표시 누락(무한 재귀), ④는 경계/방문 체크 없음(배열 오류).'}],
+1012:[{q:'무리 수를 세는 바깥 루프 전체로 맞는 것은?',code:'int worms = 0;\nfor (int i = 0; i < n; i++)\n  for (int j = 0; j < m; j++)\n    ____',options:[
+ 'if (field[i][j] == 1 && !visited[i][j]) { bfs(i, j); worms++; }',
+ 'if (field[i][j] == 1) { bfs(i, j); worms++; }',
+ 'if (!visited[i][j]) { bfs(i, j); worms++; }',
+ 'if (field[i][j] == 1 && !visited[i][j]) bfs(i, j);'
+],answer:0,explain:'배추(1)이고 미방문일 때만 새 무리 + worms++. ②는 방문 체크 없음, ③은 빈 땅도 셈, ④는 worms++ 누락.'},
+ {q:'배추 무리를 묶는 bfs 메서드의 while 전체로 맞는 것은?',code:'static void bfs(int sx, int sy) {\n    int[] dx={1,-1,0,0}, dy={0,0,1,-1};\n    Queue<int[]> q = new LinkedList<>();\n    q.add(new int[]{sx, sy}); visited[sx][sy] = true;\n    ____\n}',options:[
+ 'while (!q.isEmpty()) {\n    int[] c = q.poll();\n    for (int d = 0; d < 4; d++) {\n        int nx=c[0]+dx[d], ny=c[1]+dy[d];\n        if (nx>=0&&ny>=0&&nx<n&&ny<m&&field[nx][ny]==1&&!visited[nx][ny]) {\n            visited[nx][ny]=true; q.add(new int[]{nx,ny});\n        }\n    }\n}',
+ 'while (!q.isEmpty()) {\n    int[] c = q.poll();\n    for (int d = 0; d < 4; d++) {\n        int nx=c[0]+dx[d], ny=c[1]+dy[d];\n        if (nx>=0&&ny>=0&&nx<n&&ny<m&&field[nx][ny]==1&&!visited[nx][ny]) {\n            q.add(new int[]{nx,ny});\n        }\n    }\n}',
+ 'while (!q.isEmpty()) {\n    int[] c = q.poll();\n    for (int d = 0; d < 4; d++) {\n        int nx=c[0]+dx[d], ny=c[1]+dy[d];\n        if (nx>=0&&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]) {\n            visited[nx][ny]=true; q.add(new int[]{nx,ny});\n        }\n    }\n}',
+ 'while (!q.isEmpty()) {\n    int[] c = q.poll();\n    for (int d = 0; d < 4; d++) {\n        int nx=c[0]+dx[d], ny=c[1]+dy[d];\n        if (field[nx][ny]==1&&!visited[nx][ny]) {\n            visited[nx][ny]=true; q.add(new int[]{nx,ny});\n        }\n    }\n}'
+],answer:0,explain:'경계+배추+미방문 확인 후 표시·추가. ②는 방문 표시 누락(중복), ③은 배추(1) 체크 누락(빈 땅까지 묶음), ④는 경계 체크 누락(배열 범위 오류).'}],
+11724:[{q:'연결요소 수를 세는 바깥 루프 전체로 맞는 것은?',code:'int components = 0;\nfor (int v = 1; v <= n; v++)\n    ____',options:[
+ 'if (!visited[v]) { bfs(v); components++; }',
+ 'if (!visited[v]) bfs(v);',
+ '{ bfs(v); components++; }',
+ 'if (visited[v]) { bfs(v); components++; }'
+],answer:0,explain:'미방문 정점에서 시작할 때만 새 그룹 + components++. ②는 count 누락, ③은 방문 체크 없음(매번 +1), ④는 조건 반대.'},
+ {q:'연결요소를 묶는 bfs 메서드의 while 전체로 맞는 것은?',code:'static void bfs(int start) {\n    Queue<Integer> q = new LinkedList<>();\n    q.add(start); visited[start] = true;\n    ____\n}',options:[
+ 'while (!q.isEmpty()) {\n    int cur = q.poll();\n    for (int next : graph[cur])\n        if (!visited[next]) { visited[next] = true; q.add(next); }\n}',
+ 'while (!q.isEmpty()) {\n    int cur = q.poll();\n    for (int next : graph[cur])\n        if (!visited[next]) q.add(next);\n}',
+ 'while (!q.isEmpty()) {\n    int cur = q.poll();\n    for (int next : graph[cur])\n        { visited[next] = true; q.add(next); }\n}',
+ 'while (!q.isEmpty()) {\n    int cur = q.peek();\n    for (int next : graph[cur])\n        if (!visited[next]) { visited[next] = true; q.add(next); }\n}'
+],answer:0,explain:'꺼내서 인접을 "넣을 때" 표시. ②는 방문 표시 누락, ③은 미방문 체크 없음(중복), ④는 peek라 안 빠져 무한 루프.'}],
+11286:[{q:'절댓값 힙 PriorityQueue 선언 전체로 맞는 것은?',code:'PriorityQueue<Integer> pq = new PriorityQueue<>(____);',options:[
+ '(a, b) -> Math.abs(a) != Math.abs(b) ? Math.abs(a) - Math.abs(b) : a - b',
+ '(a, b) -> Math.abs(a) - Math.abs(b)',
+ '(a, b) -> Math.abs(a) != Math.abs(b) ? Math.abs(a) - Math.abs(b) : b - a',
+ '(a, b) -> a - b'
+],answer:0,explain:'절댓값 오름차순, 같으면 a-b로 음수 먼저. ②는 동률 처리 없음(-1·1 순서 보장 안 됨), ③은 동률에서 양수 먼저(틀림), ④는 절댓값 무시.'},
+ {q:'절댓값 힙 처리 분기 전체로 맞는 것은?',code:'int x = Integer.parseInt(br.readLine().trim());\n____',options:[
  'if (x == 0) sb.append(pq.isEmpty() ? 0 : pq.poll()).append(\'\\n\');\nelse pq.add(x);',
  'if (x == 0) sb.append(pq.isEmpty() ? 0 : pq.peek()).append(\'\\n\');\nelse pq.add(x);',
  'if (x != 0) sb.append(pq.isEmpty() ? 0 : pq.poll()).append(\'\\n\');\nelse pq.add(x);',
  'if (x == 0) sb.append(pq.poll()).append(\'\\n\');\nelse pq.add(x);'
-],answer:0,explain:'x=0이면 비었는지 보고 poll(꺼내 제거). ②는 peek(제거 안 함), ③은 조건 반대, ④는 빈 힙 검사 누락(예외 발생).'}],
+],answer:0,explain:'x=0이면 비었는지 보고 poll(꺼내 제거). ②는 peek(제거 안 함), ③은 조건 반대, ④는 빈 힙 검사 누락(예외).'}],
 1697:[{q:'숨바꼭질 BFS 확장에서 ____ 덩어리는?',code:'int cur = q.poll();\nfor (int nx : new int[]{cur-1, cur+1, cur*2}) {\n    ____\n}',options:[
  'if (nx >= 0 && nx <= 100000 && !visited[nx]) {\n    visited[nx] = true;\n    dist[nx] = dist[cur] + 1;\n    q.add(nx);\n}',
  'if (nx >= 0 && nx <= 100000) {\n    dist[nx] = dist[cur] + 1;\n    q.add(nx);\n}',
@@ -3599,7 +3641,7 @@ function renderBlockQ(q, idx) {
 function renderQuiz(id) {
   const qs = quizzes[id], im = IMPL[id], cq = CODEQ[id], bq = BLOCKQ[id];
   if (!qs && !im && !cq && !bq) return '<div class="quiz-empty">이 문제의 퀴즈는 곧 추가될 예정이에요 🙌</div>';
-  let h = '<div class="quiz-intro">💡 객관식·코드(빈칸)는 보기를 눌러 채점하고, ✍️ 구현 문제는 직접 떠올린 뒤 모범 답안과 비교해 보세요!</div>';
+  let h = '<div class="quiz-intro">💡 개념 객관식 + 🧠 코드 4지선다 — 비슷하게 생긴 코드 4개 중 올바른 로직을 고르세요! (클릭하면 즉시 채점)</div>';
   (qs || []).forEach((quiz, qi) => {
     h += `<div class="quiz-q"><div class="quiz-qnum">Q${qi + 1}</div><div class="quiz-text">${escHtml(quiz.q)}</div><div class="quiz-opts">`;
     quiz.options.forEach((o, oi) => {
@@ -3608,8 +3650,7 @@ function renderQuiz(id) {
     h += `</div><div class="quiz-explain"><b>💡 해설</b> ${escHtml(quiz.explain)}</div></div>`;
   });
   if (bq) bq.forEach((q, i) => h += renderBlockQ(q, i));
-  if (cq) cq.forEach((q, i) => h += renderCodeMCQ(q, i));
-  if (im) (Array.isArray(im) ? im : [im]).forEach((q, i) => h += renderImpl(q, i));
+  if (cq && !bq) cq.forEach((q, i) => h += renderCodeMCQ(q, i));
   return h;
 }
 // 코드 주석을 종류별로 색 구분 (역할 / 예시입력 / 출력 / 일반)
