@@ -181,6 +181,9 @@ pre code .hljs-comment{font-style:normal;color:#7d8590}
 .order-result{font-size:.87rem;font-weight:700;margin:6px 0 4px}
 .order-result.good{color:#3fb950}
 .order-result.bad{color:#ff7b72}
+.oi-text{display:block}
+.order-code{margin:8px 0 0;background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:6px 9px;overflow-x:auto}
+.order-code code{font-size:.75rem;background:transparent;padding:0;white-space:pre;font-family:'Consolas',monospace;color:#dcdfe4}
 /* 코드 블록 객관식 보기 */
 .bq-opts{gap:9px}
 .code-opt{padding:9px 12px 9px 14px;text-align:left;cursor:pointer}
@@ -3580,9 +3583,9 @@ const ORDERQ = {
  '출력 결과를 StringBuilder에 모은다',
  '모은 결과를 한 번에 출력한다'
 ],explain:'대량 입출력은 결과를 모았다가 마지막에 한 번에 출력(StringBuilder)하는 게 핵심입니다.'}],
-1000:[{q:'A+B의 전체 순서를 차례대로 클릭하세요.',steps:['두 정수 A, B를 입력받는다','A + B를 계산한다','결과를 출력한다'],explain:'가장 기본적인 입력 → 계산 → 출력 흐름입니다.'}],
-2609:[{q:'GCD·LCM의 전체 순서를 차례대로 클릭하세요.',steps:['두 수 A, B를 입력받는다','유클리드 호제법으로 최대공약수 g를 구한다','최소공배수 = A / g * B 를 계산한다','최대공약수와 최소공배수를 출력한다'],explain:'GCD를 먼저 구해야 LCM(=A*B/GCD)을 계산할 수 있습니다.'}],
-1978:[{q:'소수 찾기의 전체 순서를 차례대로 클릭하세요.',steps:['수의 개수 N과 N개의 수를 입력받는다','각 수를 2~√n까지 나눠 소수인지 판별한다','소수일 때마다 count를 늘린다','소수 개수를 출력한다'],explain:'√n까지만 확인하면 충분합니다.'}],
+1000:[{q:'A+B의 전체 순서를 차례대로 클릭하세요.',steps:['두 정수 A, B를 입력받는다','A + B를 계산한다','결과를 출력한다'],codes:['int a = sc.nextInt(), b = sc.nextInt();','int sum = a + b;','System.out.println(sum);'],explain:'가장 기본적인 입력 → 계산 → 출력 흐름입니다.'}],
+2609:[{q:'GCD·LCM의 전체 순서를 차례대로 클릭하세요.',steps:['두 수 A, B를 입력받는다','유클리드 호제법으로 최대공약수 g를 구한다','최소공배수 = A / g * B 를 계산한다','최대공약수와 최소공배수를 출력한다'],codes:['int a = sc.nextInt(), b = sc.nextInt();','int g = gcd(a, b);','long lcm = (long) a / g * b;','System.out.println(g);\nSystem.out.println(lcm);'],explain:'GCD를 먼저 구해야 LCM(=A*B/GCD)을 계산할 수 있습니다.'}],
+1978:[{q:'소수 찾기의 전체 순서를 차례대로 클릭하세요.',steps:['수의 개수 N과 N개의 수를 입력받는다','각 수를 2~√n까지 나눠 소수인지 판별한다','소수일 때마다 count를 늘린다','소수 개수를 출력한다'],codes:['int n = sc.nextInt();','boolean p = isPrime(x);','if (p) count++;','System.out.println(count);'],explain:'√n까지만 확인하면 충분합니다.'}],
 11050:[{q:'이항계수의 전체 순서를 차례대로 클릭하세요.',steps:['N과 K를 입력받는다','분자에 n, n-1, ... 을 K번 곱한다','분모에 1, 2, ..., K(=K!)를 곱한다','분자 / 분모를 출력한다'],explain:'팩토리얼을 따로 구하지 않고 K번만 곱해 계산합니다.'}],
 6064:[{q:'카잉 달력의 전체 순서를 차례대로 클릭하세요.',steps:['M, N, x, y를 입력받는다','M과 N의 최소공배수를 구한다','x에서 M씩 더하며 (k-y)%N==0 인 k를 찾는다','찾으면 k, lcm까지 없으면 -1을 출력한다'],explain:'x조건(M주기)을 만족하는 값 중 y조건(N주기)도 맞는 첫 k가 답입니다.'}],
 10828:[{q:'스택 명령 처리의 전체 순서를 차례대로 클릭하세요.',steps:['명령 개수 N을 입력받고 빈 스택을 준비한다','N번 반복하며 명령을 한 줄씩 읽는다','명령에 따라 push/pop/top/size/empty를 처리한다','출력 결과를 StringBuilder에 모은다','모은 결과를 한 번에 출력한다'],explain:'대량 입출력은 결과를 모았다가 마지막에 한 번에 출력하는 게 핵심입니다.'}],
@@ -3597,12 +3600,12 @@ const ORDERQ = {
 2798:[{q:'블랙잭의 전체 순서를 차례대로 클릭하세요.',steps:['카드 수 N·한도 M·카드들을 입력받는다','3중 반복으로 카드 3장 조합을 만든다','합이 M 이하인 것만 본다','그중 최댓값을 갱신한다','최댓값을 출력한다'],explain:'모든 3장 조합을 완전탐색합니다.'}],
 2231:[{q:'분해합의 전체 순서를 차례대로 클릭하세요.',steps:['자연수 N을 입력받는다','1부터 N-1까지 후보 m을 본다','m + (m의 각 자리 합)을 계산한다','그 값이 N과 같으면 m을 출력한다','끝까지 없으면 0을 출력한다'],explain:'가장 작은 생성자를 찾으려 1부터 올라갑니다.'}],
 1018:[{q:'체스판 다시 칠하기의 전체 순서를 차례대로 클릭하세요.',steps:['보드 크기와 색을 입력받는다','모든 8×8 시작 위치를 순회한다','각 위치에서 W시작 기준 다른 칸 수 cnt를 센다','min(cnt, 64-cnt)로 최솟값을 갱신한다','최솟값을 출력한다'],explain:'W시작 비용이 cnt면 B시작 비용은 64-cnt입니다.'}],
-1260:[{q:'DFS와 BFS의 전체 순서를 차례대로 클릭하세요.',steps:['정점·간선·시작점을 입력받아 인접 리스트를 만든다','각 인접 리스트를 오름차순 정렬한다','DFS로 방문 순서를 구해 출력한다','방문 배열을 초기화한다','BFS로 방문 순서를 구해 출력한다'],explain:'작은 번호부터 방문해야 하므로 인접 리스트를 정렬합니다.'}],
-2606:[{q:'바이러스의 전체 순서를 차례대로 클릭하세요.',steps:['컴퓨터 수와 연결 정보를 입력받아 그래프를 만든다','1번을 큐에 넣고 방문 표시한다','꺼내서 연결된 미방문 컴퓨터를 큐에 넣고 감염 수를 센다','큐가 빌 때까지 반복한다','감염된 컴퓨터 수를 출력한다'],explain:'1번에서 도달 가능한 노드 수(자신 제외)를 셉니다.'}],
-1012:[{q:'유기농 배추의 전체 순서를 차례대로 클릭하세요.',steps:['밭 크기와 배추 좌표를 입력받는다','밭의 모든 칸을 순회한다','미방문 배추에서 BFS로 무리 전체를 방문 표시한다','새 무리마다 지렁이 수를 1 늘린다','지렁이 수를 출력한다'],explain:'붙어 있는 배추 무리 수가 곧 지렁이 수입니다.'}],
-7569:[{q:'토마토(3D)의 전체 순서를 차례대로 클릭하세요.',steps:['높이·가로·세로와 상자 상태를 입력받는다','익은 토마토를 모두 큐에 넣는다','꺼내서 6방향(상하좌우+위아래)으로 익힌다','큐가 빌 때까지 반복한다','안 익은 칸이 있으면 -1, 아니면 최대 날짜를 출력한다'],explain:'2D의 4방향에 위·아래를 더해 6방향으로 퍼뜨립니다.'}],
+1260:[{q:'DFS와 BFS의 전체 순서를 차례대로 클릭하세요.',steps:['정점·간선·시작점을 입력받아 인접 리스트를 만든다','각 인접 리스트를 오름차순 정렬한다','DFS로 방문 순서를 구해 출력한다','방문 배열을 초기화한다','BFS로 방문 순서를 구해 출력한다'],codes:['graph[a].add(b); graph[b].add(a);','for (int i=1;i<=n;i++) Collections.sort(graph[i]);','dfs(v);','visited = new boolean[n+1];','bfs(v);'],explain:'작은 번호부터 방문해야 하므로 인접 리스트를 정렬합니다.'}],
+2606:[{q:'바이러스의 전체 순서를 차례대로 클릭하세요.',steps:['컴퓨터 수와 연결 정보를 입력받아 그래프를 만든다','1번을 큐에 넣고 방문 표시한다','꺼내서 연결된 미방문 컴퓨터를 큐에 넣고 감염 수를 센다','큐가 빌 때까지 반복한다','감염된 컴퓨터 수를 출력한다'],codes:['graph[a].add(b); graph[b].add(a);','q.add(1); visited[1]=true;','if (!visited[next]) { visited[next]=true; count++; q.add(next); }','while (!q.isEmpty()) { int cur=q.poll(); ... }','System.out.println(count);'],explain:'1번에서 도달 가능한 노드 수(자신 제외)를 셉니다.'}],
+1012:[{q:'유기농 배추의 전체 순서를 차례대로 클릭하세요.',steps:['밭 크기와 배추 좌표를 입력받는다','밭의 모든 칸을 순회한다','미방문 배추에서 BFS로 무리 전체를 방문 표시한다','새 무리마다 지렁이 수를 1 늘린다','지렁이 수를 출력한다'],codes:['field[x][y] = 1;','for (int i...) for (int j...)','if (field[i][j]==1 && !visited[i][j]) bfs(i,j);','worms++;','System.out.println(worms);'],explain:'붙어 있는 배추 무리 수가 곧 지렁이 수입니다.'}],
+7569:[{q:'토마토(3D)의 전체 순서를 차례대로 클릭하세요.',steps:['높이·가로·세로와 상자 상태를 입력받는다','익은 토마토를 모두 큐에 넣는다','꺼내서 6방향(상하좌우+위아래)으로 익힌다','큐가 빌 때까지 반복한다','안 익은 칸이 있으면 -1, 아니면 최대 날짜를 출력한다'],codes:['read(box);  // 층 x 세로 x 가로','if (box[z][x][y]==1) q.add(new int[]{z,x,y});','box[nz][nx][ny]=box[z][x][y]+1; q.add(new int[]{nz,nx,ny});','while (!q.isEmpty()) { ... }','ans = hasZero ? -1 : maxDay;'],explain:'2D의 4방향에 위·아래를 더해 6방향으로 퍼뜨립니다.'}],
 10026:[{q:'적록색약의 전체 순서를 차례대로 클릭하세요.',steps:['N과 N×N 그림을 입력받는다','원래 색 그대로 구역 수를 센다','R을 G로 바꾼 그림에서 구역 수를 다시 센다','일반인 구역 수와 적록색약 구역 수를 출력한다'],explain:'같은 함수를 색 변환 전/후로 두 번 돌립니다.'}],
-11724:[{q:'연결 요소 개수의 전체 순서를 차례대로 클릭하세요.',steps:['정점 수와 간선을 입력받아 그래프를 만든다','모든 정점을 순회한다','미방문 정점에서 BFS/DFS로 한 그룹을 모두 방문한다','새 그룹이 시작될 때마다 개수를 늘린다','연결 요소 개수를 출력한다'],explain:'새 탐색이 시작될 때마다 연결 요소가 하나 늘어납니다.'}],
+11724:[{q:'연결 요소 개수의 전체 순서를 차례대로 클릭하세요.',steps:['정점 수와 간선을 입력받아 그래프를 만든다','모든 정점을 순회한다','미방문 정점에서 BFS/DFS로 한 그룹을 모두 방문한다','새 그룹이 시작될 때마다 개수를 늘린다','연결 요소 개수를 출력한다'],codes:['graph[a].add(b); graph[b].add(a);','for (int v=1; v<=n; v++)','if (!visited[v]) bfs(v);','components++;','System.out.println(components);'],explain:'새 탐색이 시작될 때마다 연결 요소가 하나 늘어납니다.'}],
 1927:[{q:'최소 힙의 전체 순서를 차례대로 클릭하세요.',steps:['연산 수 N을 입력받고 최소 힙을 준비한다','N번 반복하며 입력 x를 읽는다','x≠0이면 힙에 넣는다','x=0이면 최솟값을 꺼내 출력한다(비었으면 0)'],explain:'힙은 자동 정렬되므로 0일 때 poll만 하면 최솟값이 나옵니다.'}],
 11279:[{q:'최대 힙의 전체 순서를 차례대로 클릭하세요.',steps:['연산 수 N을 입력받고 최대 힙을 준비한다','N번 반복하며 입력 x를 읽는다','x≠0이면 힙에 넣는다','x=0이면 최댓값을 꺼내 출력한다(비었으면 0)'],explain:'reverseOrder로 만든 최대 힙은 최댓값이 맨 위에 옵니다.'}],
 11286:[{q:'절댓값 힙의 전체 순서를 차례대로 클릭하세요.',steps:['연산 수 N을 입력받고 절댓값 비교 힙을 준비한다','N번 반복하며 입력 x를 읽는다','x≠0이면 힙에 넣는다','x=0이면 절댓값 최소를 꺼내 출력한다(비었으면 0)'],explain:'비교자만 다를 뿐 처리 흐름은 최소·최대 힙과 같습니다.'}],
@@ -3611,17 +3614,20 @@ const ORDERQ = {
 1074:[{q:'Z의 전체 순서를 차례대로 클릭하세요.',steps:['N, r, c를 입력받는다','정사각형을 4등분한다','(r,c)가 속한 사분면을 찾는다','앞 사분면들의 칸 수를 더하고 그 사분면 안에서 재귀한다','한 칸이 될 때까지 반복해 순번을 출력한다'],explain:'직접 세면 너무 크니 사분면을 따져 재귀로 좁힙니다.'}],
 14500:[{q:'테트로미노의 전체 순서를 차례대로 클릭하세요.',steps:['보드 크기와 숫자를 입력받는다','모든 칸을 시작점으로 삼는다','DFS로 4칸까지 이어 붙여 합의 최댓값을 갱신한다','ㅗ(T)자 모양은 따로 처리한다','최대 합을 출력한다'],explain:'대부분 모양은 DFS로, ㅗ자만 별도로 처리합니다.'}],
 5430:[{q:'AC의 전체 순서를 차례대로 클릭하세요.',steps:['명령 문자열 p·배열 크기·배열을 입력받는다','R은 방향만 토글한다','D는 현재 방향의 앞 원소를 제거한다(비었으면 error)','명령을 끝까지 적용한다','최종 배열 또는 error를 출력한다'],explain:'R마다 실제 뒤집지 않고 방향 플래그만 바꿉니다.'}],
-16928:[{q:'뱀과 사다리(BFS)의 전체 순서를 차례대로 클릭하세요.',steps:['사다리·뱀 정보를 board[]에 저장한다','1번 칸을 큐에 넣고 방문 표시한다','큐에서 칸을 꺼내 주사위 1~6칸 앞을 살핀다','사다리·뱀이 있으면 끝으로 이동, 미방문이면 큐에 넣고 횟수 +1','100번 칸에 도달하면 그 횟수를 출력한다'],explain:'칸을 노드로 보는 BFS로 처음 100에 닿은 횟수가 최소입니다.'}],
-1697:[{q:'숨바꼭질(BFS)의 전체 진행 순서를 차례대로 클릭하세요.',steps:['시작 위치 N과 목표 K를 입력받는다','큐에 N을 넣고 방문 표시한다','큐에서 한 점을 꺼낸다(poll)','3방향(−1, +1, ×2) 중 미방문이면 큐에 넣고 거리 +1','목표 K에 처음 도달했을 때의 거리를 출력한다'],explain:'모든 이동 비용이 1이라 처음 닿은 거리가 최소입니다.'}],
-2667:[{q:'단지번호붙이기(DFS)의 전체 순서를 차례대로 클릭하세요.',steps:['N과 N×N 지도를 입력받는다','지도의 모든 칸을 순회한다','집(1)이고 미방문인 칸에서 DFS로 연결된 집을 세며 방문한다','DFS가 끝나면 단지 수를 1 늘린다','단지 수와 각 크기를 정렬해 출력한다'],explain:'새 단지 발견 시 DFS로 묶고 크기를 측정합니다.'}],
-7576:[{q:'토마토(다중 시작점 BFS)의 전체 순서를 차례대로 클릭하세요.',steps:['상자 상태를 입력받는다','처음부터 익은 토마토를 모두 큐에 넣는다','꺼내서 상하좌우의 안 익은 토마토를 익히고 큐에 넣는다','큐가 빌 때까지 반복한다','안 익은 칸이 남으면 -1, 아니면 최대 날짜를 출력한다'],explain:'여러 시작점을 동시에 큐에 넣는 다중 시작점 BFS가 핵심입니다.'}]
+16928:[{q:'뱀과 사다리(BFS)의 전체 순서를 차례대로 클릭하세요.',steps:['사다리·뱀 정보를 board[]에 저장한다','1번 칸을 큐에 넣고 방문 표시한다','큐에서 칸을 꺼내 주사위 1~6칸 앞을 살핀다','사다리·뱀이 있으면 끝으로 이동, 미방문이면 큐에 넣고 횟수 +1','100번 칸에 도달하면 그 횟수를 출력한다'],codes:['board[from] = to;','q.add(1); visited[1]=true;','for (int dice=1; dice<=6; dice++) { int next=cur+dice; }','if (board[next]!=0) next=board[next];\nif (!visited[next]) { visited[next]=true; dist[next]=dist[cur]+1; q.add(next); }','if (next==100) System.out.println(dist[next]);'],explain:'칸을 노드로 보는 BFS로 처음 100에 닿은 횟수가 최소입니다.'}],
+1697:[{q:'숨바꼭질(BFS)의 전체 진행 순서를 차례대로 클릭하세요.',steps:['시작 위치 N과 목표 K를 입력받는다','큐에 N을 넣고 방문 표시한다','큐에서 한 점을 꺼낸다(poll)','3방향(−1, +1, ×2) 중 미방문이면 큐에 넣고 거리 +1','목표 K에 처음 도달했을 때의 거리를 출력한다'],codes:['int n=sc.nextInt(), k=sc.nextInt();','q.add(n); visited[n]=true;','int cur = q.poll();','for (int nx : new int[]{cur-1,cur+1,cur*2})\n  if (ok(nx)&&!visited[nx]) { visited[nx]=true; dist[nx]=dist[cur]+1; q.add(nx); }','if (cur==k) { System.out.println(dist[cur]); break; }'],explain:'모든 이동 비용이 1이라 처음 닿은 거리가 최소입니다.'}],
+2667:[{q:'단지번호붙이기(DFS)의 전체 순서를 차례대로 클릭하세요.',steps:['N과 N×N 지도를 입력받는다','지도의 모든 칸을 순회한다','집(1)이고 미방문인 칸에서 DFS로 연결된 집을 세며 방문한다','DFS가 끝나면 단지 수를 1 늘린다','단지 수와 각 크기를 정렬해 출력한다'],codes:['map[i] = br.readLine().toCharArray();','for (int i...) for (int j...)','if (map[i][j]==\'1\' && !visited[i][j]) sizes.add(dfs(i,j));','count++;','Collections.sort(sizes);'],explain:'새 단지 발견 시 DFS로 묶고 크기를 측정합니다.'}],
+7576:[{q:'토마토(다중 시작점 BFS)의 전체 순서를 차례대로 클릭하세요.',steps:['상자 상태를 입력받는다','처음부터 익은 토마토를 모두 큐에 넣는다','꺼내서 상하좌우의 안 익은 토마토를 익히고 큐에 넣는다','큐가 빌 때까지 반복한다','안 익은 칸이 남으면 -1, 아니면 최대 날짜를 출력한다'],codes:['read(box);','if (box[i][j]==1) q.add(new int[]{i,j});','box[nx][ny]=box[cx][cy]+1; q.add(new int[]{nx,ny});','while (!q.isEmpty()) { ... }','ans = hasZero ? -1 : maxDay;'],explain:'여러 시작점을 동시에 큐에 넣는 다중 시작점 BFS가 핵심입니다.'}]
 };
 function renderOrderQ(q, idx) {
   let h = `<div class="quiz-q order-q"><div class="quiz-qnum">🔢 순서 맞추기 ${idx + 1}</div><div class="quiz-text">${escHtml(q.q)}</div>`;
   const ord = q.steps.map((s, i) => i);
   for (let i = ord.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ord[i], ord[j]] = [ord[j], ord[i]]; }
   h += '<div class="order-list">';
-  ord.forEach(pos => h += `<button class="order-item" data-pos="${pos}">${escHtml(q.steps[pos])}</button>`);
+  ord.forEach(pos => {
+    const cd = (q.codes && q.codes[pos]) ? `<pre class="order-code"><code class="language-java">${escHtml(q.codes[pos])}</code></pre>` : '';
+    h += `<button class="order-item${cd ? ' has-code' : ''}" data-pos="${pos}"><span class="oi-text">${escHtml(q.steps[pos])}</span>${cd}</button>`;
+  });
   h += '</div><div class="order-result"></div>';
   return h + `<div class="quiz-explain"><b>💡 해설</b> ${escHtml(q.explain || '')}</div></div>`;
 }
