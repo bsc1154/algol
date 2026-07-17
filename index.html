@@ -129,6 +129,8 @@ pre code .hljs-comment{font-style:normal;color:#7d8590}
 .story .adj-k{width:26px;height:26px;border-radius:50%;background:#1f6feb;color:#fff;font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:center;font-family:'Consolas',monospace}
 .story .adj-ar{color:#6e7681;font-size:.9rem}
 .story .adj-c{min-width:24px;height:24px;padding:0 8px;border-radius:13px;background:#161b22;border:1px solid #30363d;color:#adbac7;font-weight:700;font-size:.78rem;display:inline-flex;align-items:center;justify-content:center;font-family:'Consolas',monospace}
+.story .viz-gwrap{display:flex;justify-content:center}
+.story .viz-graph{max-width:100%}
 .story .arr-wrap{overflow-x:auto}
 .story .arr-row{display:inline-flex;align-items:flex-start}
 .story .arr-box{min-width:32px;border:1px solid #30363d;border-right:0;background:#161b22;text-align:center;font-family:'Consolas',monospace}
@@ -3367,7 +3369,7 @@ const TOON = {
  bg:'🧭 여러 거점이 길로 이어진 지도를 탐험대가 조사해요! 시작 거점 <b>V</b>에서 출발해 두 가지 방식으로 훑습니다 — <b>DFS</b>(한 길로 끝까지 파고들었다 되돌아오기)와 <b>BFS</b>(가까운 곳부터 넓게 퍼지기). 갈림길에선 <b>번호가 작은 곳</b>부터!<span class="goal">🎯 DFS 방문 순서와 BFS 방문 순서를 각각 출력하자!</span>',
  legend:[['#e3b341','현재 방문'],['#e5484d','방문 완료'],['#30363d','미방문']],
  cuts:[
-  {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'먼저 <b>인접 리스트</b>로 그래프를 만들고, 각 리스트를 오름차순 정렬해요(작은 번호부터 방문해야 하니까).',viz:{t:'adjlist',title:'🔗 인접 리스트 — 각 정점이 손잡은 이웃들 (정렬 후)',rows:[[1,[2,3,4]],[2,[1,4]],[3,[1,4]],[4,[1,2,3]]],note:'1번은 2·3·4와, 2번은 1·4와… 이렇게 <b>정점마다 이웃 목록</b>을 들고 있어요.'},cap:'① 그래프 구성 + 정렬',code:'인접리스트 = new ArrayList[정점수+1];\nfor (int i=1; i&lt;=정점수; i++) 인접리스트[i] = new ArrayList&lt;&gt;();\nfor (int e=0; e&lt;간선수; e++) {\n    int 정점A=..., 정점B=...;\n    인접리스트[정점A].add(정점B);\n    인접리스트[정점B].add(정점A);\n}\nfor (int i=1; i&lt;=정점수; i++) Collections.sort(인접리스트[i]);'},
+  {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'먼저 <b>인접 리스트</b>로 그래프를 만들고, 각 리스트를 오름차순 정렬해요(작은 번호부터 방문해야 하니까).',viz:{t:'graph',n:4,edges:[[1,2],[1,3],[1,4],[2,4],[3,4]],title:'🗺️ 이렇게 연결돼 있어요 — 선으로 이어진 게 이웃!',note:'1번은 2·3·4와, 2번은 1·4와 선으로 이어져 있죠. 이 "누가 누구와 이웃인지"를 코드에선 <b>인접 리스트</b>로 적어둬요.'},cap:'① 그래프 구성 + 정렬',code:'인접리스트 = new ArrayList[정점수+1];\nfor (int i=1; i&lt;=정점수; i++) 인접리스트[i] = new ArrayList&lt;&gt;();\nfor (int e=0; e&lt;간선수; e++) {\n    int 정점A=..., 정점B=...;\n    인접리스트[정점A].add(정점B);\n    인접리스트[정점B].add(정점A);\n}\nfor (int i=1; i&lt;=정점수; i++) Collections.sort(인접리스트[i]);'},
   {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'<b>DFS</b>는 재귀로 한 길 끝까지! 방문 표시부터 하고 미방문 이웃으로 파고듭니다.',why:'왜 <b>정렬</b>부터? "번호 작은 곳부터"라는 규칙 때문에, 인접 리스트를 오름차순으로 만들어두면 그냥 순서대로 돌기만 해도 규칙이 지켜져요. 왜 DFS는 <b>방문 표시를 먼저</b>? 표시 전에 재귀로 들어가면 같은 정점을 또 방문해 <b>무한 재귀</b>에 빠지거든요. DFS=한 길 끝까지(재귀), BFS=가까운 곳부터(큐) — 목적에 따라 골라 써요.',cap:'② DFS (재귀)',code:'static void 깊이우선탐색(int 현재정점) {\n    방문여부[현재정점] = true;\n    출력.append(현재정점).append(\' \');\n    for (int 다음정점 : 인접리스트[현재정점])\n        if (!방문여부[다음정점]) 깊이우선탐색(다음정점);\n}'},
   {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'<b>BFS</b>는 큐로 가까운 곳부터! 큐에 <b>넣는 순간</b> 방문 표시하는 게 포인트예요.',flow:{title:'🎞️ BFS 큐의 흐름 — 이웃을 넣고(뒤로) → 하나 꺼내(앞에서) 방문, 반복!',steps:[{op:'시작: 1을 큐에 넣고 방문 표시',q:[1]},{op:'1 꺼냄 → 방문! 이웃 2·3·4를 뒤에 넣기',q:[2,3,4],out:'1'},{op:'2 꺼냄 → 이웃(1·4)은 이미 방문',q:[3,4],out:'2'},{op:'3 꺼냄 → 이웃 이미 방문',q:[4],out:'3'},{op:'4 꺼냄 → 큐가 빔, 끝!',q:[],out:'4'}]},cap:'③ BFS (큐)',code:'static void 너비우선탐색(int 시작정점) {\n    Queue&lt;Integer&gt; 방문예정큐 = new LinkedList&lt;&gt;();\n    방문예정큐.add(시작정점); 방문여부[시작정점] = true;\n    while (!방문예정큐.isEmpty()) {\n        int 현재정점 = 방문예정큐.poll();\n        출력.append(현재정점).append(\' \');\n        for (int 다음정점 : 인접리스트[현재정점])\n            if (!방문여부[다음정점]) { 방문여부[다음정점]=true; 방문예정큐.add(다음정점); }\n    }\n}'}
  ]},
@@ -3375,14 +3377,14 @@ const TOON = {
  bg:'💻 회사 전산망에 웜 바이러스 발생! <b>1번 컴퓨터</b>가 처음 감염됐어요. 바이러스는 <b>네트워크로 직접·간접 연결된 컴퓨터</b>를 타고 계속 번져요. 보안팀이 급히 묻습니다.<span class="goal">🎯 1번 때문에 감염되는 컴퓨터가 <b>몇 대</b>인지 구하자! (1번 자신은 제외)</span>',
  legend:[['#e3b341','현재'],['#e5484d','감염됨'],['#30363d','안전']],
  cuts:[
-  {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'컴퓨터 연결을 <b>인접 리스트</b>(양방향)로 만들어 둬요.',viz:{t:'adjlist',title:'🔗 인접 리스트 — 각 컴퓨터가 직접 연결된 컴퓨터들',rows:[[1,[2,5]],[2,[1,3,5]],[3,[2]],[4,[7]],[5,[1,2,6]],[6,[5]],[7,[4]]],note:'1번은 2·5와 연결. 4·7은 1번 무리와 <b>끊겨</b> 있어요(그래서 안 감염!).'},cap:'① 연결망 구성',code:'List&lt;Integer&gt;[] 인접리스트 = new ArrayList[컴퓨터수+1];\nfor (int i=1; i&lt;=컴퓨터수; i++) 인접리스트[i] = new ArrayList&lt;&gt;();\nfor (int e=0; e&lt;연결수; e++) {\n    int 컴퓨터A=..., 컴퓨터B=...;\n    인접리스트[컴퓨터A].add(컴퓨터B);\n    인접리스트[컴퓨터B].add(컴퓨터A);\n}'},
+  {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'컴퓨터 연결을 <b>인접 리스트</b>(양방향)로 만들어 둬요.',viz:{t:'graph',n:7,edges:[[1,2],[2,3],[1,5],[5,2],[5,6],[4,7]],colors:{1:'#e5484d',4:'#484f58',7:'#484f58'},title:'🗺️ 컴퓨터 연결망 — 빨강(1)이 감염 시작!',note:'1번(빨강)과 <b>선으로 이어진</b> 2·3·5·6은 감염돼요. 4·7은 따로 떨어져(회색) <b>안 감염</b>!'},cap:'① 연결망 구성',code:'List&lt;Integer&gt;[] 인접리스트 = new ArrayList[컴퓨터수+1];\nfor (int i=1; i&lt;=컴퓨터수; i++) 인접리스트[i] = new ArrayList&lt;&gt;();\nfor (int e=0; e&lt;연결수; e++) {\n    int 컴퓨터A=..., 컴퓨터B=...;\n    인접리스트[컴퓨터A].add(컴퓨터B);\n    인접리스트[컴퓨터B].add(컴퓨터A);\n}'},
   {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'1번에서 BFS로 퍼뜨리며 <b>새로 감염되는 수</b>를 세요. 1번 자신은 세지 않으니 답이 딱 맞아요.',why:'왜 <b>1번은 안 세도</b> 정답이 맞을까? 1번은 시작할 때 미리 방문 표시를 해두고, <b>새로 방문되는 이웃만</b> 감염수++ 하니까요. 그래서 카운트에 1번 자신이 절대 안 들어가 "1번 제외" 조건이 저절로 지켜져요. 왜 큐에 <b>넣을 때</b> 표시? 안 그러면 같은 컴퓨터가 여러 번 큐에 들어가 중복으로 세집니다.',flow:{title:'🎞️ 감염 확산 — 큐로 연결된 컴퓨터를 하나씩 (감염수 세기)',steps:[{op:'1번 감염. 큐에 1',q:[1]},{op:'1 꺼냄 → 이웃 2·5 감염 (+2)',q:[2,5]},{op:'2 꺼냄 → 3 감염 (+1)',q:[5,3]},{op:'5 꺼냄 → 6 감염 (+1)',q:[3,6]},{op:'3·6 꺼냄 → 새 감염 없음',q:[]}],}, cap:'② BFS 감염 + 세기',code:'boolean[] 방문여부 = new boolean[컴퓨터수+1];\nQueue&lt;Integer&gt; 방문예정큐 = new LinkedList&lt;&gt;();\n방문예정큐.add(1); 방문여부[1] = true;\nint 감염수 = 0;\nwhile (!방문예정큐.isEmpty()) {\n    int 현재컴퓨터 = 방문예정큐.poll();\n    for (int 이웃컴퓨터 : 인접리스트[현재컴퓨터])\n        if (!방문여부[이웃컴퓨터]) {\n            방문여부[이웃컴퓨터] = true;\n            감염수++;\n            방문예정큐.add(이웃컴퓨터);\n        }\n}\nSystem.out.println(감염수);'}
  ]},
 11724:{title:'🔗 연결 요소 개수',sub:'따로 떨어진 그래프 덩어리가 몇 개? — 11724',
  bg:'👥 친구 관계망을 조사해요! 서로 아는 사람끼리 선으로 이어져 있어요. 직접·간접으로 연결된 사람들은 <b>한 무리</b>지만, 아무와도 안 이어진 무리들은 서로 <b>남남</b>이에요. 조사관이 묻습니다.<span class="goal">🎯 전체가 <b>몇 개의 독립된 무리(연결 요소)</b>로 나뉘는지 세자!</span>',
  legend:[['#e3b341','현재'],['#e5484d','방문 완료'],['#30363d','미방문']],
  cuts:[
-  {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'그래프를 <b>인접 리스트</b>(양방향)로 만들어요.',viz:{t:'adjlist',title:'🔗 인접 리스트 — {1,2,5} 무리 · {3,4,6} 무리',rows:[[1,[2,5]],[2,[1,5]],[3,[4]],[4,[3,6]],[5,[1,2]],[6,[4]]],note:'1·2·5는 서로 이어져 한 무리, 3·4·6이 또 한 무리. <b>남남인 무리가 2개!</b>'},cap:'① 그래프 구성',code:'List&lt;Integer&gt;[] 인접리스트 = new ArrayList[정점수+1];\nfor (int i=1; i&lt;=정점수; i++) 인접리스트[i] = new ArrayList&lt;&gt;();\nfor (int e=0; e&lt;간선수; e++) {\n    int 정점A=..., 정점B=...;\n    인접리스트[정점A].add(정점B);\n    인접리스트[정점B].add(정점A);\n}'},
+  {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'그래프를 <b>인접 리스트</b>(양방향)로 만들어요.',viz:{t:'graph',n:6,edges:[[1,2],[2,5],[5,1],[3,4],[4,6]],colors:{1:'#3fb950',2:'#3fb950',5:'#3fb950',3:'#a371f7',4:'#a371f7',6:'#a371f7'},title:'🗺️ 두 무리가 보이나요? — 초록 팀 · 보라 팀',note:'1·2·5(초록)는 서로 이어졌지만 3·4·6(보라)과는 <b>선이 없어요</b>. 그래서 <b>독립된 무리가 2개</b>!'},cap:'① 그래프 구성',code:'List&lt;Integer&gt;[] 인접리스트 = new ArrayList[정점수+1];\nfor (int i=1; i&lt;=정점수; i++) 인접리스트[i] = new ArrayList&lt;&gt;();\nfor (int e=0; e&lt;간선수; e++) {\n    int 정점A=..., 정점B=...;\n    인접리스트[정점A].add(정점B);\n    인접리스트[정점B].add(정점A);\n}'},
   {who:'teach',nm:'🧑‍🏫 알고 선생님',say:'미방문 정점에서 BFS를 <b>시작한 횟수</b>가 곧 덩어리(연결 요소) 개수! 새 그룹이 시작될 때마다 +1.',why:'왜 <b>BFS 시작 횟수 = 덩어리 수</b>일까? 한 번 BFS를 돌리면 <b>연결된 정점 전체</b>가 방문돼요. 그러니 반복문에서 <b>아직 미방문인 정점</b>을 만난다는 건 "지금까지 어느 덩어리와도 안 이어진 새 덩어리"란 뜻! 그때마다 +1 하면 독립된 덩어리 개수가 정확히 세집니다.',flow:{title:'🎞️ 미방문에서 BFS 시작한 횟수 = 덩어리 수',steps:[{op:'1 미방문 → 덩어리 1 시작! 큐에 1',q:[1]},{op:'1 꺼냄 → 2·5 넣기',q:[2,5]},{op:'2·5 꺼냄 → {1,2,5} 무리 완료',q:[]},{op:'3 미방문 → 덩어리 2 시작!',q:[3]},{op:'…{3,4,6} 완료. 총 2개!',q:[]}]},cap:'② 미방문마다 새 덩어리 + BFS',code:'boolean[] 방문여부 = new boolean[정점수+1];\nint 덩어리수 = 0;\nfor (int i=1; i&lt;=정점수; i++) {\n    if (!방문여부[i]) {\n        덩어리수++;\n        Queue&lt;Integer&gt; 탐색큐 = new LinkedList&lt;&gt;();\n        탐색큐.add(i); 방문여부[i]=true;\n        while (!탐색큐.isEmpty()) {\n            int 현재정점 = 탐색큐.poll();\n            for (int 다음정점 : 인접리스트[현재정점])\n                if (!방문여부[다음정점]) { 방문여부[다음정점]=true; 탐색큐.add(다음정점); }\n        }\n    }\n}\nSystem.out.println(덩어리수);'}
  ]},
 10828:{title:'🥞 접시 쌓기, 스택',sub:'맨 위에만 올리고 맨 위에서만 빼는 통 — 10828 스택',
@@ -3642,6 +3644,14 @@ function renderViz(v){
     v.pairs.forEach(function(p){ h+='<div class="map-row"><span class="map-k">'+p[0]+'</span><span class="map-ar">→</span><span class="map-v">'+p[1]+'</span></div>'; });
   } else if(v.t==='set'){
     h+='<div class="set-row">'; v.items.forEach(function(x){ h+='<span class="set-chip">'+x+'</span>'; }); h+='</div>';
+  } else if(v.t==='graph'){
+    var n=v.n, R=v.r||62, cx=110, cy=88, pos={};
+    for(var gi=1;gi<=n;gi++){var a=(-90+360*(gi-1)/n)*Math.PI/180;pos[gi]=[cx+R*Math.cos(a),cy+R*Math.sin(a)];}
+    var s='<svg width="220" height="176" viewBox="0 0 220 176" class="viz-graph">';
+    v.edges.forEach(function(e){ s+='<line x1="'+pos[e[0]][0]+'" y1="'+pos[e[0]][1]+'" x2="'+pos[e[1]][0]+'" y2="'+pos[e[1]][1]+'" stroke="#565f6b" stroke-width="2.5"/>'; });
+    for(var gi2=1;gi2<=n;gi2++){ var col=(v.colors&&v.colors[gi2])||'#1f6feb'; s+='<circle cx="'+pos[gi2][0]+'" cy="'+pos[gi2][1]+'" r="16" fill="'+col+'" stroke="#0d1117" stroke-width="2.5"/><text x="'+pos[gi2][0]+'" y="'+(pos[gi2][1]+5)+'" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">'+gi2+'</text>'; }
+    s+='</svg>';
+    h+='<div class="viz-gwrap">'+s+'</div>';
   } else if(v.t==='stack'){
     h+='<div class="stk">'; for(var i=v.vals.length-1;i>=0;i--){ var top=i===v.vals.length-1; h+='<div class="stk-box'+(top?' top':'')+'">'+v.vals[i]+(top?' <span class="tag">← top</span>':'')+'</div>'; } h+='</div><div class="stk-base">▲ 바닥</div>';
   } else if(v.t==='queue'){
