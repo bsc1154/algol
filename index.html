@@ -148,6 +148,15 @@ pre code .hljs-comment{font-style:normal;color:#7d8590}
 @keyframes lqOut{from{transform:none;opacity:1}to{transform:translateY(16px) scale(.4);opacity:0}}
 .story .lq-box.in{animation:lqIn .4s ease}
 .story .lq-box.out{animation:lqOut .4s ease forwards;background:#e5484d}
+.story .lq-track{position:relative}
+.story .lq-hand{position:absolute;font-size:1.5rem;pointer-events:none;opacity:0;z-index:5;top:2px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+.story .lq-hand .hb{position:absolute;left:50%;top:-16px;transform:translateX(-50%);font-size:.62rem;font-weight:700;background:#161b22;border:1px solid #30363d;border-radius:4px;padding:0 3px;white-space:nowrap}
+.story .lq-hand-out{left:44px}.story .lq-hand-out .hb{color:#e5484d}
+.story .lq-hand-in{right:52px}.story .lq-hand-in .hb{color:#3fb950}
+@keyframes handGrab{0%{opacity:0;transform:translateY(-18px) rotate(-20deg)}25%{opacity:1;transform:translateY(2px) rotate(-20deg)}45%{transform:translateY(2px) rotate(-20deg) scale(.85)}70%{opacity:1;transform:translateY(-20px) rotate(-20deg) scale(.85)}100%{opacity:0;transform:translateY(-24px) rotate(-20deg)}}
+@keyframes handPut{0%{opacity:0;transform:translateY(-18px) rotate(20deg) scale(.85)}25%{opacity:1;transform:translateY(2px) rotate(20deg) scale(.85)}45%{transform:translateY(4px) rotate(20deg) scale(1)}70%{opacity:1;transform:translateY(2px) rotate(20deg)}100%{opacity:0;transform:translateY(-22px) rotate(20deg)}}
+.story .lq-hand-out.go{animation:handGrab .8s ease}
+.story .lq-hand-in.go{animation:handPut .8s ease}
 .story .arr-wrap{overflow-x:auto}
 .story .arr-row{display:inline-flex;align-items:flex-start}
 .story .arr-box{min-width:32px;border:1px solid #30363d;border-right:0;background:#161b22;text-align:center;font-family:'Consolas',monospace}
@@ -3825,12 +3834,16 @@ function bfsCellSim(root,cfg){
   gridEl.style.gridTemplateColumns='repeat('+W+',30px)';
   var act=document.createElement('div'); act.className='sim-act'; root.insertBefore(act, root.querySelector('.sim-info'));
   var qBox=document.createElement('div'); qBox.className='loop-queue';
-  qBox.innerHTML='<div class="lq-head">📋 탐색 큐 <span style="font-weight:400">(앞에서 꺼내고 → 뒤로 넣는다)</span></div><div class="lq-track"><span class="lq-arrowout">poll →<br><b>꺼냄</b></span><div class="lq-cells"></div><span class="lq-arrowin"><b>add</b><br>← 넣음</span></div>';
+  qBox.innerHTML='<div class="lq-head">📋 탐색 큐 <span style="font-weight:400">(손으로 앞에서 꺼내고 → 뒤로 넣는다)</span></div><div class="lq-track"><span class="lq-arrowout">poll →<br><b>꺼냄</b></span><div class="lq-cells"></div><span class="lq-arrowin"><b>add</b><br>← 넣음</span><span class="lq-hand lq-hand-out">🤏<span class="hb">꺼내기</span></span><span class="lq-hand lq-hand-in">✋<span class="hb">넣기</span></span></div>';
   root.insertBefore(qBox, root.querySelector('.sim-info'));
   var qCells=qBox.querySelector('.lq-cells'); qCells.style.cssText='display:flex;gap:6px;flex:1';
+  var handOut=qBox.querySelector('.lq-hand-out'), handIn=qBox.querySelector('.lq-hand-in');
+  function playHand(el){ el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); }
   var wsp=root.querySelector('.wsp'), cntEl=root.querySelector('.loop-cnt');
   var cells, visited, owner, queue, comp, angle, done, timer;
   function renderQueue(inSet, outItem){ qCells.innerHTML='';
+    if(outItem) playHand(handOut);
+    if(inSet && inSet.length) setTimeout(function(){playHand(handIn);}, outItem?260:0);
     if(outItem){ var o=document.createElement('div'); o.className='lq-box out'; o.textContent='('+outItem[0]+','+outItem[1]+')'; qCells.appendChild(o); }
     if(!queue.length && !outItem){ qCells.innerHTML='<span class="lq-empty">비어 있음</span>'; return; }
     var inKey = inSet? inSet.map(function(p){return p[0]+','+p[1];}) : [];
