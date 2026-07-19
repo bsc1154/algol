@@ -148,15 +148,15 @@ pre code .hljs-comment{font-style:normal;color:#7d8590}
 @keyframes lqOut{from{transform:none;opacity:1}to{transform:translateY(16px) scale(.4);opacity:0}}
 .story .lq-box.in{animation:lqIn .4s ease}
 .story .lq-box.out{animation:lqOut .4s ease forwards;background:#e5484d}
-.story .lq-track{position:relative}
-.story .lq-hand{position:absolute;font-size:1.5rem;pointer-events:none;opacity:0;z-index:5;top:2px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
-.story .lq-hand .hb{position:absolute;left:50%;top:-16px;transform:translateX(-50%);font-size:.62rem;font-weight:700;background:#161b22;border:1px solid #30363d;border-radius:4px;padding:0 3px;white-space:nowrap}
-.story .lq-hand-out{left:44px}.story .lq-hand-out .hb{color:#e5484d}
-.story .lq-hand-in{right:52px}.story .lq-hand-in .hb{color:#3fb950}
-@keyframes handGrab{0%{opacity:0;transform:translateY(-18px) rotate(-20deg)}25%{opacity:1;transform:translateY(2px) rotate(-20deg)}45%{transform:translateY(2px) rotate(-20deg) scale(.85)}70%{opacity:1;transform:translateY(-20px) rotate(-20deg) scale(.85)}100%{opacity:0;transform:translateY(-24px) rotate(-20deg)}}
-@keyframes handPut{0%{opacity:0;transform:translateY(-18px) rotate(20deg) scale(.85)}25%{opacity:1;transform:translateY(2px) rotate(20deg) scale(.85)}45%{transform:translateY(4px) rotate(20deg) scale(1)}70%{opacity:1;transform:translateY(2px) rotate(20deg)}100%{opacity:0;transform:translateY(-22px) rotate(20deg)}}
-.story .lq-hand-out.go{animation:handGrab .8s ease}
-.story .lq-hand-in.go{animation:handPut .8s ease}
+.story .lq-track{position:relative;margin-top:52px;overflow:visible}
+.story .lq-hand{position:absolute;font-size:2.9rem;pointer-events:none;opacity:0;z-index:5;top:-46px;transform-origin:center bottom;filter:drop-shadow(0 3px 3px rgba(0,0,0,.55))}
+.story .lq-hand .hb{position:absolute;left:50%;top:-18px;transform:translateX(-50%);font-size:.7rem;font-weight:700;background:#161b22;border:1px solid #30363d;border-radius:5px;padding:1px 5px;white-space:nowrap}
+.story .lq-hand-out{left:36px}.story .lq-hand-out .hb{color:#e5484d}
+.story .lq-hand-in{right:44px}.story .lq-hand-in .hb{color:#3fb950}
+@keyframes handGrab{0%{opacity:0;transform:translateY(-40px) rotate(-15deg)}20%{opacity:1;transform:translateY(-40px) rotate(-15deg)}45%{opacity:1;transform:translateY(40px) rotate(-15deg) scale(.9)}60%{transform:translateY(40px) rotate(-15deg) scale(.78)}85%{opacity:1;transform:translateY(-42px) rotate(-15deg) scale(.78)}100%{opacity:0;transform:translateY(-48px) rotate(-15deg)}}
+@keyframes handPut{0%{opacity:0;transform:translateY(-40px) rotate(15deg) scale(.78)}20%{opacity:1;transform:translateY(-40px) rotate(15deg) scale(.78)}45%{opacity:1;transform:translateY(42px) rotate(15deg) scale(.78)}60%{transform:translateY(42px) rotate(15deg) scale(1)}85%{opacity:1;transform:translateY(-42px) rotate(15deg)}100%{opacity:0;transform:translateY(-48px) rotate(15deg)}}
+.story .lq-hand-out.go{animation:handGrab 1s ease}
+.story .lq-hand-in.go{animation:handPut 1s ease}
 .story .arr-wrap{overflow-x:auto}
 .story .arr-row{display:inline-flex;align-items:flex-start}
 .story .arr-box{min-width:32px;border:1px solid #30363d;border-right:0;background:#161b22;text-align:center;font-family:'Consolas',monospace}
