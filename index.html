@@ -137,26 +137,26 @@ pre code .hljs-comment{font-style:normal;color:#7d8590}
 .story .sim-cell.cur{outline:3px solid #e3b341;outline-offset:-1px;z-index:1}
 .story .sim-cell.chk{outline:2px dashed #58a6ff;outline-offset:-1px}
 .story .sim-act{width:100%;text-align:center;font-size:.85rem;color:#c9d1d9;font-weight:700;min-height:1.3em;margin-bottom:8px}
-.story .loop-queue{width:100%;margin:6px 0 2px;display:flex;flex-direction:column;gap:4px}
-.story .lq-head{display:flex;align-items:center;gap:8px;font-size:.72rem;color:#8b949e;font-weight:700}
-.story .lq-track{display:flex;align-items:center;gap:6px;min-height:44px;padding:6px 8px;background:#0d1117;border:1px solid #21262d;border-radius:8px;overflow-x:auto}
-.story .lq-arrowout,.story .lq-arrowin{font-size:.66rem;color:#6e7681;font-weight:700;white-space:nowrap;flex:0 0 auto}
-.story .lq-arrowout b{color:#e5484d}.story .lq-arrowin b{color:#3fb950}
-.story .lq-box{flex:0 0 auto;min-width:34px;height:30px;padding:0 6px;display:flex;align-items:center;justify-content:center;background:#1f6feb;color:#fff;font-size:.72rem;font-weight:700;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.4)}
-.story .lq-empty{color:#6e7681;font-size:.72rem;font-style:italic}
-@keyframes lqIn{from{transform:translateY(-14px) scale(.5);opacity:0}to{transform:none;opacity:1}}
-@keyframes lqOut{from{transform:none;opacity:1}to{transform:translateY(16px) scale(.4);opacity:0}}
-.story .lq-box.in{animation:lqIn .4s ease}
-.story .lq-box.out{animation:lqOut .4s ease forwards;background:#e5484d}
-.story .lq-track{position:relative;margin-top:52px;overflow:visible}
-.story .lq-hand{position:absolute;font-size:2.9rem;pointer-events:none;opacity:0;z-index:5;top:-46px;transform-origin:center bottom;filter:drop-shadow(0 3px 3px rgba(0,0,0,.55))}
-.story .lq-hand .hb{position:absolute;left:50%;top:-18px;transform:translateX(-50%);font-size:.7rem;font-weight:700;background:#161b22;border:1px solid #30363d;border-radius:5px;padding:1px 5px;white-space:nowrap}
-.story .lq-hand-out{left:36px}.story .lq-hand-out .hb{color:#e5484d}
-.story .lq-hand-in{right:44px}.story .lq-hand-in .hb{color:#3fb950}
-@keyframes handGrab{0%{opacity:0;transform:translateY(-40px) rotate(-15deg)}20%{opacity:1;transform:translateY(-40px) rotate(-15deg)}45%{opacity:1;transform:translateY(40px) rotate(-15deg) scale(.9)}60%{transform:translateY(40px) rotate(-15deg) scale(.78)}85%{opacity:1;transform:translateY(-42px) rotate(-15deg) scale(.78)}100%{opacity:0;transform:translateY(-48px) rotate(-15deg)}}
-@keyframes handPut{0%{opacity:0;transform:translateY(-40px) rotate(15deg) scale(.78)}20%{opacity:1;transform:translateY(-40px) rotate(15deg) scale(.78)}45%{opacity:1;transform:translateY(42px) rotate(15deg) scale(.78)}60%{transform:translateY(42px) rotate(15deg) scale(1)}85%{opacity:1;transform:translateY(-42px) rotate(15deg)}100%{opacity:0;transform:translateY(-48px) rotate(15deg)}}
-.story .lq-hand-out.go{animation:handGrab 1s ease}
-.story .lq-hand-in.go{animation:handPut 1s ease}
+.story .loop-queue{width:100%;margin:6px 0 2px;display:flex;flex-direction:column;gap:6px}
+.story .lq-head{font-size:.74rem;color:#c9d1d9;font-weight:700;line-height:1.4}
+.story .lq-head span{color:#8b949e}
+.story .lq-lane{display:flex;align-items:flex-end;gap:10px;min-height:82px;padding:8px 12px;background:linear-gradient(#0d1117,#0d1117) padding-box;border:1px solid #21262d;border-radius:12px;overflow-x:auto}
+.story .lq-end{flex:0 0 auto;text-align:center;font-size:1.9rem;line-height:1;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-end}
+.story .lq-etxt{font-size:.6rem;color:#8b949e;font-weight:700;margin-top:3px;line-height:1.2}
+.story .lq-front{border-right:3px solid #30363d;padding-right:10px}
+.story .lq-back{border-left:3px solid #30363d;padding-left:10px}
+.story .lq-line{display:flex;align-items:flex-end;gap:10px;flex:1;min-height:66px}
+.story .lq-empty{color:#6e7681;font-size:.75rem;font-style:italic;align-self:center;margin:auto}
+.story .lq-person{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto}
+.story .lq-person .pf{font-size:2rem;line-height:1}
+.story .lq-person .pc{font-size:.64rem;font-weight:700;background:#30363d;color:#c9d1d9;border-radius:5px;padding:0 5px}
+.story .lq-person.nextup .pf{filter:drop-shadow(0 0 6px #e3b341)}
+.story .lq-person.nextup .pc{background:#e3b341;color:#0b0f15}
+.story .lq-person.in .pc{background:#3fb950;color:#0b0f15}
+@keyframes walkIn{from{transform:translateX(34px);opacity:0}to{transform:none;opacity:1}}
+@keyframes walkOut{0%{transform:none;opacity:1}100%{transform:translateX(-46px) scale(.7);opacity:0}}
+.story .lq-person.in{animation:walkIn .5s ease}
+.story .lq-person.out{animation:walkOut .6s ease forwards}
 .story .arr-wrap{overflow-x:auto}
 .story .arr-row{display:inline-flex;align-items:flex-start}
 .story .arr-box{min-width:32px;border:1px solid #30363d;border-right:0;background:#161b22;text-align:center;font-family:'Consolas',monospace}
@@ -3834,20 +3834,22 @@ function bfsCellSim(root,cfg){
   gridEl.style.gridTemplateColumns='repeat('+W+',30px)';
   var act=document.createElement('div'); act.className='sim-act'; root.insertBefore(act, root.querySelector('.sim-info'));
   var qBox=document.createElement('div'); qBox.className='loop-queue';
-  qBox.innerHTML='<div class="lq-head">📋 탐색 큐 <span style="font-weight:400">(손으로 앞에서 꺼내고 → 뒤로 넣는다)</span></div><div class="lq-track"><span class="lq-arrowout">poll →<br><b>꺼냄</b></span><div class="lq-cells"></div><span class="lq-arrowin"><b>add</b><br>← 넣음</span><span class="lq-hand lq-hand-out">🤏<span class="hb">꺼내기</span></span><span class="lq-hand lq-hand-in">✋<span class="hb">넣기</span></span></div>';
+  qBox.innerHTML='<div class="lq-head">📋 큐 = <b>줄서기</b>! <span style="font-weight:400">먼저 온 칸이 먼저 나간다 — 선착순(FIFO). 그래서 아무데서나 빼는 리스트가 아니라 <b>큐</b>!</span></div>'+
+    '<div class="lq-lane">'+
+      '<div class="lq-end lq-front">🎡<div class="lq-etxt">맨앞<br>먼저 탐(poll)</div></div>'+
+      '<div class="lq-line"></div>'+
+      '<div class="lq-end lq-back"><div class="lq-etxt">맨뒤<br>새로 줄섬(add)</div>👉</div>'+
+    '</div>';
   root.insertBefore(qBox, root.querySelector('.sim-info'));
-  var qCells=qBox.querySelector('.lq-cells'); qCells.style.cssText='display:flex;gap:6px;flex:1';
-  var handOut=qBox.querySelector('.lq-hand-out'), handIn=qBox.querySelector('.lq-hand-in');
-  function playHand(el){ el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); }
+  var lineEl=qBox.querySelector('.lq-line');
   var wsp=root.querySelector('.wsp'), cntEl=root.querySelector('.loop-cnt');
   var cells, visited, owner, queue, comp, angle, done, timer;
-  function renderQueue(inSet, outItem){ qCells.innerHTML='';
-    if(outItem) playHand(handOut);
-    if(inSet && inSet.length) setTimeout(function(){playHand(handIn);}, outItem?260:0);
-    if(outItem){ var o=document.createElement('div'); o.className='lq-box out'; o.textContent='('+outItem[0]+','+outItem[1]+')'; qCells.appendChild(o); }
-    if(!queue.length && !outItem){ qCells.innerHTML='<span class="lq-empty">비어 있음</span>'; return; }
+  function person(p, cls, face){ var d=document.createElement('div'); d.className='lq-person'+(cls?' '+cls:''); d.innerHTML='<div class="pf">'+face+'</div><div class="pc">('+p[0]+','+p[1]+')</div>'; return d; }
+  function renderQueue(inSet, outItem){ lineEl.innerHTML='';
+    if(outItem){ lineEl.appendChild(person(outItem,'out','🚶')); }
+    if(!queue.length && !outItem){ var e=document.createElement('span'); e.className='lq-empty'; e.textContent='줄에 아무도 없음 (빈 큐)'; lineEl.appendChild(e); return; }
     var inKey = inSet? inSet.map(function(p){return p[0]+','+p[1];}) : [];
-    queue.forEach(function(p){ var b=document.createElement('div'); b.className='lq-box'; if(inKey.indexOf(p[0]+','+p[1])>=0) b.className+=' in'; b.textContent='('+p[0]+','+p[1]+')'; qCells.appendChild(b); });
+    queue.forEach(function(p,idx){ var isNew=inKey.indexOf(p[0]+','+p[1])>=0; lineEl.appendChild(person(p, idx===0?'nextup':(isNew?'in':''), '🧍')); });
   }
   function build(){ gridEl.innerHTML=''; cells=[]; for(var r=0;r<H;r++){cells[r]=[];for(var c=0;c<W;c++){var d=document.createElement('div');d.className='sim-cell';gridEl.appendChild(d);cells[r][c]=d;}} }
   function stop(){if(timer){clearInterval(timer);timer=null;}}
