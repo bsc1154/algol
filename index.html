@@ -131,6 +131,12 @@ pre code .hljs-comment{font-style:normal;color:#7d8590}
 .story .adj-c{min-width:24px;height:24px;padding:0 8px;border-radius:13px;background:#161b22;border:1px solid #30363d;color:#adbac7;font-weight:700;font-size:.78rem;display:inline-flex;align-items:center;justify-content:center;font-family:'Consolas',monospace}
 .story .viz-gwrap{display:flex;justify-content:center}
 .story .viz-graph{max-width:100%}
+.story .loop-wheel{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto}
+.story .loop-lab{font-size:.66rem;color:#8b949e;text-align:center;font-weight:700;line-height:1.3}
+.story .loop-lab .loop-cnt{color:#e3b341;font-size:1rem}
+.story .sim-cell.cur{outline:3px solid #e3b341;outline-offset:-1px;z-index:1}
+.story .sim-cell.chk{outline:2px dashed #58a6ff;outline-offset:-1px}
+.story .sim-act{width:100%;text-align:center;font-size:.85rem;color:#c9d1d9;font-weight:700;min-height:1.3em;margin-bottom:8px}
 .story .arr-wrap{overflow-x:auto}
 .story .arr-row{display:inline-flex;align-items:flex-start}
 .story .arr-box{min-width:32px;border:1px solid #30363d;border-right:0;background:#161b22;text-align:center;font-family:'Consolas',monospace}
@@ -3592,9 +3598,9 @@ const SIM = {
 2667:{kind:'grid',mode:'flood',target:1,
  grid:[[1,1,0,1,1],[1,0,0,0,1],[0,0,1,0,0],[1,0,1,1,0],[1,1,0,0,0]],
  code:[['scan',KW('for')+' (모든 칸 i,j)'],['find','  '+KW('if')+' (지도[i][j]==1 &amp;&amp; !방문[i][j]) {'],['cnt','      단지수++;  '+CM('// 새 단지 발견')],['flood','      한단지_묶기(i,j);  '+CM('// 붙은 집 전부 방문')],['end','  }'],['ans',CM('// 단지수 = 답')]]},
-1012:{kind:'grid',mode:'flood',target:1,
+1012:{kind:'loopgrid',
  grid:[[1,1,0,0],[0,1,0,0],[0,0,0,1],[0,0,1,1]],
- code:[['scan',KW('for')+' (모든 칸 i,j)'],['find','  '+KW('if')+' (배추[i][j]==1 &amp;&amp; !방문[i][j]) {'],['cnt','      지렁이수++;'],['flood','      무리방문(i,j);'],['end','  }'],['ans',CM('// 지렁이수 = 답')]]},
+ code:[['scan',KW('for')+' (모든 칸 i,j)'],['cnt','  '+KW('if')+' (배추 &amp;&amp; 미방문) { 지렁이수++;  '+CM('// 새 무리')],['poll','    큐에 시작칸;  '+KW('while')+' (큐) { 현재칸 = 큐.poll();  '+CM('// 한 바퀴')],['check','      '+KW('for')+' (상·하·좌·우)'],['add','        '+KW('if')+' (배추 &amp;&amp; 미방문) { 방문표시; 큐.add(옆칸); }'],['end','  } }']]},
 10026:{kind:'grid',mode:'flood',chars:true,colorblind:true,
  grid:[['R','R','G','B','B'],['R','G','G','B','B'],['B','B','R','R','B'],['B','B','R','R','R'],['R','R','R','G','G']],
  code:[['pre',CM('// 색약이면 G→R로 바꾼 그림 사용')],['scan',KW('for')+' (모든 칸 i,j)'],['find','  '+KW('if')+' (!방문[i][j]) { 구역수++; 같은색_묶기(i,j); }'],['ans',CM('// 구역수 = 답 (일반/색약 각각)')]]},
@@ -3705,6 +3711,7 @@ function initSim(container){
   if(cfg.kind==='graph') graphSim(container,cfg);
   else if(cfg.kind==='jump') jumpSim(container,cfg);
   else if(cfg.kind==='seq') seqSim(container,cfg);
+  else if(cfg.kind==='loopgrid') bfsCellSim(container,cfg);
   else gridSim(container,cfg);
 }
 function simBtns(root){return {play:root.querySelector('[data-act=play]'),step:root.querySelector('[data-act=step]'),reset:root.querySelector('[data-act=reset]'),d:root.querySelector('.d'),q:root.querySelector('.q'),st:root.querySelector('.sim-status')};}
@@ -3787,6 +3794,54 @@ function seqSim(root,cfg){
   function step(){ if(done)return; if(idx>=ops.length){finish();return;} var op=ops[idx]; idx++; doOp(op); }
   function finish(){ done=true;stop();B.play.classList.remove('on');B.play.textContent='▶ 재생';if(cfg.ansKey)simHL(root,[cfg.ansKey]);B.st.textContent=cfg.result||'끝!';B.st.style.color='#3fb950'; }
   function play(){ if(done)reset(); if(timer){stop();B.play.classList.remove('on');B.play.textContent='▶ 재생';return;} B.play.classList.add('on');B.play.textContent='⏸ 정지';timer=setInterval(step,900); }
+  B.play.addEventListener('click',play);
+  B.step.addEventListener('click',function(){if(done)return;stop();B.play.classList.remove('on');B.play.textContent='▶ 재생';step();});
+  B.reset.addEventListener('click',reset);
+  reset();
+}
+
+function bfsCellSim(root,cfg){
+  var B=simBtns(root), wrapBox=root.querySelector('.sim-wrap'), gridEl=root.querySelector('.sim-grid');
+  var G=cfg.grid, H=G.length, W=G[0].length;
+  var pal=['#e5484d','#f2a13a','#a371f7','#3fb950','#ec7fc0','#58a6ff'];
+  var DR=[-1,1,0,0], DC=[0,0,-1,1];
+  // 관람차 만들기
+  var ws='<svg width="80" height="80" viewBox="0 0 90 90"><circle cx="45" cy="45" r="35" fill="none" stroke="#30363d" stroke-width="3"/><g class="wsp" style="transform-origin:45px 45px;transition:transform .45s ease">';
+  for(var k=0;k<6;k++){var a=k*60*Math.PI/180,x=45+32*Math.cos(a),y=45+32*Math.sin(a);ws+='<line x1="45" y1="45" x2="'+x+'" y2="'+y+'" stroke="#484f58" stroke-width="2"/><circle cx="'+x+'" cy="'+y+'" r="6" fill="#1f6feb"/>';}
+  ws+='</g><circle cx="45" cy="45" r="6" fill="#e3b341"/></svg>';
+  var wheel=document.createElement('div'); wheel.className='loop-wheel'; wheel.innerHTML=ws+'<div class="loop-lab">🎡 반복<br><span class="loop-cnt">0</span>바퀴</div>';
+  wrapBox.style.gap='16px'; wrapBox.style.flexWrap='wrap'; wrapBox.insertBefore(wheel, gridEl);
+  gridEl.style.gridTemplateColumns='repeat('+W+',30px)';
+  var act=document.createElement('div'); act.className='sim-act'; root.insertBefore(act, root.querySelector('.sim-info'));
+  var wsp=root.querySelector('.wsp'), cntEl=root.querySelector('.loop-cnt');
+  var cells, visited, owner, queue, comp, angle, done, timer;
+  function build(){ gridEl.innerHTML=''; cells=[]; for(var r=0;r<H;r++){cells[r]=[];for(var c=0;c<W;c++){var d=document.createElement('div');d.className='sim-cell';gridEl.appendChild(d);cells[r][c]=d;}} }
+  function stop(){if(timer){clearInterval(timer);timer=null;}}
+  function spin(){ angle+=60; wsp.style.transform='rotate('+angle+'deg)'; cntEl.textContent=Math.floor(angle/60); }
+  function render(cur, chk){ for(var r=0;r<H;r++)for(var c=0;c<W;c++){ var el=cells[r][c]; el.className='sim-cell'; el.style.background=''; el.textContent='';
+      if(G[r][c]!==1){ el.classList.add('w'); }
+      else if(visited[r][c]){ el.style.background=pal[(owner[r][c]-1)%pal.length]; el.style.color='#0b0f15'; el.textContent='🥬'; }
+      else { el.classList.add('g'); el.textContent='🥬'; }
+    }
+    if(cur) cells[cur[0]][cur[1]].classList.add('cur');
+    if(chk) chk.forEach(function(p){ if(G[p[0]]&&G[p[0]][p[1]]!==undefined) cells[p[0]][p[1]].classList.add('chk'); });
+    B.d.textContent=comp; B.q.textContent = queue.length? queue.map(function(p){return '('+p[0]+','+p[1]+')';}).join(' ') : '(빈 큐)';
+  }
+  function reset(){ stop();done=false;comp=0;queue=[];angle=0;visited=[];owner=[]; for(var r=0;r<H;r++){visited[r]=[];owner[r]=[];for(var c=0;c<W;c++){visited[r][c]=false;owner[r][c]=0;}}
+    wsp.style.transform='rotate(0deg)'; cntEl.textContent='0'; B.st.textContent=''; act.textContent='▶ 재생/다음을 눌러 관람차를 돌려보세요!'; B.play.classList.remove('on'); B.play.textContent='▶ 재생'; simHL(root,['scan']); render(null,null); }
+  function nextCabbage(){ for(var r=0;r<H;r++)for(var c=0;c<W;c++) if(G[r][c]===1&&!visited[r][c]) return [r,c]; return null; }
+  function step(){ if(done)return; spin();
+    if(queue.length===0){ var s=nextCabbage(); if(!s){ finish(); return; } comp++; visited[s[0]][s[1]]=true; owner[s[0]][s[1]]=comp; queue.push(s);
+      simHL(root,['scan','cnt']); act.innerHTML='🌱 <b>새 배추 무리 발견!</b> ('+s[0]+','+s[1]+') → 큐에 넣고 지렁이 <b>'+comp+'</b>마리'; render(s,null); return; }
+    var cur=queue.shift(); var added=[], chk=[];
+    for(var i=0;i<4;i++){ var nr=cur[0]+DR[i], nc=cur[1]+DC[i]; if(nr>=0&&nr<H&&nc>=0&&nc<W){ chk.push([nr,nc]); if(G[nr][nc]===1&&!visited[nr][nc]){ visited[nr][nc]=true; owner[nr][nc]=comp; queue.push([nr,nc]); added.push([nr,nc]); } } }
+    if(added.length){ simHL(root,['poll','check','add']); act.innerHTML='🔄 큐에서 <b>('+cur[0]+','+cur[1]+')</b> 꺼냄 → 상하좌우 확인 → 배추 <b>'+added.length+'칸</b> 큐에 추가!'; }
+    else { simHL(root,['poll','check']); act.innerHTML='🔄 큐에서 <b>('+cur[0]+','+cur[1]+')</b> 꺼냄 → 이웃에 새 배추 없음'; }
+    render(cur, chk);
+  }
+  function finish(){ done=true;stop();B.play.classList.remove('on');B.play.textContent='▶ 재생';simHL(root,['end']); act.innerHTML='✅ 끝! 관람차가 여러 바퀴 돌며 무리를 다 묶었어요.'; B.st.textContent='필요한 지렁이 = '+comp+'마리'; B.st.style.color='#3fb950'; render(null,null); }
+  build();
+  function play(){ if(done)reset(); if(timer){stop();B.play.classList.remove('on');B.play.textContent='▶ 재생';return;} B.play.classList.add('on');B.play.textContent='⏸ 정지';timer=setInterval(step,1100); }
   B.play.addEventListener('click',play);
   B.step.addEventListener('click',function(){if(done)return;stop();B.play.classList.remove('on');B.play.textContent='▶ 재생';step();});
   B.reset.addEventListener('click',reset);
