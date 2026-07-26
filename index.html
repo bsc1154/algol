@@ -157,6 +157,19 @@ pre code .hljs-comment{font-style:normal;color:#7d8590}
 @keyframes walkOut{0%{transform:none;opacity:1}100%{transform:translateX(-46px) scale(.7);opacity:0}}
 .story .lq-person.in{animation:walkIn .5s ease}
 .story .lq-person.out{animation:walkOut .6s ease forwards}
+.story .cs-legend{display:flex;gap:14px;justify-content:center;font-size:.7rem;color:#8b949e;margin-bottom:8px;flex-wrap:wrap;align-items:center}
+.story .cs-legend b{color:#c9d1d9}
+.story .cs-sw{display:inline-block;width:13px;height:13px;border-radius:2px;vertical-align:-2px;margin-right:3px}
+.story .cs-board{position:relative;display:grid;gap:0;border:2px solid #30363d;border-radius:5px;overflow:hidden;flex:0 0 auto}
+.story .cs-cell{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.72rem;transition:opacity .2s;position:relative}
+.story .cs-cell.cw{background:#eeeed2}
+.story .cs-cell.cb{background:#6f9f57}
+.story .cs-cell.dim{opacity:.25}
+.story .cs-cell.bad{box-shadow:inset 0 0 0 3px #e5484d;z-index:2}
+.story .cs-cell.bad::after{content:'🖌️';font-size:.72rem}
+.story .cs-win{position:absolute;border:3px solid #e3b341;border-radius:3px;pointer-events:none;box-shadow:0 0 0 3px rgba(227,179,65,.25);transition:left .35s ease,top .35s ease;z-index:3;opacity:0}
+.story .cs-msg{width:100%;text-align:center;font-size:.82rem;color:#c9d1d9;font-weight:700;min-height:1.3em;margin:8px 0 2px;line-height:1.5}
+.story .cs-best{display:inline-block;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:2px 8px;margin-top:4px;color:#e3b341;font-weight:700;font-size:.8rem}
 .story .arr-wrap{overflow-x:auto}
 .story .arr-row{display:inline-flex;align-items:flex-start}
 .story .arr-box{min-width:32px;border:1px solid #30363d;border-right:0;background:#161b22;text-align:center;font-family:'Consolas',monospace}
@@ -3489,7 +3502,8 @@ const TOON = {
  cuts:[{who:'teach',nm:'🧑‍🏫 알고 선생님',say:'<b>HashMap&lt;사이트, 비밀번호&gt;</b>에 저장해두고 질문마다 <code>get</code>으로 꺼내면 끝!',why:'왜 <b>맵</b>을 미리 만들까? 질문이 여러 개인데, 매번 저장 목록 전체를 뒤지면 느려요. 사이트→비밀번호 맵을 한 번 만들어두면 <b>각 질문을 O(1)</b>에 즉시 답할 수 있어요. "미리 정리해두고 빠르게 조회"가 해시맵의 핵심!',viz:{t:'map',title:'📒 사전(맵) — 사이트로 비밀번호를 바로 찾기',pairs:[['wikipedia','hashing'],['namuwiki','spammer']],note:'미리 <b>사이트 → 비밀번호</b> 장부를 만들어두면 질문마다 즉시 답!'},cap:'전체 코드',code:'Map&lt;String,String&gt; 비밀번호장부 = new HashMap&lt;&gt;();\nfor (int i=0; i&lt;저장된쌍수; i++) {\n    토큰 = new StringTokenizer(입력.readLine());\n    비밀번호장부.put(토큰.nextToken(), 토큰.nextToken());   // 사이트→비밀번호\n}\nfor (int i=0; i&lt;질문수; i++)\n    출력.append(비밀번호장부.get(입력.readLine().trim())).append(\'\\n\');'}]},
 2798:{title:'🃏 블랙잭',sub:'카드 3장 합이 M 이하 최댓값 — 2798',
  bg:'🎰 카드 N장 중 <b>서로 다른 3장</b>을 골라, 합이 한도 M을 넘지 않으면서 <b>최대</b>가 되게 해요(블랙잭처럼 M에 가깝게).<span class="goal">🎯 3장 합의 최댓값(M 이하) 출력!</span>',
- cuts:[{who:'teach',nm:'🧑‍🏫 알고 선생님',say:'가능한 <b>모든 3장 조합</b>을 3중 반복으로 다 더해 보고, M 이하 중 최댓값을 갱신해요.',why:'왜 <b>완전탐색</b>(다 해보기)으로 충분할까? N이 최대 100이라 3장 조합 수가 100³=백만 정도로 <b>넉넉히 빠르거든요</b>. 이렇게 경우의 수가 감당 가능하면, 머리 굴리지 말고 전부 시도하는 게 가장 확실해요.',viz:{t:'array',title:'📦 카드 배열 (예: 한도 21)',vals:[5,6,7,8,9],idx:true,note:'서로 다른 <b>3장</b>을 골라 합이 21 이하 최대! (6+7+8=21)'},cap:'전체 코드',code:'int 최댓값 = 0;\nfor (int i=0; i&lt;카드수; i++)\n  for (int j=i+1; j&lt;카드수; j++)\n    for (int k=j+1; k&lt;카드수; k++) {\n        int 세장합 = 카드숫자[i] + 카드숫자[j] + 카드숫자[k];\n        if (세장합 &lt;= 한도) 최댓값 = Math.max(최댓값, 세장합);\n    }\nSystem.out.println(최댓값);'}]},
+ cuts:[{who:'teach',nm:'🧑‍🏫 알고 선생님',say:'가능한 <b>모든 3장 조합</b>을 3중 반복으로 다 더해 보고, M 이하 중 최댓값을 갱신해요.',why:'왜 <b>완전탐색</b>(다 해보기)으로 충분할까? N이 최대 100이라 3장 조합 수가 100³=백만 정도로 <b>넉넉히 빠르거든요</b>. 이렇게 경우의 수가 감당 가능하면, 머리 굴리지 말고 전부 시도하는 게 가장 확실해요.',viz:{t:'array',title:'📦 카드 배열 (예: 한도 21)',vals:[5,6,7,8,9],idx:true,note:'서로 다른 <b>3장</b>을 골라 합이 21 이하 최대! (6+7+8=21)'},cap:'전체 코드',code:'int 최댓값 = 0;\nfor (int i=0; i&lt;카드수; i++)\n  for (int j=i+1; j&lt;카드수; j++)\n    for (int k=j+1; k&lt;카드수; k++) {\n        int 세장합 = 카드숫자[i] + 카드숫자[j] + 카드숫자[k];\n        if (세장합 &lt;= 한도) 최댓값 = Math.max(최댓값, 세장합);\n    }\nSystem.out.println(최댓값);'},
+  {who:'stud',nm:'🧑‍🎓 학생',say:'근데 왜 <b>j=i+1</b>, <b>k=j+1</b> 이에요? 그냥 0부터 돌면 안 돼요?',why:'서로 다른 3장을 <b>조합(순서 무시)으로 딱 한 번씩만</b> 고르려고요!<br>• <b>j=i+1</b> → j를 항상 i <b>뒤</b>로 두면 ① 같은 카드 두 번 뽑기(i==j) 방지 ② {1번,2번}과 {2번,1번} 같은 <b>중복 조합</b> 방지<br>• <b>k=j+1</b> → 똑같이 k를 j 뒤로 → 결국 항상 <b>i &lt; j &lt; k</b> 를 강제해요.<br>만약 셋 다 0부터 돌면? 같은 카드를 겹쳐 뽑고, {5,6,7} 한 조합을 순서만 바꿔 <b>6번</b>이나 세게 돼요 — 낭비이고, 같은 카드 중복으로 <b>오답</b>까지 날 수 있어요.',cap:'왜 +1 인지 (같은 뜻)',code:'for (int i=0;   i&lt;카드수; i++)       '+CM('// 첫 장')+'\n  for (int j=i+1; j&lt;카드수; j++)     '+CM('// ← i 다음 칸부터 (겹침·중복 방지)')+'\n    for (int k=j+1; k&lt;카드수; k++)   '+CM('// ← j 다음 칸부터')+'\n        ... '+CM('// i < j < k 인 조합만 딱 한 번씩!')}]},
 2231:{title:'➗ 분해합',sub:'N의 가장 작은 생성자 찾기 — 2231',
  bg:'🧩 어떤 수 M과 <b>M의 각 자릿수 합</b>을 더한 값이 "M의 분해합"이에요(예: 245 → 245+2+4+5=256). 분해합이 N이 되는 <b>가장 작은 M</b>(생성자)을 찾아요.<span class="goal">🎯 가장 작은 생성자(없으면 0)!</span>',
  cuts:[{who:'teach',nm:'🧑‍🏫 알고 선생님',say:'1부터 N−1까지 후보 m을 하나씩 보며 m + 자릿수 합이 N이 되는 <b>첫 m</b>을 찾으면 끝!',why:'왜 <b>1부터 순서대로</b> 올라갈까? "가장 작은" 생성자를 찾아야 하니까요. 작은 수부터 확인하면 <b>처음 맞는 순간이 곧 최소</b>라 바로 멈출 수 있어요(반대로 큰 수부터면 끝까지 봐야 함).',cap:'전체 코드',code:'for (int 생성자후보=1; 생성자후보&lt;목표N; 생성자후보++) {\n    int 분해합 = 생성자후보, 남은수 = 생성자후보;\n    while (남은수 &gt; 0) { 분해합 += 남은수 % 10; 남은수 /= 10; }   // 각 자리 더하기\n    if (분해합 == 목표N) { System.out.println(생성자후보); return; }\n}\nSystem.out.println(0);   // 못 찾음'}]},
